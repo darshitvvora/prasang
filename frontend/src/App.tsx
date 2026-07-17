@@ -8,6 +8,7 @@ import PricingPage from './pages/PricingPage';
 import DashboardPage from './pages/artist/DashboardPage';
 import OnboardingPage from './pages/artist/OnboardingPage';
 import LeadsPage from './pages/artist/LeadsPage';
+import PlannerDashboardPage from './pages/planner/DashboardPage';
 
 export default function App() {
   return (
@@ -22,6 +23,7 @@ export default function App() {
         <Route path="/artist/dashboard" element={<DashboardPage />} />
         <Route path="/artist/onboarding" element={<OnboardingPage />} />
         <Route path="/artist/leads" element={<LeadsPage />} />
+        <Route path="/planner/dashboard" element={<PlannerDashboardPage />} />
       </Routes>
     </BrowserRouter>
   );
