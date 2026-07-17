@@ -9,6 +9,7 @@ import DashboardPage from './pages/artist/DashboardPage';
 import OnboardingPage from './pages/artist/OnboardingPage';
 import LeadsPage from './pages/artist/LeadsPage';
 import PlannerDashboardPage from './pages/planner/DashboardPage';
+import PlannerInquiriesPage from './pages/planner/InquiriesPage';
 
 export default function App() {
   return (
@@ -24,6 +25,7 @@ export default function App() {
         <Route path="/artist/onboarding" element={<OnboardingPage />} />
         <Route path="/artist/leads" element={<LeadsPage />} />
         <Route path="/planner/dashboard" element={<PlannerDashboardPage />} />
+        <Route path="/planner/inquiries" element={<PlannerInquiriesPage />} />
       </Routes>
     </BrowserRouter>
   );
