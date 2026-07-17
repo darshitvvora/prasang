@@ -39,14 +39,14 @@ export default function SignupPage() {
     setLoading(true);
     await new Promise((r) => setTimeout(r, 800));
     setLoading(false);
-    window.location.href = role === 'artist' ? '/artist/onboarding' : '/';
+    window.location.href = role === 'artist' ? '/artist/onboarding' : '/planner/dashboard';
   }
 
   async function handleGoogleSignup() {
     if (!role) return;
     setLoading(true);
     await new Promise((r) => setTimeout(r, 600));
-    window.location.href = role === 'artist' ? '/artist/onboarding' : '/';
+    window.location.href = role === 'artist' ? '/artist/onboarding' : '/planner/dashboard';
   }
 
   return (
