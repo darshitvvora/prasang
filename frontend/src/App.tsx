@@ -10,6 +10,7 @@ import OnboardingPage from './pages/artist/OnboardingPage';
 import LeadsPage from './pages/artist/LeadsPage';
 import PlannerDashboardPage from './pages/planner/DashboardPage';
 import PlannerInquiriesPage from './pages/planner/InquiriesPage';
+import PlannerSavedArtistsPage from './pages/planner/SavedArtistsPage';
 
 export default function App() {
   return (
@@ -26,6 +27,7 @@ export default function App() {
         <Route path="/artist/leads" element={<LeadsPage />} />
         <Route path="/planner/dashboard" element={<PlannerDashboardPage />} />
         <Route path="/planner/inquiries" element={<PlannerInquiriesPage />} />
+        <Route path="/planner/saved" element={<PlannerSavedArtistsPage />} />
       </Routes>
     </BrowserRouter>
   );
