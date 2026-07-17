@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { AtSign, PlayCircle, Globe, Briefcase } from 'lucide-react';
 import './Footer.css';
 
@@ -36,9 +37,9 @@ export default function Footer() {
           <div>
             <h3 className="footer-column-title">For Artists</h3>
             <nav className="footer-links" aria-label="Artist links">
-              <a href="#" className="footer-link">List Your Profile</a>
-              <a href="#" className="footer-link">Pricing Plans</a>
-              <a href="#" className="footer-link">Artist Dashboard</a>
+              <Link to="/artist/onboarding" className="footer-link">List Your Profile</Link>
+              <Link to="/pricing" className="footer-link">Pricing Plans</Link>
+              <Link to="/artist/dashboard" className="footer-link">Artist Dashboard</Link>
               <a href="#" className="footer-link">Success Stories</a>
               <a href="#" className="footer-link">Referral Program</a>
             </nav>
@@ -48,9 +49,9 @@ export default function Footer() {
           <div>
             <h3 className="footer-column-title">For Event Planners</h3>
             <nav className="footer-links" aria-label="Event planner links">
-              <a href="#" className="footer-link">Find Artists</a>
-              <a href="#" className="footer-link">Browse by Category</a>
-              <a href="#" className="footer-link">Browse by Location</a>
+              <Link to="/search" className="footer-link">Find Artists</Link>
+              <Link to="/search" className="footer-link">Browse by Category</Link>
+              <Link to="/search" className="footer-link">Browse by Location</Link>
               <a href="#" className="footer-link">How It Works</a>
               <a href="#" className="footer-link">FAQ</a>
             </nav>

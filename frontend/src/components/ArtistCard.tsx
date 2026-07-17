@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import {
   MapPin,
   Star,
@@ -25,8 +26,26 @@ function formatPrice(amount: number): string {
 }
 
 export default function ArtistCard({ artist }: ArtistCardProps) {
+  const navigate = useNavigate();
+
+  function goToProfile() {
+    navigate(`/profile/${artist.slug}`);
+  }
+
   return (
-    <article className="artist-card" id={`artist-${artist.slug}`}>
+    <article
+      className="artist-card"
+      id={`artist-${artist.slug}`}
+      role="link"
+      tabIndex={0}
+      onClick={goToProfile}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          goToProfile();
+        }
+      }}
+    >
       {/* Image */}
       <div className="artist-card-image-wrapper">
         <img
@@ -89,6 +108,7 @@ export default function ArtistCard({ artist }: ArtistCardProps) {
               target="_blank"
               rel="noopener noreferrer"
               aria-label={`${artist.name} on Instagram`}
+              onClick={(e) => e.stopPropagation()}
             >
               <AtSign size={15} />
             </a>
@@ -100,6 +120,7 @@ export default function ArtistCard({ artist }: ArtistCardProps) {
               target="_blank"
               rel="noopener noreferrer"
               aria-label={`${artist.name} on YouTube`}
+              onClick={(e) => e.stopPropagation()}
             >
               <PlayCircle size={15} />
             </a>
@@ -125,14 +146,19 @@ export default function ArtistCard({ artist }: ArtistCardProps) {
         {/* Actions */}
         <div className="artist-card-actions">
           <div className="artist-card-action-icons">
-            <button type="button" className="artist-card-icon-btn" aria-label="Send message">
+            <button type="button" className="artist-card-icon-btn" aria-label="Send message" onClick={(e) => e.stopPropagation()}>
               <MessageCircle size={18} />
             </button>
-            <button type="button" className="artist-card-icon-btn favorite" aria-label="Save to favorites">
+            <button type="button" className="artist-card-icon-btn favorite" aria-label="Save to favorites" onClick={(e) => e.stopPropagation()}>
               <Heart size={18} />
             </button>
           </div>
-          <button type="button" className="artist-card-contact-btn" id={`contact-${artist.slug}`}>
+          <button
+            type="button"
+            className="artist-card-contact-btn"
+            id={`contact-${artist.slug}`}
+            onClick={(e) => e.stopPropagation()}
+          >
             Get Contact Info
           </button>
         </div>

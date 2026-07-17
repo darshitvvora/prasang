@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { MapPin, Bell, Menu, X, Sparkles } from 'lucide-react';
 import './Navbar.css';
 
@@ -6,31 +7,31 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const links = [
-    { label: 'Home', href: '#', active: true },
-    { label: 'Search', href: '#search' },
-    { label: 'For Artists', href: '#artists' },
-    { label: 'Pricing', href: '#pricing' },
+    { label: 'Home', to: '/', active: true },
+    { label: 'Search', to: '/search' },
+    { label: 'For Artists', to: '/artist/onboarding' },
+    { label: 'Pricing', to: '/pricing' },
   ];
 
   return (
     <nav className="navbar" id="navbar">
       <div className="container navbar-inner">
         {/* Logo */}
-        <a href="/" className="navbar-logo">
+        <Link to="/" className="navbar-logo">
           <span className="navbar-logo-text">prasang</span>
           <span className="navbar-logo-hindi">प्रसंग</span>
-        </a>
+        </Link>
 
         {/* Desktop Links */}
         <div className="navbar-links">
           {links.map((link) => (
-            <a
+            <Link
               key={link.label}
-              href={link.href}
+              to={link.to}
               className={`navbar-link${link.active ? ' active' : ''}`}
             >
               {link.label}
-            </a>
+            </Link>
           ))}
         </div>
 
@@ -45,10 +46,10 @@ export default function Navbar() {
             <Bell size={20} />
           </button>
 
-          <a href="#list" className="navbar-cta">
+          <Link to="/artist/onboarding" className="navbar-cta">
             <Sparkles size={16} />
             List Your Art
-          </a>
+          </Link>
 
           {/* Mobile toggle */}
           <button
@@ -65,24 +66,24 @@ export default function Navbar() {
       {/* Mobile Menu */}
       <div className={`navbar-mobile-menu${mobileOpen ? ' open' : ''}`}>
         {links.map((link) => (
-          <a
+          <Link
             key={link.label}
-            href={link.href}
+            to={link.to}
             className={`navbar-link${link.active ? ' active' : ''}`}
             onClick={() => setMobileOpen(false)}
           >
             {link.label}
-          </a>
+          </Link>
         ))}
         <div className="navbar-mobile-divider" />
         <button type="button" className="navbar-location">
           <MapPin size={16} />
           <span>Mumbai, India</span>
         </button>
-        <a href="#list" className="navbar-cta" onClick={() => setMobileOpen(false)}>
+        <Link to="/artist/onboarding" className="navbar-cta" onClick={() => setMobileOpen(false)}>
           <Sparkles size={16} />
           List Your Art
-        </a>
+        </Link>
       </div>
     </nav>
   );

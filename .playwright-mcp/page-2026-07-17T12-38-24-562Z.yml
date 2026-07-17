@@ -1,0 +1,96 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - link "prasang प्रसंग" [ref=e5] [cursor=pointer]:
+      - /url: /
+      - generic [ref=e6]: prasang
+      - generic [ref=e7]: प्रसंग
+    - navigation [ref=e8]:
+      - link "Dashboard" [ref=e9] [cursor=pointer]:
+        - /url: /planner/dashboard
+      - link "My Inquiries" [ref=e15] [cursor=pointer]:
+        - /url: /planner/inquiries
+      - link "Saved Artists" [ref=e18] [cursor=pointer]:
+        - /url: /planner/saved
+      - link "Browse Artists" [ref=e21] [cursor=pointer]:
+        - /url: /search
+    - generic [ref=e25]:
+      - generic [ref=e26]: Looking for more artists?
+      - generic [ref=e27]: Search magicians, DJs, singers and more near you.
+      - link "Browse Artists" [ref=e28] [cursor=pointer]:
+        - /url: /search
+  - main [ref=e31]:
+    - generic [ref=e32]:
+      - generic [ref=e33]:
+        - heading "Dashboard" [level=1] [ref=e34]
+        - paragraph [ref=e35]: Track the artists you've reached out to
+      - link "Browse Artists" [ref=e36] [cursor=pointer]:
+        - /url: /search
+    - generic [ref=e40]:
+      - generic [ref=e41]:
+        - generic [ref=e42]: Artists Contacted
+        - generic [ref=e47]: "5"
+      - generic [ref=e48]:
+        - generic [ref=e49]: Responses Received
+        - generic [ref=e54]: "2"
+      - generic [ref=e55]:
+        - generic [ref=e56]: Confirmed Bookings
+        - generic [ref=e62]: "1"
+      - generic [ref=e63]:
+        - generic [ref=e64]: Saved Artists
+        - generic [ref=e69]: "4"
+    - generic [ref=e70]:
+      - generic [ref=e74]:
+        - generic [ref=e75]: Wedding Reception with Arjun Malhotra
+        - generic [ref=e76]: Jan 5, 2026
+      - generic [ref=e77]: 12d to go
+    - generic [ref=e78]:
+      - generic [ref=e79]:
+        - generic [ref=e80]:
+          - heading "Recent Inquiries" [level=2] [ref=e81]
+          - link "View all" [ref=e82] [cursor=pointer]:
+            - /url: /planner/inquiries
+        - generic [ref=e85]:
+          - generic [ref=e86]:
+            - img "Rohan Desai" [ref=e88]
+            - generic [ref=e89]:
+              - generic [ref=e90]: Rohan Desai
+              - generic [ref=e91]: Corporate Offsite · Dec 28, 2025
+            - generic [ref=e92]: declined
+          - generic [ref=e93]:
+            - img "Arjun Malhotra" [ref=e95]
+            - generic [ref=e96]:
+              - generic [ref=e97]: Arjun Malhotra
+              - generic [ref=e98]: Wedding Reception · Jan 5, 2026
+            - generic [ref=e99]: confirmed
+          - generic [ref=e100]:
+            - img "The Raaga Collective" [ref=e102]
+            - generic [ref=e103]:
+              - generic [ref=e104]: The Raaga Collective
+              - generic [ref=e105]: Birthday Party · Jan 10, 2026
+            - generic [ref=e106]: pending
+      - generic [ref=e107]:
+        - generic [ref=e108]:
+          - heading "Saved Artists" [level=2] [ref=e109]
+          - link "View all" [ref=e110] [cursor=pointer]:
+            - /url: /planner/saved
+        - generic [ref=e113]:
+          - link "DJ Krish DJ Krish DJ" [ref=e114] [cursor=pointer]:
+            - /url: /profile/dj-krish
+            - img "DJ Krish" [ref=e115]
+            - generic [ref=e116]: DJ Krish
+            - generic [ref=e117]: DJ
+          - link "Meera Kapoor Meera Kapoor Anchor" [ref=e118] [cursor=pointer]:
+            - /url: /profile/meera-kapoor-anchor
+            - img "Meera Kapoor" [ref=e119]
+            - generic [ref=e120]: Meera Kapoor
+            - generic [ref=e121]: Anchor
+          - link "Vikram Bubbles Vikram Bubbles Bubble Artist" [ref=e122] [cursor=pointer]:
+            - /url: /profile/vikram-bubbles
+            - img "Vikram Bubbles" [ref=e123]
+            - generic [ref=e124]: Vikram Bubbles
+            - generic [ref=e125]: Bubble Artist
+          - link "Aditya Naik Aditya Naik Singer" [ref=e126] [cursor=pointer]:
+            - /url: /profile/aditya-naik-singer
+            - img "Aditya Naik" [ref=e127]
+            - generic [ref=e128]: Aditya Naik
+            - generic [ref=e129]: Singer

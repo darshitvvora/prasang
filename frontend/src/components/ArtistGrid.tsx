@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { ArrowRight, Sparkles } from 'lucide-react';
 import type { Artist } from '../types/artist';
 import ArtistCard from './ArtistCard';
@@ -21,7 +22,7 @@ export default function ArtistGrid({ artists }: ArtistGridProps) {
           ))}
 
           {/* Show All Card */}
-          <div className="artist-grid-show-all" role="link" tabIndex={0} id="show-all-artists">
+          <Link to="/search" className="artist-grid-show-all" id="show-all-artists">
             <div className="artist-grid-show-all-arrow">
               <ArrowRight size={24} />
             </div>
@@ -40,7 +41,7 @@ export default function ArtistGrid({ artists }: ArtistGridProps) {
               <img src="/artists/comedian.png" alt="" className="artist-grid-show-all-avatar" />
               <img src="/artists/anchor.png" alt="" className="artist-grid-show-all-avatar" />
             </div>
-          </div>
+          </Link>
 
           {rest.map((artist) => (
             <ArtistCard key={artist.artistId} artist={artist} />
