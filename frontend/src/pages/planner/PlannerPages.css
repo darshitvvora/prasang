@@ -1,0 +1,661 @@
+/* frontend/src/pages/planner/PlannerPages.css */
+
+/* ─── Shared layout ─── */
+.planner-layout {
+  display: flex;
+  min-height: 100vh;
+  background: #0f0f0f;
+  color: #ffffff;
+  font-family: var(--font-body);
+}
+
+/* ─── Sidebar ─── */
+.planner-sidebar {
+  width: 240px;
+  flex-shrink: 0;
+  background: #141414;
+  border-right: 1px solid rgba(255, 255, 255, 0.07);
+  display: flex;
+  flex-direction: column;
+  padding: 24px 16px;
+  gap: 8px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.planner-sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  font-family: var(--font-heading);
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--color-accent);
+  margin-bottom: 32px;
+  padding: 0 8px;
+}
+
+.planner-sidebar-logo-hindi {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.3);
+  font-family: var(--font-body);
+  font-weight: 400;
+}
+
+.planner-sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.planner-sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.5);
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.planner-sidebar-link:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.planner-sidebar-link.active {
+  background: rgba(212, 245, 63, 0.1);
+  color: var(--color-accent);
+}
+
+/* Promo card (planner sidebar has no subscription tier, unlike artist sidebar) */
+.planner-promo-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 16px;
+}
+
+.planner-promo-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 4px;
+}
+
+.planner-promo-note {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.4);
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+
+.planner-promo-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 9px 12px;
+  border-radius: 9px;
+  background: var(--color-accent);
+  color: #0f0f0f;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.planner-promo-btn:hover { background: var(--color-accent-hover); }
+
+/* ─── Main area ─── */
+.planner-main {
+  flex: 1;
+  padding: 32px 40px;
+  overflow-y: auto;
+  max-width: 1100px;
+}
+
+.planner-topbar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 28px;
+}
+
+.planner-page-title {
+  font-family: var(--font-heading);
+  font-size: 28px;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0 0 4px;
+}
+
+.planner-page-sub {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.4);
+  margin: 0;
+}
+
+.planner-topbar-cta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 16px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.planner-topbar-cta:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+
+/* ─── Metrics ─── */
+.planner-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.planner-metric-card {
+  background: #1a1a1a;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 14px;
+  padding: 20px;
+}
+
+.planner-metric-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.planner-metric-label {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.4);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.planner-metric-icon { color: rgba(255, 255, 255, 0.2); }
+
+.planner-metric-value {
+  font-family: var(--font-heading);
+  font-size: 32px;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1;
+}
+
+/* ─── Upcoming event card ─── */
+.planner-upcoming-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: rgba(212, 245, 63, 0.06);
+  border: 1px solid rgba(212, 245, 63, 0.2);
+  border-radius: 14px;
+  padding: 20px 22px;
+  margin-bottom: 24px;
+}
+
+.planner-upcoming-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(212, 245, 63, 0.15);
+  color: var(--color-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.planner-upcoming-info { flex: 1; }
+
+.planner-upcoming-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 2px;
+}
+
+.planner-upcoming-sub {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.planner-upcoming-days {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--color-accent);
+  white-space: nowrap;
+}
+
+.planner-upcoming-empty {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* ─── Dashboard cards row ─── */
+.planner-dashboard-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.planner-dashboard-card {
+  background: #1a1a1a;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 16px;
+  padding: 24px;
+}
+
+.planner-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.planner-card-title {
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+}
+
+.planner-card-action {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  color: var(--color-accent);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+/* Inquiry preview list (dashboard) */
+.planner-inquiry-preview-list { display: flex; flex-direction: column; gap: 14px; }
+
+.planner-inquiry-preview-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.planner-inquiry-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.planner-inquiry-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+.planner-inquiry-info { flex: 1; }
+.planner-inquiry-name { font-size: 14px; font-weight: 600; color: #ffffff; }
+.planner-inquiry-event { font-size: 12px; color: rgba(255, 255, 255, 0.4); }
+
+.planner-status-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 8px;
+  text-transform: capitalize;
+}
+
+.planner-empty-note {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.35);
+  text-align: center;
+  padding: 20px 0;
+}
+
+/* Saved artists preview (dashboard) */
+.planner-saved-preview-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.planner-saved-preview-card {
+  text-decoration: none;
+  display: block;
+}
+
+.planner-saved-preview-img {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 10px;
+  object-fit: cover;
+  margin-bottom: 8px;
+}
+
+.planner-saved-preview-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 2px;
+}
+
+.planner-saved-preview-type {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* ─── Inquiries page ─── */
+.planner-filter-tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.planner-filter-tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.planner-filter-tab:hover { color: rgba(255, 255, 255, 0.8); }
+
+.planner-filter-tab.active {
+  background: rgba(212, 245, 63, 0.1);
+  border-color: rgba(212, 245, 63, 0.3);
+  color: var(--color-accent);
+}
+
+.planner-tab-count {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  padding: 1px 6px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.planner-filter-tab.active .planner-tab-count {
+  background: rgba(212, 245, 63, 0.15);
+  color: var(--color-accent);
+}
+
+.planner-inquiry-cards { display: flex; flex-direction: column; gap: 14px; }
+
+.planner-inquiries-empty {
+  text-align: center;
+  padding: 60px;
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 15px;
+}
+
+.planner-inquiry-card {
+  background: #1a1a1a;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 14px;
+  padding: 20px;
+  transition: border-color 0.2s;
+}
+
+.planner-inquiry-card:hover { border-color: rgba(255, 255, 255, 0.14); }
+
+.planner-inquiry-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.planner-inquiry-card-left { display: flex; align-items: center; gap: 12px; }
+
+.planner-inquiry-card-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.planner-inquiry-card-name { font-size: 16px; font-weight: 700; color: #ffffff; margin-bottom: 4px; }
+
+.planner-inquiry-card-meta {
+  display: flex;
+  gap: 12px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.planner-inquiry-card-meta span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.planner-inquiry-card-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+
+.planner-inquiry-time { font-size: 11px; color: rgba(255, 255, 255, 0.3); }
+
+.planner-inquiry-card-event {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  margin-bottom: 12px;
+}
+
+.planner-inquiry-event-type { font-size: 14px; font-weight: 600; color: rgba(255, 255, 255, 0.8); }
+
+.planner-inquiry-budget {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-accent);
+}
+
+.planner-inquiry-card-expanded {
+  padding: 12px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  margin-bottom: 8px;
+}
+
+.planner-inquiry-notes {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.55);
+  line-height: 1.6;
+  margin-bottom: 14px;
+}
+
+.planner-inquiry-view-profile-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 18px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.planner-inquiry-view-profile-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+
+.planner-inquiry-expand-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 12px;
+  cursor: pointer;
+  transition: color 0.2s;
+  padding: 0;
+}
+
+.planner-inquiry-expand-btn:hover { color: rgba(255, 255, 255, 0.65); }
+
+/* ─── Saved artists page ─── */
+.planner-saved-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.planner-saved-card {
+  display: block;
+  background: #1a1a1a;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 16px;
+  overflow: hidden;
+  text-decoration: none;
+  transition: border-color 0.2s;
+}
+
+.planner-saved-card:hover { border-color: rgba(255, 255, 255, 0.16); }
+
+.planner-saved-card-img-wrap { position: relative; }
+
+.planner-saved-card-img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  display: block;
+}
+
+.planner-saved-card-verified {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 50%;
+  padding: 4px;
+  color: var(--color-accent);
+  display: flex;
+}
+
+.planner-saved-card-body { padding: 16px; }
+
+.planner-saved-card-name-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.planner-saved-card-name { font-size: 15px; font-weight: 700; color: #ffffff; }
+
+.planner-saved-card-rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.planner-saved-card-location {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.4);
+  margin-bottom: 10px;
+}
+
+.planner-saved-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.planner-saved-card-type {
+  font-size: 11px;
+  font-weight: 700;
+  color: #0f0f0f;
+  padding: 3px 9px;
+  border-radius: 7px;
+}
+
+.planner-saved-card-price {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-accent);
+}
+
+.planner-saved-empty {
+  text-align: center;
+  padding: 60px;
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 15px;
+}
+
+.planner-saved-browse-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 24px;
+  padding: 11px 22px;
+  border-radius: 10px;
+  background: var(--color-accent);
+  color: #0f0f0f;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.planner-saved-browse-cta:hover { background: var(--color-accent-hover); }
+
+/* ─── Responsive ─── */
+@media (max-width: 900px) {
+  .planner-sidebar { display: none; }
+  .planner-main { padding: 24px 20px; }
+  .planner-metrics-grid { grid-template-columns: repeat(2, 1fr); }
+  .planner-dashboard-row { grid-template-columns: 1fr; }
+  .planner-saved-preview-grid { grid-template-columns: repeat(2, 1fr); }
+  .planner-saved-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 640px) {
+  .planner-metrics-grid { grid-template-columns: 1fr 1fr; }
+  .planner-saved-grid { grid-template-columns: 1fr; }
+}
