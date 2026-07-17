@@ -15,7 +15,7 @@ export default function DashboardPage() {
     .sort((a, b) => a.daysToEvent - b.daysToEvent)[0];
   const upcomingArtist = upcoming ? mockArtists.find((a) => a.artistId === upcoming.artistId) : undefined;
 
-  const recentInquiries = [...INQUIRIES].sort((a, b) => a.daysToEvent - b.daysToEvent).slice(0, 3);
+  const recentInquiries = INQUIRIES.slice(0, 3);
 
   return (
     <div className="planner-layout">
