@@ -1,0 +1,51 @@
+- generic [ref=e3]:
+  - generic [ref=e4]:
+    - link "prasang प्रसंग" [ref=e5] [cursor=pointer]:
+      - /url: /
+      - generic [ref=e6]: prasang
+      - generic [ref=e7]: प्रसंग
+    - generic [ref=e8]: Step 2 of 3
+  - generic [ref=e9]:
+    - generic [ref=e10]:
+      - img [ref=e72]
+      - generic [ref=e12]: Profile Setup
+    - generic [ref=e14]:
+      - generic [ref=e15]: "2"
+      - generic [ref=e16]: Social & Media
+    - generic [ref=e18]:
+      - generic [ref=e19]: "3"
+      - generic [ref=e20]: Choose Plan
+  - generic [ref=e21]:
+    - generic [ref=e74]:
+      - heading "Connect your social media" [level=2] [ref=e75]
+      - paragraph [ref=e76]: Profiles with social links get 2.4× more contact requests.
+      - generic [ref=e77]:
+        - generic [ref=e78]:
+          - img [ref=e79]
+          - text: Instagram handle
+        - generic [ref=e82]:
+          - generic [ref=e83]: "@"
+          - textbox "arjunmagician" [ref=e84]
+      - generic [ref=e85]:
+        - generic [ref=e86]:
+          - img [ref=e87]
+          - text: YouTube channel
+        - generic [ref=e90]:
+          - generic [ref=e91]: youtube.com/
+          - textbox "@arjunmagic" [ref=e92]
+      - generic [ref=e93]:
+        - generic [ref=e94]: Upload portfolio media
+        - generic [ref=e95] [cursor=pointer]:
+          - img [ref=e96]
+          - generic [ref=e99]: Upload photos & videos of your performances
+          - generic [ref=e100]: Up to 20 photos + 3 videos on Basic plan
+      - generic [ref=e101]:
+        - generic [ref=e102]: 💡
+        - generic [ref=e103]:
+          - strong [ref=e104]: "Tip:"
+          - text: Artists with 5+ portfolio photos get 3× more profile views than those with none.
+    - generic [ref=e68]:
+      - button "← Back" [ref=e105] [cursor=pointer]
+      - button "Next" [active] [ref=e69] [cursor=pointer]:
+        - text: Next
+        - img [ref=e70]

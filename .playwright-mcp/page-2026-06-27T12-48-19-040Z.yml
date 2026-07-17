@@ -1,0 +1,131 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - link "prasang प्रसंग" [ref=e5] [cursor=pointer]:
+      - /url: /
+      - generic [ref=e6]: prasang
+      - generic [ref=e7]: प्रसंग
+    - navigation [ref=e8]:
+      - link "Dashboard" [ref=e9] [cursor=pointer]:
+        - /url: /artist/dashboard
+        - img [ref=e10]
+        - text: Dashboard
+      - link "Leads" [ref=e13] [cursor=pointer]:
+        - /url: /artist/leads
+        - img [ref=e14]
+        - text: Leads
+      - link "My Profile" [ref=e16] [cursor=pointer]:
+        - /url: /artist/onboarding
+        - img [ref=e17]
+        - text: My Profile
+      - link "Upgrade" [ref=e19] [cursor=pointer]:
+        - /url: /pricing
+        - img [ref=e20]
+        - text: Upgrade
+    - generic [ref=e22]:
+      - generic [ref=e23]: Basic Plan
+      - generic [ref=e24]: 15 leads/month · 6 used
+      - link "Upgrade to Pro" [ref=e27] [cursor=pointer]:
+        - /url: /pricing
+        - text: Upgrade to Pro
+        - img [ref=e28]
+  - main [ref=e30]:
+    - generic [ref=e31]:
+      - generic [ref=e32]:
+        - heading "Dashboard" [level=1] [ref=e33]
+        - paragraph [ref=e34]: Good morning, Arjun 👋
+      - generic [ref=e35]:
+        - button "Notifications" [ref=e36] [cursor=pointer]:
+          - img [ref=e37]
+        - link "View Profile" [ref=e41] [cursor=pointer]:
+          - /url: /profile/arjun-malhotra
+    - generic [ref=e42]:
+      - img [ref=e43]
+      - generic [ref=e45]:
+        - strong [ref=e46]: Get 3× more leads
+        - text: — Upgrade to Pro for unlimited leads + top search placement
+      - link "Upgrade now" [ref=e47] [cursor=pointer]:
+        - /url: /pricing
+    - generic [ref=e48]:
+      - generic [ref=e49]:
+        - generic [ref=e50]:
+          - generic [ref=e51]: Profile Views
+          - img [ref=e53]
+        - generic [ref=e56]: 1,243
+        - generic [ref=e57]: +18% this month
+      - generic [ref=e58]:
+        - generic [ref=e59]:
+          - generic [ref=e60]: Contact Clicks
+          - img [ref=e62]
+        - generic [ref=e64]: "87"
+        - generic [ref=e65]: +34% this month
+      - generic [ref=e66]:
+        - generic [ref=e67]:
+          - generic [ref=e68]: Leads This Month
+          - img [ref=e70]
+        - generic [ref=e73]: "23"
+        - generic [ref=e74]: +12% this month
+      - generic [ref=e75]:
+        - generic [ref=e76]:
+          - generic [ref=e77]: Avg. Rating
+          - img [ref=e79]
+        - generic [ref=e81]: "4.8"
+        - generic [ref=e82]: 12 reviews this month
+    - generic [ref=e83]:
+      - generic [ref=e84]:
+        - generic [ref=e85]:
+          - heading "Recent Leads" [level=2] [ref=e86]
+          - link "View all" [ref=e87] [cursor=pointer]:
+            - /url: /artist/leads
+            - text: View all
+            - img [ref=e88]
+        - generic [ref=e90]:
+          - generic [ref=e91]:
+            - generic [ref=e92]: R
+            - generic [ref=e93]:
+              - generic [ref=e94]: Rahul Mehta
+              - generic [ref=e95]: Wedding Reception · Dec 28
+            - generic [ref=e96]:
+              - generic [ref=e97]: ₹40k–60k
+              - generic [ref=e98]: New
+          - generic [ref=e99]:
+            - generic [ref=e100]: P
+            - generic [ref=e101]:
+              - generic [ref=e102]: Priya Gupta
+              - generic [ref=e103]: Corporate Event · Jan 5
+            - generic [ref=e104]:
+              - generic [ref=e105]: ₹25k–40k
+              - generic [ref=e106]: New
+          - generic [ref=e107]:
+            - generic [ref=e108]: A
+            - generic [ref=e109]:
+              - generic [ref=e110]: Arjun Singh
+              - generic [ref=e111]: Birthday Party · Dec 31
+            - generic [ref=e113]: ₹15k–25k
+      - generic [ref=e114]:
+        - generic [ref=e115]:
+          - heading "Lead Sources" [level=2] [ref=e116]
+          - generic [ref=e117]: Last 30 days
+        - generic [ref=e118]:
+          - generic [ref=e120]:
+            - generic [ref=e121]: Search results
+            - generic [ref=e122]: 42%
+          - generic [ref=e126]:
+            - generic [ref=e127]: Featured placement
+            - generic [ref=e128]: 28%
+          - generic [ref=e132]:
+            - generic [ref=e133]: Direct profile link
+            - generic [ref=e134]: 18%
+          - generic [ref=e138]:
+            - generic [ref=e139]: Category browse
+            - generic [ref=e140]: 12%
+    - generic [ref=e143]:
+      - generic [ref=e144]:
+        - 'heading "Profile strength: 65%" [level=2] [ref=e145]'
+        - generic [ref=e149]: 65%
+      - generic [ref=e150]:
+        - generic [ref=e151]: Basic info added
+        - generic [ref=e153]: Profile photo uploaded
+        - generic [ref=e155]: Bio written
+        - generic [ref=e157]: Add portfolio media
+        - generic [ref=e159]: Connect Instagram
+        - generic [ref=e161]: Get your first review

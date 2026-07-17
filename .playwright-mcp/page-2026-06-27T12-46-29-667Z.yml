@@ -1,0 +1,492 @@
+- generic [ref=e2]:
+  - navigation [ref=e3]:
+    - generic [ref=e4]:
+      - link "prasang प्रसंग" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e6]: prasang
+        - generic [ref=e7]: प्रसंग
+      - generic [ref=e8]:
+        - link "Home" [ref=e9] [cursor=pointer]:
+          - /url: "#"
+        - link "Search" [ref=e10] [cursor=pointer]:
+          - /url: "#search"
+        - link "For Artists" [ref=e11] [cursor=pointer]:
+          - /url: "#artists"
+        - link "Pricing" [ref=e12] [cursor=pointer]:
+          - /url: "#pricing"
+      - generic [ref=e13]:
+        - button "Change location" [ref=e14] [cursor=pointer]:
+          - img [ref=e15]
+          - generic [ref=e18]: Mumbai, India
+        - button "Notifications" [ref=e19] [cursor=pointer]:
+          - img [ref=e20]
+        - link "List Your Art" [ref=e23] [cursor=pointer]:
+          - /url: "#list"
+          - img [ref=e24]
+          - text: List Your Art
+  - generic [ref=e27]:
+    - generic [ref=e29]:
+      - link "Back to home" [ref=e30] [cursor=pointer]:
+        - /url: /
+        - img [ref=e31]
+      - generic [ref=e33]:
+        - img [ref=e34]
+        - textbox "Search artists" [ref=e37]:
+          - /placeholder: Search magicians, DJs, singers, bands...
+      - generic [ref=e38] [cursor=pointer]:
+        - img [ref=e39]
+        - combobox "Select city" [ref=e42]:
+          - option "Mumbai" [selected]
+          - option "Pune"
+          - option "Delhi"
+          - option "Bangalore"
+          - option "Hyderabad"
+          - option "Chennai"
+        - img [ref=e43]
+      - button "Toggle filters" [ref=e45] [cursor=pointer]:
+        - img [ref=e46]
+        - text: Filters
+    - generic [ref=e47]:
+      - complementary "Search filters" [ref=e48]:
+        - heading "Filters" [level=2] [ref=e50]
+        - generic [ref=e51]:
+          - heading "Artist Type" [level=3] [ref=e52]
+          - generic [ref=e53]:
+            - button "Magician" [ref=e54] [cursor=pointer]
+            - button "DJ" [ref=e55] [cursor=pointer]
+            - button "Singer" [ref=e56] [cursor=pointer]
+            - button "Comedian" [ref=e57] [cursor=pointer]
+            - button "Bubble Artist" [ref=e58] [cursor=pointer]
+            - button "Band" [ref=e59] [cursor=pointer]
+            - button "Body Double" [ref=e60] [cursor=pointer]
+            - button "Anchor" [ref=e61] [cursor=pointer]
+            - button "Other" [ref=e62] [cursor=pointer]
+        - generic [ref=e63]:
+          - heading "Area in Mumbai" [level=3] [ref=e64]
+          - combobox "Select area" [ref=e65] [cursor=pointer]:
+            - option "All Areas" [selected]
+            - option "Bandra West"
+            - option "Andheri West"
+            - option "Juhu"
+            - option "Powai"
+            - option "Lower Parel"
+            - option "Dadar"
+            - option "Goregaon"
+            - option "Malad"
+        - generic [ref=e66]:
+          - heading "Event Type" [level=3] [ref=e67]
+          - generic [ref=e68]:
+            - generic [ref=e69]: Birthday
+            - generic [ref=e70]: Wedding
+            - generic [ref=e71]: Pre-Wedding
+            - generic [ref=e72]: Anniversary
+            - generic [ref=e73]: Corporate
+            - generic [ref=e74]: House Party
+        - generic [ref=e75]:
+          - heading "Budget Range ₹0 – ₹1L+" [level=3] [ref=e76]:
+            - text: Budget Range
+            - generic [ref=e77]: ₹0 – ₹1L+
+          - slider "Maximum budget" [ref=e79] [cursor=pointer]: "100000"
+          - generic [ref=e80]:
+            - generic [ref=e81]: ₹0
+            - generic [ref=e82]: ₹1L+
+        - generic [ref=e83]:
+          - heading "Minimum Rating" [level=3] [ref=e84]
+          - generic [ref=e85]:
+            - button "Any" [ref=e86] [cursor=pointer]
+            - button "3+ ★" [ref=e87] [cursor=pointer]
+            - button "4+ ★" [ref=e88] [cursor=pointer]
+            - button "4.5+ ★" [ref=e89] [cursor=pointer]
+        - generic [ref=e90]:
+          - generic [ref=e91] [cursor=pointer]:
+            - checkbox "Verified Artists Only"
+            - generic [ref=e93]:
+              - img [ref=e94]
+              - text: Verified Artists Only
+          - generic [ref=e97] [cursor=pointer]:
+            - checkbox "Featured Only"
+            - generic [ref=e99]:
+              - img [ref=e100]
+              - text: Featured Only
+      - main "Search results" [ref=e102]:
+        - generic [ref=e103]:
+          - paragraph [ref=e104]:
+            - strong [ref=e105]: "8"
+            - text: artists found · Mumbai
+          - generic [ref=e106]:
+            - combobox "Sort results" [ref=e107] [cursor=pointer]:
+              - option "Most Relevant" [selected]
+              - option "Highest Rated"
+              - 'option "Price: Low to High"'
+              - 'option "Price: High to Low"'
+              - option "Most Popular"
+            - group "View mode" [ref=e108]:
+              - button "Grid view" [pressed] [ref=e109] [cursor=pointer]:
+                - img [ref=e110]
+              - button "List view" [ref=e115] [cursor=pointer]:
+                - img [ref=e116]
+        - generic [ref=e117]:
+          - article [ref=e118]:
+            - generic [ref=e119]:
+              - img "Arjun Malhotra" [ref=e120]
+              - generic [ref=e122]:
+                - img [ref=e123]
+                - text: Featured
+              - button "Add to favorites" [ref=e125] [cursor=pointer]:
+                - img [ref=e126]
+            - generic [ref=e128]:
+              - generic [ref=e129]:
+                - generic [ref=e130]:
+                  - generic [ref=e131]:
+                    - generic [ref=e132]: Arjun Malhotra
+                    - img "Verified" [ref=e133]
+                  - generic [ref=e136]:
+                    - img [ref=e137]
+                    - text: Bandra West, Mumbai
+                - generic [ref=e140]:
+                  - img [ref=e141]
+                  - generic [ref=e143]: "4.9"
+                  - generic [ref=e144]: (127)
+              - paragraph [ref=e145]: Award-winning close-up magician specializing in mentalism and card magic. 500+ shows across Mumbai.
+              - generic [ref=e146]:
+                - link "Instagram" [ref=e147] [cursor=pointer]:
+                  - /url: https://instagram.com/arjunmagic
+                  - img [ref=e148]
+                - link "YouTube" [ref=e151] [cursor=pointer]:
+                  - /url: https://youtube.com/@ArjunMalhotraMagic
+                  - img [ref=e152]
+                - generic [ref=e155]: Magician
+              - generic [ref=e156]:
+                - generic [ref=e157]:
+                  - generic [ref=e158]: ₹15K – ₹25K
+                  - generic [ref=e159]: per event
+                - generic [ref=e160]:
+                  - button "Message" [ref=e161] [cursor=pointer]:
+                    - img [ref=e162]
+                  - link "View Profile" [ref=e164] [cursor=pointer]:
+                    - /url: /profile/arjun-malhotra-magic
+                  - button "Get Contact" [ref=e165] [cursor=pointer]
+          - article [ref=e166]:
+            - generic [ref=e167]:
+              - img "The Raaga Collective" [ref=e168]
+              - generic [ref=e170]:
+                - img [ref=e171]
+                - text: Featured
+              - button "Add to favorites" [ref=e173] [cursor=pointer]:
+                - img [ref=e174]
+            - generic [ref=e176]:
+              - generic [ref=e177]:
+                - generic [ref=e178]:
+                  - generic [ref=e179]:
+                    - generic [ref=e180]: The Raaga Collective
+                    - img "Verified" [ref=e181]
+                  - generic [ref=e184]:
+                    - img [ref=e185]
+                    - text: Lower Parel, Mumbai
+                - generic [ref=e188]:
+                  - img [ref=e189]
+                  - generic [ref=e191]: "4.9"
+                  - generic [ref=e192]: (64)
+              - paragraph [ref=e193]: 5-piece fusion band blending Indian classical with rock. Perfect for weddings, sangeets, corporate galas & concert nights.
+              - generic [ref=e194]:
+                - link "Instagram" [ref=e195] [cursor=pointer]:
+                  - /url: https://instagram.com/theraagacollective
+                  - img [ref=e196]
+                - link "YouTube" [ref=e199] [cursor=pointer]:
+                  - /url: https://youtube.com/@TheRaagaCollective
+                  - img [ref=e200]
+                - generic [ref=e203]: Band
+              - generic [ref=e204]:
+                - generic [ref=e205]:
+                  - generic [ref=e206]: ₹30K – ₹60K
+                  - generic [ref=e207]: per event
+                - generic [ref=e208]:
+                  - button "Message" [ref=e209] [cursor=pointer]:
+                    - img [ref=e210]
+                  - link "View Profile" [ref=e212] [cursor=pointer]:
+                    - /url: /profile/the-raaga-collective
+                  - button "Get Contact" [ref=e213] [cursor=pointer]
+          - article [ref=e214]:
+            - generic [ref=e215]:
+              - img "DJ Krish" [ref=e216]
+              - generic [ref=e218]:
+                - img [ref=e219]
+                - text: Featured
+              - button "Add to favorites" [ref=e221] [cursor=pointer]:
+                - img [ref=e222]
+            - generic [ref=e224]:
+              - generic [ref=e225]:
+                - generic [ref=e226]:
+                  - generic [ref=e227]:
+                    - generic [ref=e228]: DJ Krish
+                    - img "Verified" [ref=e229]
+                  - generic [ref=e232]:
+                    - img [ref=e233]
+                    - text: Andheri West, Mumbai
+                - generic [ref=e236]:
+                  - img [ref=e237]
+                  - generic [ref=e239]: "4.7"
+                  - generic [ref=e240]: (89)
+              - paragraph [ref=e241]: Bollywood + EDM DJ with 10 years experience. Resident DJ at top Mumbai clubs. Weddings, sangeets, corporate events.
+              - generic [ref=e242]:
+                - link "Instagram" [ref=e243] [cursor=pointer]:
+                  - /url: https://instagram.com/djkrish_official
+                  - img [ref=e244]
+                - link "YouTube" [ref=e247] [cursor=pointer]:
+                  - /url: https://youtube.com/@DJKrishOfficial
+                  - img [ref=e248]
+                - generic [ref=e251]: DJ
+              - generic [ref=e252]:
+                - generic [ref=e253]:
+                  - generic [ref=e254]: ₹20K – ₹35K
+                  - generic [ref=e255]: per event
+                - generic [ref=e256]:
+                  - button "Message" [ref=e257] [cursor=pointer]:
+                    - img [ref=e258]
+                  - link "View Profile" [ref=e260] [cursor=pointer]:
+                    - /url: /profile/dj-krish
+                  - button "Get Contact" [ref=e261] [cursor=pointer]
+          - article [ref=e262]:
+            - generic [ref=e263]:
+              - img "Rohan Desai" [ref=e264]
+              - button "Add to favorites" [ref=e266] [cursor=pointer]:
+                - img [ref=e267]
+            - generic [ref=e269]:
+              - generic [ref=e270]:
+                - generic [ref=e271]:
+                  - generic [ref=e272]:
+                    - generic [ref=e273]: Rohan Desai
+                    - img "Verified" [ref=e274]
+                  - generic [ref=e277]:
+                    - img [ref=e278]
+                    - text: Powai, Mumbai
+                - generic [ref=e281]:
+                  - img [ref=e282]
+                  - generic [ref=e284]: "4.6"
+                  - generic [ref=e285]: (72)
+              - paragraph [ref=e286]: Stand-up comedian & improv artist. Featured on Amazon Prime. Clean comedy for corporate events, house parties & college fests.
+              - generic [ref=e287]:
+                - link "Instagram" [ref=e288] [cursor=pointer]:
+                  - /url: https://instagram.com/rohandesaicomedy
+                  - img [ref=e289]
+                - link "YouTube" [ref=e292] [cursor=pointer]:
+                  - /url: https://youtube.com/@RohanDesaiComedy
+                  - img [ref=e293]
+                - generic [ref=e296]: Comedian
+              - generic [ref=e297]:
+                - generic [ref=e298]:
+                  - generic [ref=e299]: ₹25K – ₹50K
+                  - generic [ref=e300]: per event
+                - generic [ref=e301]:
+                  - button "Message" [ref=e302] [cursor=pointer]:
+                    - img [ref=e303]
+                  - link "View Profile" [ref=e305] [cursor=pointer]:
+                    - /url: /profile/rohan-desai-comedy
+                  - button "Get Contact" [ref=e306] [cursor=pointer]
+          - article [ref=e307]:
+            - generic [ref=e308]:
+              - img "Priya Sharma" [ref=e309]
+              - button "Add to favorites" [ref=e311] [cursor=pointer]:
+                - img [ref=e312]
+            - generic [ref=e314]:
+              - generic [ref=e315]:
+                - generic [ref=e316]:
+                  - generic [ref=e317]:
+                    - generic [ref=e318]: Priya Sharma
+                    - img "Verified" [ref=e319]
+                  - generic [ref=e322]:
+                    - img [ref=e323]
+                    - text: Juhu, Mumbai
+                - generic [ref=e326]:
+                  - img [ref=e327]
+                  - generic [ref=e329]: "4.8"
+                  - generic [ref=e330]: (156)
+              - paragraph [ref=e331]: Classically trained vocalist performing Bollywood, ghazals, and sufi music. Perfect for mehendi, sangeet & receptions.
+              - generic [ref=e332]:
+                - link "Instagram" [ref=e333] [cursor=pointer]:
+                  - /url: https://instagram.com/priyasharmamusic
+                  - img [ref=e334]
+                - link "YouTube" [ref=e337] [cursor=pointer]:
+                  - /url: https://youtube.com/@PriyaSharmaLive
+                  - img [ref=e338]
+                - generic [ref=e341]: Singer
+              - generic [ref=e342]:
+                - generic [ref=e343]:
+                  - generic [ref=e344]: ₹10K – ₹20K
+                  - generic [ref=e345]: per event
+                - generic [ref=e346]:
+                  - button "Message" [ref=e347] [cursor=pointer]:
+                    - img [ref=e348]
+                  - link "View Profile" [ref=e350] [cursor=pointer]:
+                    - /url: /profile/priya-sharma-singer
+                  - button "Get Contact" [ref=e351] [cursor=pointer]
+          - article [ref=e352]:
+            - generic [ref=e353]:
+              - img "Vikram Bubbles" [ref=e354]
+              - button "Add to favorites" [ref=e356] [cursor=pointer]:
+                - img [ref=e357]
+            - generic [ref=e359]:
+              - generic [ref=e360]:
+                - generic [ref=e361]:
+                  - generic [ref=e362]:
+                    - generic [ref=e363]: Vikram Bubbles
+                    - img "Verified" [ref=e364]
+                  - generic [ref=e367]:
+                    - img [ref=e368]
+                    - text: Goregaon, Mumbai
+                - generic [ref=e371]:
+                  - img [ref=e372]
+                  - generic [ref=e374]: "4.8"
+                  - generic [ref=e375]: (211)
+              - paragraph [ref=e376]: India's premier bubble artist! Giant bubbles, bubble-in-bubble tricks, and UV glow bubble shows for kids parties & events.
+              - generic [ref=e377]:
+                - link "Instagram" [ref=e378] [cursor=pointer]:
+                  - /url: https://instagram.com/vikrambubbles
+                  - img [ref=e379]
+                - link "YouTube" [ref=e382] [cursor=pointer]:
+                  - /url: https://youtube.com/@VikramBubbleShow
+                  - img [ref=e383]
+                - generic [ref=e386]: Bubble Artist
+              - generic [ref=e387]:
+                - generic [ref=e388]:
+                  - generic [ref=e389]: ₹5K – ₹10K
+                  - generic [ref=e390]: per event
+                - generic [ref=e391]:
+                  - button "Message" [ref=e392] [cursor=pointer]:
+                    - img [ref=e393]
+                  - link "View Profile" [ref=e395] [cursor=pointer]:
+                    - /url: /profile/vikram-bubbles
+                  - button "Get Contact" [ref=e396] [cursor=pointer]
+          - article [ref=e397]:
+            - generic [ref=e398]:
+              - img "Meera Kapoor" [ref=e399]
+              - button "Add to favorites" [ref=e401] [cursor=pointer]:
+                - img [ref=e402]
+            - generic [ref=e404]:
+              - generic [ref=e405]:
+                - generic [ref=e406]:
+                  - generic [ref=e408]: Meera Kapoor
+                  - generic [ref=e409]:
+                    - img [ref=e410]
+                    - text: Dadar, Mumbai
+                - generic [ref=e413]:
+                  - img [ref=e414]
+                  - generic [ref=e416]: "4.5"
+                  - generic [ref=e417]: (93)
+              - paragraph [ref=e418]: Bilingual event host (Hindi/English). Weddings, corporate events, award nights. Energetic, witty, and always on cue.
+              - generic [ref=e419]:
+                - link "Instagram" [ref=e420] [cursor=pointer]:
+                  - /url: https://instagram.com/meerakapoor_mc
+                  - img [ref=e421]
+                - generic [ref=e424]: Anchor
+              - generic [ref=e425]:
+                - generic [ref=e426]:
+                  - generic [ref=e427]: ₹8K – ₹15K
+                  - generic [ref=e428]: per event
+                - generic [ref=e429]:
+                  - button "Message" [ref=e430] [cursor=pointer]:
+                    - img [ref=e431]
+                  - link "View Profile" [ref=e433] [cursor=pointer]:
+                    - /url: /profile/meera-kapoor-anchor
+                  - button "Get Contact" [ref=e434] [cursor=pointer]
+          - article [ref=e435]:
+            - generic [ref=e436]:
+              - img "Aditya Naik" [ref=e437]
+              - button "Add to favorites" [ref=e439] [cursor=pointer]:
+                - img [ref=e440]
+            - generic [ref=e442]:
+              - generic [ref=e443]:
+                - generic [ref=e444]:
+                  - generic [ref=e446]: Aditya Naik
+                  - generic [ref=e447]:
+                    - img [ref=e448]
+                    - text: Malad, Mumbai
+                - generic [ref=e451]:
+                  - img [ref=e452]
+                  - generic [ref=e454]: "4.7"
+                  - generic [ref=e455]: (45)
+              - paragraph [ref=e456]: Sufi & Bollywood playback singer. Performed at 200+ live events. Soulful voice for intimate gatherings & grand celebrations.
+              - generic [ref=e457]:
+                - link "Instagram" [ref=e458] [cursor=pointer]:
+                  - /url: https://instagram.com/adityanaik_music
+                  - img [ref=e459]
+                - generic [ref=e462]: Singer
+              - generic [ref=e463]:
+                - generic [ref=e464]:
+                  - generic [ref=e465]: ₹15K – ₹30K
+                  - generic [ref=e466]: per event
+                - generic [ref=e467]:
+                  - button "Message" [ref=e468] [cursor=pointer]:
+                    - img [ref=e469]
+                  - link "View Profile" [ref=e471] [cursor=pointer]:
+                    - /url: /profile/aditya-naik-singer
+                  - button "Get Contact" [ref=e472] [cursor=pointer]
+  - contentinfo [ref=e473]:
+    - generic [ref=e474]:
+      - generic [ref=e475]:
+        - generic [ref=e476]:
+          - generic [ref=e477]:
+            - generic [ref=e478]: prasang
+            - generic [ref=e479]: प्रसंग
+          - paragraph [ref=e480]: Find artists for every prasang. India's largest artist discovery platform connecting performers with event planners.
+          - generic [ref=e481]:
+            - link "Instagram" [ref=e482] [cursor=pointer]:
+              - /url: "#"
+              - img [ref=e483]
+            - link "YouTube" [ref=e486] [cursor=pointer]:
+              - /url: "#"
+              - img [ref=e487]
+            - link "Twitter" [ref=e490] [cursor=pointer]:
+              - /url: "#"
+              - img [ref=e491]
+            - link "LinkedIn" [ref=e494] [cursor=pointer]:
+              - /url: "#"
+              - img [ref=e495]
+        - generic [ref=e498]:
+          - heading "For Artists" [level=3] [ref=e499]
+          - navigation "Artist links" [ref=e500]:
+            - link "List Your Profile" [ref=e501] [cursor=pointer]:
+              - /url: "#"
+            - link "Pricing Plans" [ref=e502] [cursor=pointer]:
+              - /url: "#"
+            - link "Artist Dashboard" [ref=e503] [cursor=pointer]:
+              - /url: "#"
+            - link "Success Stories" [ref=e504] [cursor=pointer]:
+              - /url: "#"
+            - link "Referral Program" [ref=e505] [cursor=pointer]:
+              - /url: "#"
+        - generic [ref=e506]:
+          - heading "For Event Planners" [level=3] [ref=e507]
+          - navigation "Event planner links" [ref=e508]:
+            - link "Find Artists" [ref=e509] [cursor=pointer]:
+              - /url: "#"
+            - link "Browse by Category" [ref=e510] [cursor=pointer]:
+              - /url: "#"
+            - link "Browse by Location" [ref=e511] [cursor=pointer]:
+              - /url: "#"
+            - link "How It Works" [ref=e512] [cursor=pointer]:
+              - /url: "#"
+            - link "FAQ" [ref=e513] [cursor=pointer]:
+              - /url: "#"
+        - generic [ref=e514]:
+          - heading "Company" [level=3] [ref=e515]
+          - navigation "Company links" [ref=e516]:
+            - link "About Us" [ref=e517] [cursor=pointer]:
+              - /url: "#"
+            - link "Blog" [ref=e518] [cursor=pointer]:
+              - /url: "#"
+            - link "Careers" [ref=e519] [cursor=pointer]:
+              - /url: "#"
+            - link "Contact" [ref=e520] [cursor=pointer]:
+              - /url: "#"
+            - link "Press" [ref=e521] [cursor=pointer]:
+              - /url: "#"
+      - generic [ref=e522]:
+        - paragraph [ref=e523]: © 2026 Prasang. Made with ❤️ in Mumbai
+        - generic [ref=e524]:
+          - link "Privacy Policy" [ref=e525] [cursor=pointer]:
+            - /url: "#"
+          - link "Terms of Service" [ref=e526] [cursor=pointer]:
+            - /url: "#"
+          - link "Cookie Policy" [ref=e527] [cursor=pointer]:
+            - /url: "#"

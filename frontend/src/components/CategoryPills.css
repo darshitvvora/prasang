@@ -1,0 +1,89 @@
+.category-pills-section {
+  padding: var(--space-10) 0 var(--space-4);
+}
+
+.category-pills-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-6);
+}
+
+.category-pills-title {
+  font-family: var(--font-heading);
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.category-pills-subtitle {
+  font-size: var(--text-base);
+  color: var(--color-text-muted);
+}
+
+.category-pills-wrapper {
+  display: flex;
+  gap: var(--space-3);
+  overflow-x: auto;
+  padding-bottom: var(--space-2);
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.category-pills-wrapper::-webkit-scrollbar {
+  display: none;
+}
+
+.category-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-5);
+  border-radius: var(--radius-full);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  font-weight: 500;
+  white-space: nowrap;
+  border: 1.5px solid var(--color-border);
+  background: var(--color-bg-card);
+  color: var(--color-text-secondary);
+  transition:
+    background var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast),
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast);
+  cursor: pointer;
+}
+
+.category-pill:hover {
+  border-color: var(--color-text-muted);
+  color: var(--color-text-primary);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.category-pill.active {
+  background: var(--color-bg-dark);
+  border-color: var(--color-bg-dark);
+  color: var(--color-accent);
+  box-shadow: var(--shadow-md);
+}
+
+.category-pill-icon {
+  font-size: var(--text-md);
+  line-height: 1;
+}
+
+@media (max-width: 768px) {
+  .category-pills-section {
+    padding: var(--space-8) 0 var(--space-2);
+  }
+
+  .category-pills-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-1);
+    margin-bottom: var(--space-4);
+  }
+}

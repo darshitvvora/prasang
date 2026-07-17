@@ -1,0 +1,188 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - link "prasang प्रसंग" [ref=e5] [cursor=pointer]:
+      - /url: /
+      - generic [ref=e6]: prasang
+      - generic [ref=e7]: प्रसंग
+    - navigation [ref=e8]:
+      - link "Dashboard" [ref=e9] [cursor=pointer]:
+        - /url: /artist/dashboard
+        - img [ref=e10]
+        - text: Dashboard
+      - link "Leads" [ref=e13] [cursor=pointer]:
+        - /url: /artist/leads
+        - img [ref=e14]
+        - text: Leads
+      - link "My Profile" [ref=e16] [cursor=pointer]:
+        - /url: /artist/onboarding
+        - img [ref=e17]
+        - text: My Profile
+      - link "Upgrade" [ref=e19] [cursor=pointer]:
+        - /url: /pricing
+        - img [ref=e20]
+        - text: Upgrade
+    - generic [ref=e22]:
+      - generic [ref=e23]: Basic Plan
+      - generic [ref=e24]: 15 leads/month · 6 used
+      - link "Upgrade to Pro →" [ref=e27] [cursor=pointer]:
+        - /url: /pricing
+        - text: Upgrade to Pro
+        - generic [ref=e28]: →
+  - main [ref=e29]:
+    - generic [ref=e31]:
+      - heading "Leads" [level=1] [ref=e32]
+      - paragraph [ref=e33]: Event planners who want to book you
+    - generic [ref=e34]:
+      - img [ref=e35]
+      - generic [ref=e37]:
+        - strong [ref=e38]: You have 9 leads remaining this month.
+        - text: Upgrade to Pro for unlimited leads.
+      - link "Upgrade" [ref=e39] [cursor=pointer]:
+        - /url: /pricing
+    - generic [ref=e40]:
+      - button "All 5" [ref=e41] [cursor=pointer]:
+        - text: All
+        - generic [ref=e42]: "5"
+      - button "New 2" [ref=e43] [cursor=pointer]:
+        - text: New
+        - generic [ref=e44]: "2"
+      - button "Contacted 1" [ref=e45] [cursor=pointer]:
+        - text: Contacted
+        - generic [ref=e46]: "1"
+      - button "Converted 1" [ref=e47] [cursor=pointer]:
+        - text: Converted
+        - generic [ref=e48]: "1"
+      - button "Expired 1" [ref=e49] [cursor=pointer]:
+        - text: Expired
+        - generic [ref=e50]: "1"
+    - generic [ref=e51]:
+      - generic [ref=e52]:
+        - generic [ref=e53]:
+          - generic [ref=e54]:
+            - generic [ref=e55]: R
+            - generic [ref=e56]:
+              - generic [ref=e57]: Rahul Mehta
+              - generic [ref=e58]:
+                - generic [ref=e59]:
+                  - img [ref=e60]
+                  - text: 2024-12-28
+                - generic [ref=e62]:
+                  - img [ref=e63]
+                  - text: Bandra West, Mumbai
+          - generic [ref=e66]:
+            - generic [ref=e67]: new
+            - generic [ref=e68]: 2 hours ago
+        - generic [ref=e69]:
+          - generic [ref=e70]: Wedding Reception
+          - generic [ref=e71]:
+            - img [ref=e72]
+            - text: 40k – 60k
+        - generic [ref=e182]:
+          - generic [ref=e183]: Looking for a magician for ~100 guests, 2 hours show
+          - generic [ref=e184]:
+            - link "Call" [ref=e185] [cursor=pointer]:
+              - /url: tel:+91 98765 XXXXX
+              - img [ref=e186]
+              - text: Call
+            - link "WhatsApp" [ref=e188] [cursor=pointer]:
+              - /url: https://wa.me/9198765
+            - generic [ref=e189]: +91 98765 XXXXX
+        - button "Hide details" [active] [ref=e190] [cursor=pointer]:
+          - text: Hide details
+          - img [ref=e76]
+      - generic [ref=e78]:
+        - generic [ref=e79]:
+          - generic [ref=e80]:
+            - generic [ref=e81]: P
+            - generic [ref=e82]:
+              - generic [ref=e83]: Priya Gupta
+              - generic [ref=e84]:
+                - generic [ref=e85]:
+                  - img [ref=e86]
+                  - text: 2025-01-05
+                - generic [ref=e88]:
+                  - img [ref=e89]
+                  - text: Nariman Point, Mumbai
+          - generic [ref=e92]:
+            - generic [ref=e93]: new
+            - generic [ref=e94]: 5 hours ago
+        - generic [ref=e95]:
+          - generic [ref=e96]: Corporate Gala
+          - generic [ref=e97]:
+            - img [ref=e98]
+            - text: 25k – 40k
+        - button "View details" [ref=e101] [cursor=pointer]:
+          - text: View details
+          - img [ref=e102]
+      - generic [ref=e104]:
+        - generic [ref=e105]:
+          - generic [ref=e106]:
+            - generic [ref=e107]: A
+            - generic [ref=e108]:
+              - generic [ref=e109]: Arjun Singh
+              - generic [ref=e110]:
+                - generic [ref=e111]:
+                  - img [ref=e112]
+                  - text: 2024-12-31
+                - generic [ref=e114]:
+                  - img [ref=e115]
+                  - text: Koregaon Park, Pune
+          - generic [ref=e118]:
+            - generic [ref=e119]: contacted
+            - generic [ref=e120]: 1 day ago
+        - generic [ref=e121]:
+          - generic [ref=e122]: Birthday Party
+          - generic [ref=e123]:
+            - img [ref=e124]
+            - text: 15k – 25k
+        - button "View details" [ref=e127] [cursor=pointer]:
+          - text: View details
+          - img [ref=e128]
+      - generic [ref=e130]:
+        - generic [ref=e131]:
+          - generic [ref=e132]:
+            - generic [ref=e133]: S
+            - generic [ref=e134]:
+              - generic [ref=e135]: Sneha Patel
+              - generic [ref=e136]:
+                - generic [ref=e137]:
+                  - img [ref=e138]
+                  - text: 2025-01-12
+                - generic [ref=e140]:
+                  - img [ref=e141]
+                  - text: BKC, Mumbai
+          - generic [ref=e144]:
+            - generic [ref=e145]: converted
+            - generic [ref=e146]: 3 days ago
+        - generic [ref=e147]:
+          - generic [ref=e148]: Product Launch
+          - generic [ref=e149]:
+            - img [ref=e150]
+            - text: 50k – 80k
+        - button "View details" [ref=e153] [cursor=pointer]:
+          - text: View details
+          - img [ref=e154]
+      - generic [ref=e156]:
+        - generic [ref=e157]:
+          - generic [ref=e158]:
+            - generic [ref=e159]: V
+            - generic [ref=e160]:
+              - generic [ref=e161]: Vikram Joshi
+              - generic [ref=e162]:
+                - generic [ref=e163]:
+                  - img [ref=e164]
+                  - text: 2024-12-20
+                - generic [ref=e166]:
+                  - img [ref=e167]
+                  - text: Hiranandani, Thane
+          - generic [ref=e170]:
+            - generic [ref=e171]: expired
+            - generic [ref=e172]: 10 days ago
+        - generic [ref=e173]:
+          - generic [ref=e174]: Anniversary Party
+          - generic [ref=e175]:
+            - img [ref=e176]
+            - text: 20k – 35k
+        - button "View details" [ref=e179] [cursor=pointer]:
+          - text: View details
+          - img [ref=e180]

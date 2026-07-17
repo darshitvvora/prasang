@@ -1,0 +1,38 @@
+- generic [ref=e4]:
+  - link "prasang प्रसंग" [ref=e5] [cursor=pointer]:
+    - /url: /
+    - generic [ref=e6]: prasang
+    - generic [ref=e7]: प्रसंग
+  - heading "Create account" [level=1] [ref=e8]
+  - paragraph [ref=e9]: Join India's largest artist discovery platform
+  - generic [ref=e10]:
+    - button "🎤 I'm an Artist List my services & get discovered" [ref=e11] [cursor=pointer]:
+      - generic [ref=e12]: 🎤
+      - generic [ref=e13]: I'm an Artist
+      - generic [ref=e14]: List my services & get discovered
+    - button "🎉 I'm Planning Find artists for my event" [ref=e15] [cursor=pointer]:
+      - generic [ref=e16]: 🎉
+      - generic [ref=e17]: I'm Planning
+      - generic [ref=e18]: Find artists for my event
+  - paragraph [ref=e19]: Select your role to continue
+  - tablist [ref=e20]:
+    - tab "Google" [selected] [ref=e21] [cursor=pointer]
+    - tab "Mobile OTP" [ref=e22] [cursor=pointer]:
+      - img [ref=e23]
+      - text: Mobile OTP
+  - generic [ref=e25]:
+    - button "Continue with Google" [disabled] [ref=e26]:
+      - img [ref=e27]
+      - text: Continue with Google
+    - paragraph [ref=e33]: Free to sign up. No credit card required.
+  - generic [ref=e35]: Already have an account?
+  - link "Sign in" [ref=e36] [cursor=pointer]:
+    - /url: /login
+  - paragraph [ref=e37]:
+    - text: By creating an account, you agree to our
+    - link "Terms of Service" [ref=e38] [cursor=pointer]:
+      - /url: /terms
+    - text: and
+    - link "Privacy Policy" [ref=e39] [cursor=pointer]:
+      - /url: /privacy
+    - text: .

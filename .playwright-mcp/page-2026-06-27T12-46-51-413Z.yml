@@ -1,0 +1,275 @@
+- generic [ref=e2]:
+  - navigation [ref=e3]:
+    - generic [ref=e4]:
+      - link "prasang प्रसंग" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e6]: prasang
+        - generic [ref=e7]: प्रसंग
+      - generic [ref=e8]:
+        - link "Home" [ref=e9] [cursor=pointer]:
+          - /url: "#"
+        - link "Search" [ref=e10] [cursor=pointer]:
+          - /url: "#search"
+        - link "For Artists" [ref=e11] [cursor=pointer]:
+          - /url: "#artists"
+        - link "Pricing" [ref=e12] [cursor=pointer]:
+          - /url: "#pricing"
+      - generic [ref=e13]:
+        - button "Change location" [ref=e14] [cursor=pointer]:
+          - img [ref=e15]
+          - generic [ref=e18]: Mumbai, India
+        - button "Notifications" [ref=e19] [cursor=pointer]:
+          - img [ref=e20]
+        - link "List Your Art" [ref=e23] [cursor=pointer]:
+          - /url: "#list"
+          - img [ref=e24]
+          - text: List Your Art
+  - generic [ref=e27]:
+    - generic [ref=e28]:
+      - link "Back to Search" [ref=e29] [cursor=pointer]:
+        - /url: /search
+        - img [ref=e30]
+        - text: Back to Search
+      - generic [ref=e32]: /
+      - generic [ref=e33]: Magician
+      - generic [ref=e34]: /
+      - generic [ref=e35]: Arjun Malhotra
+    - generic [ref=e36]:
+      - main [ref=e37]:
+        - generic [ref=e38]:
+          - generic [ref=e39]:
+            - img "Arjun Malhotra" [ref=e40]
+            - generic [ref=e41]:
+              - img [ref=e42]
+              - text: Featured
+          - generic [ref=e45]:
+            - generic [ref=e46]:
+              - generic [ref=e47]:
+                - generic [ref=e48]:
+                  - heading "Arjun Malhotra" [level=1] [ref=e49]
+                  - img "Verified artist" [ref=e50]
+                - generic [ref=e53]:
+                  - generic [ref=e54]: Magician
+                  - generic [ref=e55]:
+                    - img [ref=e56]
+                    - text: Bandra West, Mumbai
+              - generic [ref=e59]:
+                - button "Add to favorites" [ref=e60] [cursor=pointer]:
+                  - img [ref=e61]
+                - button "Share profile" [ref=e63] [cursor=pointer]:
+                  - img [ref=e64]
+            - generic [ref=e70]:
+              - generic "4.9 out of 5 stars" [ref=e71]:
+                - img [ref=e72]
+                - img [ref=e74]
+                - img [ref=e76]
+                - img [ref=e78]
+                - img [ref=e80]
+              - generic [ref=e82]: "4.9"
+              - generic [ref=e83]: (127 reviews)
+              - generic [ref=e84]: 8 yrs exp.
+            - paragraph [ref=e85]: Award-winning close-up magician specializing in mentalism and card magic. 500+ shows across Mumbai.
+            - generic [ref=e86]:
+              - link "@arjunmagic" [ref=e87] [cursor=pointer]:
+                - /url: https://instagram.com/arjunmagic
+                - img [ref=e88]
+                - text: "@arjunmagic"
+              - link "ArjunMalhotraMagic" [ref=e91] [cursor=pointer]:
+                - /url: https://youtube.com/@ArjunMalhotraMagic
+                - img [ref=e92]
+                - text: ArjunMalhotraMagic
+            - generic [ref=e95]:
+              - generic [ref=e96]:
+                - generic [ref=e97]: 127+
+                - generic [ref=e98]: Events Done
+              - generic [ref=e99]:
+                - generic [ref=e100]: 8+
+                - generic [ref=e101]: Years Active
+              - generic [ref=e102]:
+                - generic [ref=e103]: "4.9"
+                - generic [ref=e104]: Avg Rating
+              - generic [ref=e107]: Available
+        - tablist [ref=e108]:
+          - tab "About" [selected] [ref=e109] [cursor=pointer]
+          - tab "Media" [ref=e110] [cursor=pointer]
+          - tab "Reviews 3" [ref=e111] [cursor=pointer]:
+            - text: Reviews
+            - generic [ref=e112]: "3"
+        - tabpanel [ref=e113]:
+          - generic [ref=e114]:
+            - heading "About" [level=2] [ref=e115]
+            - paragraph [ref=e116]: Award-winning close-up magician specializing in mentalism and card magic. 500+ shows across Mumbai. They bring professionalism, energy, and creativity to every event, ensuring an unforgettable experience for your guests.
+          - generic [ref=e117]:
+            - heading "Performance Details" [level=2] [ref=e118]
+            - generic [ref=e119]:
+              - generic [ref=e120]:
+                - img [ref=e121]
+                - generic [ref=e123]:
+                  - generic [ref=e124]: Availability
+                  - generic [ref=e125]: available
+              - generic [ref=e126]:
+                - img [ref=e127]
+                - generic [ref=e130]:
+                  - generic [ref=e131]: Experience
+                  - generic [ref=e132]: 8 years
+              - generic [ref=e133]:
+                - img [ref=e134]
+                - generic [ref=e137]:
+                  - generic [ref=e138]: Base Location
+                  - generic [ref=e139]: Bandra West, Mumbai
+              - generic [ref=e140]:
+                - img [ref=e141]
+                - generic [ref=e143]:
+                  - generic [ref=e144]: Artist Type
+                  - generic [ref=e145]: Magician
+          - generic [ref=e146]:
+            - heading "What's Included" [level=2] [ref=e147]
+            - list [ref=e148]:
+              - listitem [ref=e149]:
+                - img [ref=e150]
+                - text: Professional performance for agreed duration
+              - listitem [ref=e153]:
+                - img [ref=e154]
+                - text: Own equipment and setup
+              - listitem [ref=e157]:
+                - img [ref=e158]
+                - text: Prior event consultation call
+              - listitem [ref=e161]:
+                - img [ref=e162]
+                - text: Customisation based on event theme
+              - listitem [ref=e165]:
+                - img [ref=e166]
+                - text: Backup plan for technical issues
+        - generic [ref=e169]:
+          - generic [ref=e170]:
+            - heading "Similar Artists You Might Like" [level=2] [ref=e171]
+            - link "See all" [ref=e172] [cursor=pointer]:
+              - /url: /search
+              - text: See all
+              - img [ref=e173]
+          - generic [ref=e175]:
+            - link "DJ Krish DJ Krish DJ 4.7" [ref=e176] [cursor=pointer]:
+              - /url: /profile/dj-krish
+              - img "DJ Krish" [ref=e177]
+              - generic [ref=e178]:
+                - generic [ref=e179]: DJ Krish
+                - generic [ref=e180]: DJ
+                - generic [ref=e181]:
+                  - img [ref=e182]
+                  - text: "4.7"
+            - link "Priya Sharma Priya Sharma Singer 4.8" [ref=e184] [cursor=pointer]:
+              - /url: /profile/priya-sharma-singer
+              - img "Priya Sharma" [ref=e185]
+              - generic [ref=e186]:
+                - generic [ref=e187]: Priya Sharma
+                - generic [ref=e188]: Singer
+                - generic [ref=e189]:
+                  - img [ref=e190]
+                  - text: "4.8"
+            - link "The Raaga Collective The Raaga Collective Band 4.9" [ref=e192] [cursor=pointer]:
+              - /url: /profile/the-raaga-collective
+              - img "The Raaga Collective" [ref=e193]
+              - generic [ref=e194]:
+                - generic [ref=e195]: The Raaga Collective
+                - generic [ref=e196]: Band
+                - generic [ref=e197]:
+                  - img [ref=e198]
+                  - text: "4.9"
+      - complementary [ref=e200]:
+        - generic [ref=e201]:
+          - generic [ref=e202]:
+            - generic [ref=e203]:
+              - generic [ref=e204]: ₹15K – ₹25K
+              - generic [ref=e205]: per event
+            - generic [ref=e206]:
+              - img [ref=e207]
+              - text: Verified
+          - button "Get Contact Info" [ref=e210] [cursor=pointer]:
+            - img [ref=e211]
+            - text: Get Contact Info
+          - link "WhatsApp" [ref=e213] [cursor=pointer]:
+            - /url: https://wa.me/919876543210
+            - img [ref=e214]
+            - text: WhatsApp
+          - generic [ref=e216]:
+            - img [ref=e217]
+            - text: Arjun Malhotra will be notified instantly when you request contact info.
+          - list [ref=e221]:
+            - listitem [ref=e222]:
+              - img [ref=e223]
+              - text: No booking fees — pay artist directly
+            - listitem [ref=e226]:
+              - img [ref=e227]
+              - text: Free to contact and negotiate
+            - listitem [ref=e230]:
+              - img [ref=e231]
+              - text: 127+ verified reviews
+  - contentinfo [ref=e234]:
+    - generic [ref=e235]:
+      - generic [ref=e236]:
+        - generic [ref=e237]:
+          - generic [ref=e238]:
+            - generic [ref=e239]: prasang
+            - generic [ref=e240]: प्रसंग
+          - paragraph [ref=e241]: Find artists for every prasang. India's largest artist discovery platform connecting performers with event planners.
+          - generic [ref=e242]:
+            - link "Instagram" [ref=e243] [cursor=pointer]:
+              - /url: "#"
+              - img [ref=e244]
+            - link "YouTube" [ref=e247] [cursor=pointer]:
+              - /url: "#"
+              - img [ref=e248]
+            - link "Twitter" [ref=e251] [cursor=pointer]:
+              - /url: "#"
+              - img [ref=e252]
+            - link "LinkedIn" [ref=e255] [cursor=pointer]:
+              - /url: "#"
+              - img [ref=e256]
+        - generic [ref=e259]:
+          - heading "For Artists" [level=3] [ref=e260]
+          - navigation "Artist links" [ref=e261]:
+            - link "List Your Profile" [ref=e262] [cursor=pointer]:
+              - /url: "#"
+            - link "Pricing Plans" [ref=e263] [cursor=pointer]:
+              - /url: "#"
+            - link "Artist Dashboard" [ref=e264] [cursor=pointer]:
+              - /url: "#"
+            - link "Success Stories" [ref=e265] [cursor=pointer]:
+              - /url: "#"
+            - link "Referral Program" [ref=e266] [cursor=pointer]:
+              - /url: "#"
+        - generic [ref=e267]:
+          - heading "For Event Planners" [level=3] [ref=e268]
+          - navigation "Event planner links" [ref=e269]:
+            - link "Find Artists" [ref=e270] [cursor=pointer]:
+              - /url: "#"
+            - link "Browse by Category" [ref=e271] [cursor=pointer]:
+              - /url: "#"
+            - link "Browse by Location" [ref=e272] [cursor=pointer]:
+              - /url: "#"
+            - link "How It Works" [ref=e273] [cursor=pointer]:
+              - /url: "#"
+            - link "FAQ" [ref=e274] [cursor=pointer]:
+              - /url: "#"
+        - generic [ref=e275]:
+          - heading "Company" [level=3] [ref=e276]
+          - navigation "Company links" [ref=e277]:
+            - link "About Us" [ref=e278] [cursor=pointer]:
+              - /url: "#"
+            - link "Blog" [ref=e279] [cursor=pointer]:
+              - /url: "#"
+            - link "Careers" [ref=e280] [cursor=pointer]:
+              - /url: "#"
+            - link "Contact" [ref=e281] [cursor=pointer]:
+              - /url: "#"
+            - link "Press" [ref=e282] [cursor=pointer]:
+              - /url: "#"
+      - generic [ref=e283]:
+        - paragraph [ref=e284]: © 2026 Prasang. Made with ❤️ in Mumbai
+        - generic [ref=e285]:
+          - link "Privacy Policy" [ref=e286] [cursor=pointer]:
+            - /url: "#"
+          - link "Terms of Service" [ref=e287] [cursor=pointer]:
+            - /url: "#"
+          - link "Cookie Policy" [ref=e288] [cursor=pointer]:
+            - /url: "#"

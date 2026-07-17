@@ -1,0 +1,119 @@
+.artist-grid-section {
+  padding: var(--space-6) 0 var(--space-16);
+}
+
+.artist-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-6);
+}
+
+/* --- Show All Card --- */
+.artist-grid-show-all {
+  background: linear-gradient(135deg, #c4b5fd 0%, #a78bfa 50%, #8b5cf6 100%);
+  border-radius: var(--radius-xl);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-8);
+  text-align: center;
+  cursor: pointer;
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+  position: relative;
+  overflow: hidden;
+  min-height: 380px;
+}
+
+.artist-grid-show-all:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 32px rgba(139, 92, 246, 0.3);
+}
+
+.artist-grid-show-all-arrow {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  margin-bottom: var(--space-5);
+  transition: transform var(--transition-fast);
+}
+
+.artist-grid-show-all:hover .artist-grid-show-all-arrow {
+  transform: translateX(4px);
+}
+
+.artist-grid-show-all-title {
+  font-family: var(--font-heading);
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  color: white;
+  margin-bottom: var(--space-2);
+}
+
+.artist-grid-show-all-count {
+  font-size: var(--text-base);
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: var(--space-6);
+}
+
+/* Avatars at bottom */
+.artist-grid-show-all-avatars {
+  display: flex;
+  justify-content: center;
+}
+
+.artist-grid-show-all-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  border: 3px solid rgba(139, 92, 246, 0.6);
+  object-fit: cover;
+  margin-right: -10px;
+}
+
+/* Decorative star */
+.artist-grid-show-all-star {
+  position: absolute;
+  bottom: 40%;
+  left: 15%;
+  color: rgba(255, 255, 255, 0.25);
+  animation: pulse 3s ease infinite;
+}
+
+/* --- Responsive --- */
+@media (max-width: 1200px) {
+  .artist-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .artist-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .artist-grid-show-all {
+    min-height: 320px;
+  }
+}
+
+@media (max-width: 560px) {
+  .artist-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-5);
+  }
+
+  .artist-grid-section {
+    padding: var(--space-4) 0 var(--space-10);
+  }
+
+  .artist-grid-show-all {
+    min-height: 260px;
+  }
+}
