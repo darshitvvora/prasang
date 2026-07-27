@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Check, X, Crown, Zap, Star, Sparkles } from 'lucide-react';
+import Navbar from '../components/Navbar';
 import './PricingPage.css';
 
 const PLANS = [
@@ -132,17 +133,7 @@ export default function PricingPage() {
 
   return (
     <div className="pricing-page">
-      {/* Navbar minimal */}
-      <nav className="pricing-nav">
-        <Link to="/" className="pricing-nav-logo">
-          <span>prasang</span>
-          <span className="pricing-nav-hindi">प्रसंग</span>
-        </Link>
-        <div className="pricing-nav-actions">
-          <Link to="/login" className="pricing-nav-link">Sign in</Link>
-          <Link to="/signup" className="pricing-nav-cta">Get started free</Link>
-        </div>
-      </nav>
+      <Navbar />
 
       <div className="pricing-hero">
         <p className="pricing-eyebrow">Simple pricing</p>

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { MapPin, Bell, Menu, X, Sparkles } from 'lucide-react';
+import { MapPin, Menu, X, Sparkles } from 'lucide-react';
 import './Navbar.css';
 
 export default function Navbar() {
@@ -9,7 +9,6 @@ export default function Navbar() {
   const links = [
     { label: 'Home', to: '/', active: true },
     { label: 'Search', to: '/search' },
-    { label: 'For Artists', to: '/artist/onboarding' },
     { label: 'Pricing', to: '/pricing' },
   ];
 
@@ -42,9 +41,9 @@ export default function Navbar() {
             <span>Mumbai, India</span>
           </button>
 
-          <button type="button" className="navbar-bell" aria-label="Notifications">
-            <Bell size={20} />
-          </button>
+          <Link to="/login" className="navbar-signin">
+            Sign In
+          </Link>
 
           <Link to="/artist/onboarding" className="navbar-cta">
             <Sparkles size={16} />
@@ -76,6 +75,9 @@ export default function Navbar() {
           </Link>
         ))}
         <div className="navbar-mobile-divider" />
+        <Link to="/login" className="navbar-link" onClick={() => setMobileOpen(false)}>
+          Sign In
+        </Link>
         <button type="button" className="navbar-location">
           <MapPin size={16} />
           <span>Mumbai, India</span>

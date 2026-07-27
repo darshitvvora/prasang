@@ -5,61 +5,6 @@
   font-family: var(--font-body);
 }
 
-/* Nav */
-.pricing-nav {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 20px 40px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-.pricing-nav-logo {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  text-decoration: none;
-  font-family: var(--font-heading);
-  font-size: 22px;
-  font-weight: 800;
-  color: var(--color-accent);
-}
-
-.pricing-nav-hindi {
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.35);
-  font-family: var(--font-body);
-  font-weight: 400;
-}
-
-.pricing-nav-actions {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.pricing-nav-link {
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.6);
-  text-decoration: none;
-  transition: color 0.2s;
-}
-
-.pricing-nav-link:hover { color: #ffffff; }
-
-.pricing-nav-cta {
-  padding: 9px 18px;
-  background: var(--color-accent);
-  border-radius: 10px;
-  font-size: 14px;
-  font-weight: 700;
-  color: #0f0f0f;
-  text-decoration: none;
-  transition: background 0.2s;
-}
-
-.pricing-nav-cta:hover { background: var(--color-accent-hover); }
-
 /* Hero */
 .pricing-hero {
   text-align: center;
