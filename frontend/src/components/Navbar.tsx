@@ -13,56 +13,61 @@ export default function Navbar() {
   ];
 
   return (
-    <nav className="navbar" id="navbar">
-      <div className="container navbar-inner">
-        {/* Logo */}
-        <Link to="/" className="navbar-logo">
-          <span className="navbar-logo-text">prasang</span>
-          <span className="navbar-logo-hindi">प्रसंग</span>
-        </Link>
+    <>
+      <nav className="navbar" id="navbar">
+        <div className="container navbar-inner">
+          {/* Logo */}
+          <Link to="/" className="navbar-logo">
+            <span className="navbar-logo-text">prasang</span>
+            <span className="navbar-logo-hindi">प्रसंग</span>
+          </Link>
 
-        {/* Desktop Links */}
-        <div className="navbar-links">
-          {links.map((link) => (
-            <Link
-              key={link.label}
-              to={link.to}
-              className={`navbar-link${link.active ? ' active' : ''}`}
-            >
-              {link.label}
+          {/* Desktop Links */}
+          <div className="navbar-links">
+            {links.map((link) => (
+              <Link
+                key={link.label}
+                to={link.to}
+                className={`navbar-link${link.active ? ' active' : ''}`}
+              >
+                {link.label}
+              </Link>
+            ))}
+          </div>
+
+          {/* Right Section */}
+          <div className="navbar-right">
+            <button type="button" className="navbar-location" aria-label="Change location">
+              <MapPin size={16} />
+              <span>Mumbai, India</span>
+            </button>
+
+            <Link to="/login" className="navbar-signin">
+              Sign In
             </Link>
-          ))}
+
+            <Link to="/artist/onboarding" className="navbar-cta">
+              <Sparkles size={16} />
+              List Your Art
+            </Link>
+
+            {/* Mobile toggle */}
+            <button
+              type="button"
+              className="navbar-mobile-toggle"
+              aria-label="Toggle menu"
+              onClick={() => setMobileOpen(!mobileOpen)}
+            >
+              {mobileOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
         </div>
+      </nav>
 
-        {/* Right Section */}
-        <div className="navbar-right">
-          <button type="button" className="navbar-location" aria-label="Change location">
-            <MapPin size={16} />
-            <span>Mumbai, India</span>
-          </button>
-
-          <Link to="/login" className="navbar-signin">
-            Sign In
-          </Link>
-
-          <Link to="/artist/onboarding" className="navbar-cta">
-            <Sparkles size={16} />
-            List Your Art
-          </Link>
-
-          {/* Mobile toggle */}
-          <button
-            type="button"
-            className="navbar-mobile-toggle"
-            aria-label="Toggle menu"
-            onClick={() => setMobileOpen(!mobileOpen)}
-          >
-            {mobileOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
-        </div>
-      </div>
-
-      {/* Mobile Menu */}
+      {/* Mobile Menu — rendered outside <nav> so its position:fixed isn't
+          confined by the navbar's backdrop-filter (which otherwise becomes
+          the containing block for fixed descendants and collapses this to
+          the navbar's own height). */}
       <div className={`navbar-mobile-menu${mobileOpen ? ' open' : ''}`}>
         {links.map((link) => (
           <Link
@@ -87,6 +92,6 @@ export default function Navbar() {
           List Your Art
         </Link>
       </div>
-    </nav>
+    </>
   );
 }

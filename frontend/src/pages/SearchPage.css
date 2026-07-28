@@ -779,6 +779,7 @@
     z-index: var(--z-modal);
     border-radius: 0;
     width: 320px;
+    max-width: 85vw;
     max-height: 100dvh;
     overflow-y: auto;
     transition: left var(--transition-base);
@@ -787,6 +788,14 @@
 
   .search-sidebar.open { left: 0; }
   .sidebar-close-btn { display: flex; }
+
+  .search-sidebar-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: var(--z-overlay);
+    animation: fadeIn var(--transition-fast);
+  }
 }
 
 @media (max-width: 640px) {
@@ -794,4 +803,17 @@
   .search-topbar-inner { flex-wrap: wrap; }
   .search-city-select-wrap { display: none; }
   .results-header { flex-direction: column; align-items: flex-start; }
+
+  /* List view has no room for a side-by-side row on narrow screens —
+     fall back to the same stacked card layout as grid view. */
+  .list-view .result-card {
+    flex-direction: column;
+    max-height: none;
+  }
+
+  .list-view .result-card-image-wrap {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+  }
 }

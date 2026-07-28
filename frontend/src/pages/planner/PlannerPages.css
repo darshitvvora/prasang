@@ -121,6 +121,7 @@
   padding: 32px 40px;
   overflow-y: auto;
   max-width: 1100px;
+  margin: 0 auto;
 }
 
 .planner-topbar {
@@ -647,7 +648,53 @@
 
 /* ─── Responsive ─── */
 @media (max-width: 900px) {
-  .planner-sidebar { display: none; }
+  .planner-layout {
+    flex-direction: column;
+  }
+
+  .planner-sidebar {
+    position: sticky;
+    top: 0;
+    z-index: var(--z-sticky);
+    width: 100%;
+    height: auto;
+    flex-direction: row;
+    align-items: center;
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    padding: 12px 16px;
+    gap: 12px;
+    overflow-x: auto;
+    overflow-y: visible;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .planner-sidebar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .planner-sidebar-logo {
+    margin-bottom: 0;
+    padding: 0;
+    flex-shrink: 0;
+  }
+
+  .planner-sidebar-nav {
+    flex-direction: row;
+    flex: none;
+    gap: 4px;
+  }
+
+  .planner-sidebar-link {
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .planner-promo-card {
+    display: none;
+  }
+
   .planner-main { padding: 24px 20px; }
   .planner-metrics-grid { grid-template-columns: repeat(2, 1fr); }
   .planner-dashboard-row { grid-template-columns: 1fr; }
@@ -658,4 +705,9 @@
 @media (max-width: 640px) {
   .planner-metrics-grid { grid-template-columns: 1fr 1fr; }
   .planner-saved-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 420px) {
+  .planner-metrics-grid { grid-template-columns: 1fr; }
+  .planner-saved-preview-grid { grid-template-columns: 1fr 1fr; }
 }

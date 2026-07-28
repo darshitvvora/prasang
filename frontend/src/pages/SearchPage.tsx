@@ -161,6 +161,15 @@ export default function SearchPage() {
         </div>
 
         <div className="container search-body">
+          {/* Backdrop for mobile filter drawer */}
+          {filtersOpen && (
+            <div
+              className="search-sidebar-backdrop"
+              onClick={() => setFiltersOpen(false)}
+              aria-hidden="true"
+            />
+          )}
+
           {/* Sidebar */}
           <aside className={`search-sidebar${filtersOpen ? ' open' : ''}`} aria-label="Search filters">
             <div className="sidebar-header">

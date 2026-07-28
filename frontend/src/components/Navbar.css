@@ -196,7 +196,8 @@
     display: none;
   }
 
-  .navbar-location {
+  /* Scoped to the top bar only — the mobile drawer keeps its own location button visible. */
+  .navbar-right .navbar-location {
     display: none;
   }
 
@@ -210,7 +211,8 @@
 }
 
 @media (max-width: 480px) {
-  .navbar-cta {
+  /* Scoped to the top bar only — the mobile drawer keeps its own CTA visible. */
+  .navbar-right .navbar-cta {
     display: none;
   }
 }

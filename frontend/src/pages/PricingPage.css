@@ -420,7 +420,6 @@
 }
 
 @media (max-width: 640px) {
-  .pricing-nav { padding: 16px 20px; }
   .pricing-hero { padding: 48px 20px 40px; }
 
   .pricing-grid {
