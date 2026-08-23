@@ -1,11 +1,19 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin, Menu, X, Sparkles } from 'lucide-react';
 import './Navbar.css';
+import indianCities from '../data/indian_cities.json';
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
-
+  const [city, setCity] = useState('Mumbai, India');
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(() => {
+        // Placeholder: could reverse geocode to city name; fallback to default.
+      });
+    }
+  }, []);
   const links = [
     { label: 'Home', to: '/', active: true },
     { label: 'Search', to: '/search' },
@@ -17,7 +25,7 @@ export default function Navbar() {
       <nav className="navbar" id="navbar">
         <div className="container navbar-inner">
           {/* Logo */}
-          <Link to="/" className="navbar-logo">
+          <Link to="/" className="navbar-logo" onClick={() => setMobileOpen(false)}>
             <span className="navbar-logo-text">prasang</span>
             <span className="navbar-logo-hindi">प्रसंग</span>
           </Link>
@@ -37,10 +45,11 @@ export default function Navbar() {
 
           {/* Right Section */}
           <div className="navbar-right">
-            <button type="button" className="navbar-location" aria-label="Change location">
-              <MapPin size={16} />
-              <span>Mumbai, India</span>
-            </button>
+            <select className="navbar-location-select" value={city} onChange={(e) => setCity(e.target.value)} aria-label="Select location">
+              {indianCities.map((c) => (
+                <option key={c.name} value={`${c.name}, India`}>{c.name}, India</option>
+              ))}
+            </select>
 
             <Link to="/login" className="navbar-signin">
               Sign In
@@ -83,10 +92,11 @@ export default function Navbar() {
         <Link to="/login" className="navbar-link" onClick={() => setMobileOpen(false)}>
           Sign In
         </Link>
-        <button type="button" className="navbar-location">
-          <MapPin size={16} />
-          <span>Mumbai, India</span>
-        </button>
+            <select className="navbar-location-select" value={city} onChange={(e) => setCity(e.target.value)} aria-label="Select location">
+              {indianCities.map((c) => (
+                <option key={c.name} value={`${c.name}, India`}>{c.name}, India</option>
+              ))}
+            </select>
         <Link to="/artist/onboarding" className="navbar-cta" onClick={() => setMobileOpen(false)}>
           <Sparkles size={16} />
           List Your Art

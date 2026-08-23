@@ -47,7 +47,7 @@ export default function ArtistProfilePage() {
   const [contactStep, setContactStep] = useState<'form' | 'revealed'>('form');
   const [form, setForm] = useState({ name: '', phone: '', email: '', eventType: 'Birthday', eventDate: '', budget: '₹10K–15K', notes: '' });
   const [submitting, setSubmitting] = useState(false);
-  const [activeTab, setActiveTab] = useState<'about' | 'media' | 'reviews'>('about');
+  const [activeTab, setActiveTab] = useState<'media' | 'reviews'>('media');
 
   function openContact() {
     setContactOpen(true);
@@ -101,7 +101,7 @@ export default function ArtistProfilePage() {
                     <Crown size={13} /> Featured
                   </div>
                 )}
-                <div className={`profile-status-dot ${artist.availabilityStatus}`} />
+                {/* <div className={`profile-status-dot ${artist.availabilityStatus}`} /> */}
               </div>
 
               <div className="profile-hero-info">
@@ -175,19 +175,19 @@ export default function ArtistProfilePage() {
                     <span className="profile-stat-val">{artist.averageRating}</span>
                     <span className="profile-stat-lbl">Avg Rating</span>
                   </div>
-                  <div className="profile-stat">
+                  {/* <div className="profile-stat">
                     <span className={`profile-avail-dot ${artist.availabilityStatus}`} />
                     <span className="profile-stat-lbl">
                       {artist.availabilityStatus === 'available' ? 'Available' : artist.availabilityStatus === 'busy' ? 'Busy' : 'Unavailable'}
                     </span>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>
 
             {/* Tabs */}
             <div className="profile-tabs" role="tablist">
-              {(['about', 'media', 'reviews'] as const).map((tab) => (
+              {(['media', 'reviews'] as const).map((tab) => (
                 <button
                   key={tab}
                   className={`profile-tab${activeTab === tab ? ' active' : ''}`}
@@ -202,7 +202,7 @@ export default function ArtistProfilePage() {
             </div>
 
             {/* Tab: About */}
-            {activeTab === 'about' && (
+            {/* {activeTab === 'about' && (
               <div className="profile-tab-content" role="tabpanel">
                 <section className="profile-section">
                   <h2 className="profile-section-title">About</h2>
@@ -255,7 +255,7 @@ export default function ArtistProfilePage() {
                   </ul>
                 </section>
               </div>
-            )}
+            )} */}
 
             {/* Tab: Media */}
             {activeTab === 'media' && (

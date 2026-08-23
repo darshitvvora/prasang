@@ -56,7 +56,7 @@ export default function ArtistCard({ artist }: ArtistCardProps) {
         />
 
         {/* Status indicator */}
-        <div
+        {/* <div
           className={`artist-card-status ${artist.availabilityStatus}`}
           title={
             artist.availabilityStatus === 'available'
@@ -65,7 +65,7 @@ export default function ArtistCard({ artist }: ArtistCardProps) {
                 ? 'Busy — limited availability'
                 : 'Currently unavailable'
           }
-        />
+        /> */}
 
         {/* Featured badge */}
         {artist.isFeatured && (
@@ -144,7 +144,7 @@ export default function ArtistCard({ artist }: ArtistCardProps) {
         </div>
 
         {/* Actions */}
-        <div className="artist-card-actions">
+        {/* <div className="artist-card-actions">
           <div className="artist-card-action-icons">
             <button type="button" className="artist-card-icon-btn" aria-label="Send message" onClick={(e) => e.stopPropagation()}>
               <MessageCircle size={18} />
@@ -161,7 +161,7 @@ export default function ArtistCard({ artist }: ArtistCardProps) {
           >
             Get Contact Info
           </button>
-        </div>
+        </div> */}
       </div>
     </article>
   );
