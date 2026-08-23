@@ -2,7 +2,6 @@ import { useNavigate } from 'react-router-dom';
 import {
   MapPin,
   Star,
-  Heart,
   MessageCircle,
   BadgeCheck,
   Crown,

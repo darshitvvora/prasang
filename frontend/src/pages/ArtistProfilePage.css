@@ -240,6 +240,38 @@
   flex-wrap: wrap;
 }
 
+.profile-performance-details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding-top: var(--space-4);
+  margin-top: var(--space-4);
+  border-top: 1px solid var(--color-border);
+}
+
+.profile-detail-row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+  font-size: var(--text-sm);
+}
+
+.profile-detail-row-label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-text-secondary);
+  font-weight: 500;
+  width: 100px;
+  flex-shrink: 0;
+}
+
+.profile-detail-text {
+  color: var(--color-text-primary);
+  font-weight: 500;
+  line-height: 1.4;
+}
+
 .profile-stat {
   display: flex;
   flex-direction: column;

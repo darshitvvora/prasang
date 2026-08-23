@@ -2,13 +2,13 @@ import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import {
   ArrowLeft, MapPin, Star, BadgeCheck, Crown, AtSign,
-  PlayCircle, Heart, Share2, Phone, MessageCircle, Calendar,
-  Clock, ChevronRight, X, CheckCircle,
+  PlayCircle, Share2, Phone, MessageCircle, Calendar,
+  Clock, ChevronRight, X, CheckCircle, Plane, Globe, CalendarDays,
 } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { mockArtists } from '../data/mockArtists';
-import { ARTIST_TYPE_LABELS, ARTIST_TYPE_COLORS } from '../types/artist';
+import { ARTIST_TYPE_LABELS, ARTIST_TYPE_COLORS, EVENT_TYPE_LABELS } from '../types/artist';
 import './ArtistProfilePage.css';
 
 const MOCK_REVIEWS = [
@@ -42,7 +42,7 @@ export default function ArtistProfilePage() {
   const artist = mockArtists.find((a) => a.slug === slug) ?? mockArtists[0];
   const similar = mockArtists.filter((a) => SIMILAR_ARTISTS_IDS.includes(a.artistId) && a.artistId !== artist.artistId).slice(0, 3);
 
-  const [isFavorited, setIsFavorited] = useState(false);
+
   const [contactOpen, setContactOpen] = useState(false);
   const [contactStep, setContactStep] = useState<'form' | 'revealed'>('form');
   const [form, setForm] = useState({ name: '', phone: '', email: '', eventType: 'Birthday', eventDate: '', budget: '₹10K–15K', notes: '' });
@@ -127,13 +127,6 @@ export default function ArtistProfilePage() {
                     </div>
                   </div>
                   <div className="profile-hero-actions">
-                    <button
-                      className={`profile-fav-btn${isFavorited ? ' active' : ''}`}
-                      onClick={() => setIsFavorited(!isFavorited)}
-                      aria-label={isFavorited ? 'Remove from favorites' : 'Add to favorites'}
-                    >
-                      <Heart size={20} fill={isFavorited ? 'currentColor' : 'none'} />
-                    </button>
                     <button className="profile-share-btn" aria-label="Share profile">
                       <Share2 size={18} />
                     </button>
@@ -175,13 +168,46 @@ export default function ArtistProfilePage() {
                     <span className="profile-stat-val">{artist.averageRating}</span>
                     <span className="profile-stat-lbl">Avg Rating</span>
                   </div>
-                  {/* <div className="profile-stat">
+                </div>
+
+                {/* Performance Details */}
+                <div className="profile-performance-details">
+                  {artist.eventTypesSupported.length > 0 && (
+                    <div className="profile-detail-row">
+                      <span className="profile-detail-row-label">
+                        <CalendarDays size={14} /> Events :
+                      </span>
+                      <span className="profile-detail-text">
+                        &nbsp; {artist.eventTypesSupported.map((et) => EVENT_TYPE_LABELS[et]).join(', ')}
+                      </span>
+                    </div>
+                  )}
+                  {artist.languagesSpoken.length > 0 && (
+                    <div className="profile-detail-row">
+                      <span className="profile-detail-row-label">
+                        <Globe size={14} /> Languages :
+                      </span>
+                      <span className="profile-detail-text">
+                        &nbsp; {artist.languagesSpoken.join(', ')}
+                      </span>
+                    </div>
+                  )}
+                  <div className="profile-detail-row">
+                    <span className="profile-detail-row-label">
+                      <Plane size={14} /> Travel :
+                    </span>
+                    <span className="profile-detail-text">
+                      &nbsp; {artist.readyToTravel ? 'Yes' : 'No'}
+                    </span>
+                  </div>
+                </div>
+
+                {/* <div className="profile-stat">
                     <span className={`profile-avail-dot ${artist.availabilityStatus}`} />
                     <span className="profile-stat-lbl">
                       {artist.availabilityStatus === 'available' ? 'Available' : artist.availabilityStatus === 'busy' ? 'Busy' : 'Unavailable'}
                     </span>
                   </div> */}
-                </div>
               </div>
             </div>
 

@@ -21,6 +21,9 @@ export const mockArtists: Artist[] = [
     youtubeChannel: 'ArjunMalhotraMagic',
     experienceYears: 8,
     availabilityStatus: 'available',
+    eventTypesSupported: ['birthday', 'wedding', 'corporate', 'anniversary', 'house_party'],
+    languagesSpoken: ['Hindi', 'English'],
+    readyToTravel: true,
   },
   {
     artistId: 'art-002',
@@ -42,6 +45,9 @@ export const mockArtists: Artist[] = [
     youtubeChannel: 'DJKrishOfficial',
     experienceYears: 10,
     availabilityStatus: 'available',
+    eventTypesSupported: ['wedding', 'pre_wedding', 'corporate', 'house_party', 'anniversary'],
+    languagesSpoken: ['Hindi', 'English', 'Punjabi'],
+    readyToTravel: true,
   },
   {
     artistId: 'art-003',
@@ -63,6 +69,9 @@ export const mockArtists: Artist[] = [
     youtubeChannel: 'PriyaSharmaLive',
     experienceYears: 6,
     availabilityStatus: 'available',
+    eventTypesSupported: ['wedding', 'pre_wedding', 'anniversary', 'birthday'],
+    languagesSpoken: ['Hindi', 'English', 'Marathi'],
+    readyToTravel: false,
   },
   {
     artistId: 'art-004',
@@ -84,6 +93,9 @@ export const mockArtists: Artist[] = [
     youtubeChannel: 'RohanDesaiComedy',
     experienceYears: 5,
     availabilityStatus: 'busy',
+    eventTypesSupported: ['corporate', 'house_party', 'birthday', 'other'],
+    languagesSpoken: ['Hindi', 'English', 'Marathi'],
+    readyToTravel: true,
   },
   {
     artistId: 'art-005',
@@ -105,6 +117,9 @@ export const mockArtists: Artist[] = [
     youtubeChannel: 'TheRaagaCollective',
     experienceYears: 7,
     availabilityStatus: 'available',
+    eventTypesSupported: ['wedding', 'corporate', 'anniversary', 'other'],
+    languagesSpoken: ['Hindi', 'English', 'Tamil'],
+    readyToTravel: true,
   },
   {
     artistId: 'art-006',
@@ -125,6 +140,9 @@ export const mockArtists: Artist[] = [
     instagramHandle: 'meerakapoor_mc',
     experienceYears: 4,
     availabilityStatus: 'available',
+    eventTypesSupported: ['wedding', 'corporate', 'anniversary', 'birthday'],
+    languagesSpoken: ['Hindi', 'English'],
+    readyToTravel: false,
   },
   {
     artistId: 'art-007',
@@ -132,7 +150,7 @@ export const mockArtists: Artist[] = [
     slug: 'vikram-bubbles',
     artistType: 'bubble_artist',
     profileImageUrl: '/artists/magician.png',
-    bio: 'India\'s premier bubble artist! Giant bubbles, bubble-in-bubble tricks, and UV glow bubble shows for kids parties & events.',
+    bio: "India's premier bubble artist! Giant bubbles, bubble-in-bubble tricks, and UV glow bubble shows for kids parties & events.",
     locationCity: 'Mumbai',
     locationArea: 'Goregaon',
     perEventRateMin: 5000,
@@ -146,6 +164,9 @@ export const mockArtists: Artist[] = [
     youtubeChannel: 'VikramBubbleShow',
     experienceYears: 9,
     availabilityStatus: 'available',
+    eventTypesSupported: ['birthday', 'house_party', 'corporate', 'wedding'],
+    languagesSpoken: ['Hindi', 'English', 'Marathi', 'Gujarati'],
+    readyToTravel: true,
   },
   {
     artistId: 'art-008',
@@ -166,5 +187,9 @@ export const mockArtists: Artist[] = [
     instagramHandle: 'adityanaik_music',
     experienceYears: 3,
     availabilityStatus: 'unavailable',
+    eventTypesSupported: ['wedding', 'anniversary', 'birthday', 'house_party'],
+    languagesSpoken: ['Hindi', 'Marathi', 'Kannada'],
+    readyToTravel: false,
   },
 ];
+

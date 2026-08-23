@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { LayoutDashboard, MessageCircle, Heart, Search, Calendar, MapPin, IndianRupee, ChevronDown, ExternalLink, ChevronRight } from 'lucide-react';
+import { LayoutDashboard, MessageCircle, Search, Calendar, MapPin, IndianRupee, ChevronDown, ExternalLink, ChevronRight } from 'lucide-react';
 import { mockArtists } from '../../data/mockArtists';
 import { INQUIRIES, STATUS_COLORS } from '../../data/mockPlannerActivity';
 import type { InquiryStatus } from '../../data/mockPlannerActivity';
@@ -35,9 +35,6 @@ export default function InquiriesPage() {
           </Link>
           <Link to="/planner/inquiries" className="planner-sidebar-link active">
             <MessageCircle size={18} /> My Inquiries
-          </Link>
-          <Link to="/planner/saved" className="planner-sidebar-link">
-            <Heart size={18} /> Saved Artists
           </Link>
           <Link to="/search" className="planner-sidebar-link">
             <Search size={18} /> Browse Artists

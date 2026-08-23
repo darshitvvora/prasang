@@ -793,6 +793,56 @@
   color: rgba(255, 255, 255, 0.65);
 }
 
+.ob-toggle-label {
+  justify-content: space-between;
+  width: 100%;
+}
+
+.ob-toggle {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  margin-left: auto;
+}
+
+.ob-toggle input[type="checkbox"] {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+
+.ob-toggle-track {
+  width: 36px;
+  height: 20px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  position: relative;
+  transition: background-color 0.2s;
+}
+
+.ob-toggle-track::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 14px;
+  height: 14px;
+  background-color: rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ob-toggle input:checked + .ob-toggle-track {
+  background-color: var(--color-accent);
+}
+
+.ob-toggle input:checked + .ob-toggle-track::after {
+  transform: translateX(16px);
+  background-color: #ffffff;
+}
+
 .ob-input {
   background: rgba(255, 255, 255, 0.05);
   border: 1.5px solid rgba(255, 255, 255, 0.1);

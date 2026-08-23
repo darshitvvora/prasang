@@ -13,6 +13,40 @@ export type SubscriptionTier = 'free' | 'basic' | 'pro' | 'premium';
 
 export type AvailabilityStatus = 'available' | 'busy' | 'unavailable';
 
+export type EventType =
+  | 'birthday'
+  | 'wedding'
+  | 'pre_wedding'
+  | 'anniversary'
+  | 'corporate'
+  | 'house_party'
+  | 'other';
+
+export const EVENT_TYPE_LABELS: Record<EventType, string> = {
+  birthday: 'Birthday',
+  wedding: 'Wedding',
+  pre_wedding: 'Pre-Wedding',
+  anniversary: 'Anniversary',
+  corporate: 'Corporate',
+  house_party: 'House Party',
+  other: 'Other',
+};
+
+export const LANGUAGES = [
+  'Hindi',
+  'English',
+  'Marathi',
+  'Gujarati',
+  'Tamil',
+  'Telugu',
+  'Kannada',
+  'Bengali',
+  'Punjabi',
+  'Other',
+] as const;
+
+export type Language = typeof LANGUAGES[number];
+
 export interface Artist {
   artistId: string;
   name: string;
@@ -32,7 +66,10 @@ export interface Artist {
   instagramHandle?: string;
   youtubeChannel?: string;
   experienceYears: number;
-  availabilityStatus: AvailabilityStatus;
+  eventTypesSupported: EventType[];
+  languagesSpoken: string[];
+  readyToTravel: boolean;
+  availabilityStatus?: AvailabilityStatus;
 }
 
 export const ARTIST_TYPE_LABELS: Record<ArtistType, string> = {

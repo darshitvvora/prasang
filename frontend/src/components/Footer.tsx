@@ -76,9 +76,9 @@ export default function Footer() {
             © 2026 Prasang. Made with ❤️ in Mumbai
           </p>
           <div className="footer-bottom-links">
-            <a href="#" className="footer-bottom-link">Privacy Policy</a>
-            <a href="#" className="footer-bottom-link">Terms of Service</a>
-            <a href="#" className="footer-bottom-link">Cookie Policy</a>
+            <Link to="/privacy-policy" className="footer-bottom-link">Privacy Policy</Link>
+            <Link to="/terms-of-service" className="footer-bottom-link">Terms of Service</Link>
+            <Link to="/cookie-policy" className="footer-bottom-link">Cookie Policy</Link>
           </div>
         </div>
       </div>

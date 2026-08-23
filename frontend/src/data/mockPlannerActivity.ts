@@ -82,5 +82,3 @@ export const STATUS_COLORS: Record<InquiryStatus, string> = {
   confirmed: '#4ade80',
   declined: '#666',
 };
-
-export const SAVED_ARTIST_IDS = ['art-002', 'art-006', 'art-007', 'art-008'];

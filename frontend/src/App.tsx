@@ -10,7 +10,11 @@ import OnboardingPage from './pages/artist/OnboardingPage';
 import LeadsPage from './pages/artist/LeadsPage';
 import PlannerDashboardPage from './pages/planner/DashboardPage';
 import PlannerInquiriesPage from './pages/planner/InquiriesPage';
-import PlannerSavedArtistsPage from './pages/planner/SavedArtistsPage';
+
+// Legal Pages
+import PrivacyPolicy from './pages/legal/PrivacyPolicy';
+import TermsOfService from './pages/legal/TermsOfService';
+import CookiePolicy from './pages/legal/CookiePolicy';
 
 export default function App() {
   return (
@@ -27,7 +31,11 @@ export default function App() {
         <Route path="/artist/leads" element={<LeadsPage />} />
         <Route path="/planner/dashboard" element={<PlannerDashboardPage />} />
         <Route path="/planner/inquiries" element={<PlannerInquiriesPage />} />
-        <Route path="/planner/saved" element={<PlannerSavedArtistsPage />} />
+        
+        {/* Legal Routes */}
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/terms-of-service" element={<TermsOfService />} />
+        <Route path="/cookie-policy" element={<CookiePolicy />} />
       </Routes>
     </BrowserRouter>
   );

@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Check, Upload, AtSign, PlayCircle, ChevronRight } from 'lucide-react';
-import type { ArtistType } from '../../types/artist';
-import { ARTIST_TYPE_LABELS } from '../../types/artist';
+import { Check, Upload, AtSign, PlayCircle, ChevronRight, Plane, Globe, CalendarDays } from 'lucide-react';
+import type { ArtistType, EventType } from '../../types/artist';
+import { ARTIST_TYPE_LABELS, EVENT_TYPE_LABELS, LANGUAGES } from '../../types/artist';
 import './ArtistPages.css';
 
 const STEPS = ['Profile Setup', 'Social & Media', 'Choose Plan'];
@@ -21,6 +21,9 @@ type FormState = {
   instagram: string;
   youtube: string;
   selectedPlan: 'basic' | 'pro' | 'premium';
+  eventTypes: EventType[];
+  languages: string[];
+  readyToTravel: boolean;
 };
 
 export default function OnboardingPage() {
@@ -30,7 +33,26 @@ export default function OnboardingPage() {
     name: '', artistType: '', city: '', area: '', bio: '',
     experienceYears: '', rateMin: '', rateMax: '',
     instagram: '', youtube: '', selectedPlan: 'pro',
+    eventTypes: [], languages: [], readyToTravel: false,
   });
+
+  function toggleEventType(t: EventType) {
+    setForm((f) => ({
+      ...f,
+      eventTypes: f.eventTypes.includes(t)
+        ? f.eventTypes.filter((e) => e !== t)
+        : [...f.eventTypes, t],
+    }));
+  }
+
+  function toggleLanguage(lang: string) {
+    setForm((f) => ({
+      ...f,
+      languages: f.languages.includes(lang)
+        ? f.languages.filter((l) => l !== lang)
+        : [...f.languages, lang],
+    }));
+  }
 
   function set(key: keyof FormState, val: string) {
     setForm((f) => ({ ...f, [key]: val }));
@@ -169,6 +191,59 @@ export default function OnboardingPage() {
                   />
                 </div>
               </div>
+            </div>
+
+            <div className="ob-field">
+              <label>
+                <CalendarDays size={15} /> Event types you perform at
+              </label>
+              <div className="ob-type-grid">
+                {(Object.keys(EVENT_TYPE_LABELS) as EventType[]).map((t) => (
+                  <button
+                    key={t}
+                    type="button"
+                    className={`ob-type-btn${form.eventTypes.includes(t) ? ' selected' : ''}`}
+                    onClick={() => toggleEventType(t)}
+                  >
+                    {EVENT_TYPE_LABELS[t]}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="ob-field">
+              <label>
+                <Globe size={15} /> Languages you perform in
+              </label>
+              <div className="ob-type-grid">
+                {LANGUAGES.map((lang) => (
+                  <button
+                    key={lang}
+                    type="button"
+                    className={`ob-type-btn${form.languages.includes(lang) ? ' selected' : ''}`}
+                    onClick={() => toggleLanguage(lang)}
+                  >
+                    {lang}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="ob-field">
+              <label className="ob-toggle-label">
+                <Plane size={15} /> Ready to travel outside your city?
+                <label className="ob-toggle">
+                  <input
+                    type="checkbox"
+                    checked={form.readyToTravel}
+                    onChange={(e) => setForm((f) => ({ ...f, readyToTravel: e.target.checked }))}
+                  />
+                  <span className="ob-toggle-track" />
+                </label>
+              </label>
+              <span className="ob-hint">
+                {form.readyToTravel ? '✈️ Artists open to travelling get 40% more enquiries from other cities.' : 'You will only receive enquiries from your city.'}
+              </span>
             </div>
 
             <div className="ob-field">

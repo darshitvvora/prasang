@@ -1,14 +1,13 @@
 import { Link } from 'react-router-dom';
-import { LayoutDashboard, MessageCircle, Heart, CheckCircle2, Calendar, ChevronRight, Search, Star } from 'lucide-react';
+import { LayoutDashboard, MessageCircle, CheckCircle2, Calendar, ChevronRight, Search, Star } from 'lucide-react';
 import { mockArtists } from '../../data/mockArtists';
-import { INQUIRIES, STATUS_COLORS, SAVED_ARTIST_IDS } from '../../data/mockPlannerActivity';
+import { INQUIRIES, STATUS_COLORS } from '../../data/mockPlannerActivity';
 import { ARTIST_TYPE_LABELS } from '../../types/artist';
 import './PlannerPages.css';
 
 export default function DashboardPage() {
   const respondedCount = INQUIRIES.filter((i) => i.status === 'responded' || i.status === 'confirmed').length;
   const confirmedCount = INQUIRIES.filter((i) => i.status === 'confirmed').length;
-  const savedArtists = mockArtists.filter((a) => SAVED_ARTIST_IDS.includes(a.artistId));
 
   const upcoming = INQUIRIES
     .filter((i) => i.status !== 'declined' && i.daysToEvent >= 0)
@@ -31,9 +30,6 @@ export default function DashboardPage() {
           </Link>
           <Link to="/planner/inquiries" className="planner-sidebar-link">
             <MessageCircle size={18} /> My Inquiries
-          </Link>
-          <Link to="/planner/saved" className="planner-sidebar-link">
-            <Heart size={18} /> Saved Artists
           </Link>
           <Link to="/search" className="planner-sidebar-link">
             <Search size={18} /> Browse Artists
@@ -81,13 +77,6 @@ export default function DashboardPage() {
               <span className="planner-metric-icon"><CheckCircle2 size={20} /></span>
             </div>
             <div className="planner-metric-value">{confirmedCount}</div>
-          </div>
-          <div className="planner-metric-card">
-            <div className="planner-metric-header">
-              <span className="planner-metric-label">Saved Artists</span>
-              <span className="planner-metric-icon"><Heart size={20} /></span>
-            </div>
-            <div className="planner-metric-value">{savedArtists.length}</div>
           </div>
         </div>
 
@@ -138,26 +127,6 @@ export default function DashboardPage() {
                     </div>
                   );
                 })}
-              </div>
-            )}
-          </div>
-
-          <div className="planner-dashboard-card">
-            <div className="planner-card-header">
-              <h2 className="planner-card-title">Saved Artists</h2>
-              <Link to="/planner/saved" className="planner-card-action">View all <ChevronRight size={14} /></Link>
-            </div>
-            {savedArtists.length === 0 ? (
-              <p className="planner-empty-note">You haven't saved any artists yet.</p>
-            ) : (
-              <div className="planner-saved-preview-grid">
-                {savedArtists.slice(0, 4).map((artist) => (
-                  <Link to={`/profile/${artist.slug}`} key={artist.artistId} className="planner-saved-preview-card">
-                    <img src={artist.profileImageUrl} alt={artist.name} className="planner-saved-preview-img" />
-                    <div className="planner-saved-preview-name">{artist.name}</div>
-                    <div className="planner-saved-preview-type">{ARTIST_TYPE_LABELS[artist.artistType]}</div>
-                  </Link>
-                ))}
               </div>
             )}
           </div>

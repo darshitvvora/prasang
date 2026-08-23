@@ -2,14 +2,14 @@ import { useState, useMemo } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import {
   Search, SlidersHorizontal, X, ChevronDown, MapPin,
-  Star, Crown, BadgeCheck, Heart, MessageCircle, AtSign,
-  PlayCircle, ArrowLeft, LayoutGrid, List,
+  Star, Crown, BadgeCheck, MessageCircle, AtSign,
+  PlayCircle, ArrowLeft, LayoutGrid, List, Plane,
 } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { mockArtists } from '../data/mockArtists';
-import type { ArtistType } from '../types/artist';
-import { ARTIST_TYPE_LABELS, ARTIST_TYPE_COLORS } from '../types/artist';
+import type { ArtistType, EventType } from '../types/artist';
+import { ARTIST_TYPE_LABELS, ARTIST_TYPE_COLORS, EVENT_TYPE_LABELS, LANGUAGES } from '../types/artist';
 import './SearchPage.css';
 
 const CITIES = ['Mumbai', 'Pune', 'Delhi', 'Bangalore', 'Hyderabad', 'Chennai'];
@@ -44,6 +44,9 @@ export default function SearchPage() {
   const [city, setCity] = useState(initialCity);
   const [area, setArea] = useState('');
   const [artistType, setArtistType] = useState<ArtistType | ''>('');
+  const [eventTypeFilter, setEventTypeFilter] = useState<EventType | ''>('');
+  const [languageFilter, setLanguageFilter] = useState('');
+  const [travelOnly, setTravelOnly] = useState(false);
   const [minPrice, setMinPrice] = useState(0);
   const [maxPrice, setMaxPrice] = useState(100000);
   const [minRating, setMinRating] = useState(0);
@@ -52,7 +55,7 @@ export default function SearchPage() {
   const [sortBy, setSortBy] = useState('relevance');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [filtersOpen, setFiltersOpen] = useState(false);
-  const [favorites, setFavorites] = useState<Set<string>>(new Set());
+
 
   const results = useMemo(() => {
     let list = [...mockArtists];
@@ -67,6 +70,9 @@ export default function SearchPage() {
     }
     if (artistType) list = list.filter((a) => a.artistType === artistType);
     if (area) list = list.filter((a) => a.locationArea === area);
+    if (eventTypeFilter) list = list.filter((a) => a.eventTypesSupported.includes(eventTypeFilter));
+    if (languageFilter) list = list.filter((a) => a.languagesSpoken.includes(languageFilter));
+    if (travelOnly) list = list.filter((a) => a.readyToTravel);
     if (verifiedOnly) list = list.filter((a) => a.isVerified);
     if (featuredOnly) list = list.filter((a) => a.isFeatured);
     if (minRating > 0) list = list.filter((a) => a.averageRating >= minRating);
@@ -86,19 +92,16 @@ export default function SearchPage() {
       });
     }
     return list;
-  }, [query, artistType, area, verifiedOnly, featuredOnly, minRating, minPrice, maxPrice, sortBy]);
+  }, [query, artistType, area, eventTypeFilter, languageFilter, travelOnly, verifiedOnly, featuredOnly, minRating, minPrice, maxPrice, sortBy]);
 
-  function toggleFavorite(id: string) {
-    setFavorites((prev) => {
-      const next = new Set(prev);
-      next.has(id) ? next.delete(id) : next.add(id);
-      return next;
-    });
-  }
+
 
   function clearFilters() {
     setArtistType('');
     setArea('');
+    setEventTypeFilter('');
+    setLanguageFilter('');
+    setTravelOnly(false);
     setMinPrice(0);
     setMaxPrice(100000);
     setMinRating(0);
@@ -107,7 +110,8 @@ export default function SearchPage() {
   }
 
   const hasActiveFilters =
-    artistType || area || minPrice > 0 || maxPrice < 100000 || minRating > 0 || verifiedOnly || featuredOnly;
+    artistType || area || eventTypeFilter || languageFilter || travelOnly ||
+    minPrice > 0 || maxPrice < 100000 || minRating > 0 || verifiedOnly || featuredOnly;
 
   return (
     <>
@@ -215,14 +219,34 @@ export default function SearchPage() {
               </select>
             </div>
 
-            {/* Event Type (informational, no filter logic needed yet) */}
+            {/* Event Type Filter */}
             <div className="sidebar-group">
               <h3 className="sidebar-group-title">Event Type</h3>
               <div className="sidebar-event-chips">
-                {EVENT_TYPES.map((e) => (
-                  <span key={e} className="sidebar-event-chip">{e}</span>
+                {(Object.keys(EVENT_TYPE_LABELS) as EventType[]).map((et) => (
+                  <button
+                    key={et}
+                    className={`sidebar-event-chip${eventTypeFilter === et ? ' active' : ''}`}
+                    onClick={() => setEventTypeFilter(eventTypeFilter === et ? '' : et)}
+                  >
+                    {EVENT_TYPE_LABELS[et]}
+                  </button>
                 ))}
               </div>
+            </div>
+
+            {/* Language Filter */}
+            <div className="sidebar-group">
+              <h3 className="sidebar-group-title">Language</h3>
+              <select
+                value={languageFilter}
+                onChange={(e) => setLanguageFilter(e.target.value)}
+                className="sidebar-select"
+                aria-label="Filter by language"
+              >
+                <option value="">All Languages</option>
+                {LANGUAGES.map((lang) => <option key={lang} value={lang}>{lang}</option>)}
+              </select>
             </div>
 
             {/* Budget Range */}
@@ -265,6 +289,17 @@ export default function SearchPage() {
 
             {/* Toggles */}
             <div className="sidebar-group">
+              <label className="sidebar-toggle">
+                <input
+                  type="checkbox"
+                  checked={travelOnly}
+                  onChange={(e) => setTravelOnly(e.target.checked)}
+                />
+                <span className="sidebar-toggle-track" />
+                <span className="sidebar-toggle-label">
+                  <Plane size={15} /> Ready to Travel
+                </span>
+              </label>
               <label className="sidebar-toggle">
                 <input
                   type="checkbox"
@@ -348,19 +383,13 @@ export default function SearchPage() {
                         className="result-card-image"
                         loading="lazy"
                       />
-                      <div className={`result-card-status ${artist.availabilityStatus}`} />
+                      {/* <div className={`result-card-status ${artist.availabilityStatus}`} />
                       {artist.isFeatured && (
                         <div className="result-card-featured">
                           <Crown size={11} /> Featured
                         </div>
-                      )}
-                      <button
-                        className={`result-card-fav${favorites.has(artist.artistId) ? ' active' : ''}`}
-                        onClick={() => toggleFavorite(artist.artistId)}
-                        aria-label={`${favorites.has(artist.artistId) ? 'Remove from' : 'Add to'} favorites`}
-                      >
-                        <Heart size={16} fill={favorites.has(artist.artistId) ? 'currentColor' : 'none'} />
-                      </button>
+                      )} */}
+
                     </div>
 
                     <div className="result-card-body">
@@ -413,15 +442,15 @@ export default function SearchPage() {
                           <div className="result-card-price-label">per event</div>
                         </div>
                         <div className="result-card-actions">
-                          <button className="result-card-msg-btn" aria-label="Message">
+                          {/* <button className="result-card-msg-btn" aria-label="Message">
                             <MessageCircle size={16} />
-                          </button>
+                          </button> */}
                           <Link to={`/profile/${artist.slug}`} className="result-card-view-btn">
                             View Profile
                           </Link>
-                          <button className="result-card-contact-btn">
+                          {/* <button className="result-card-contact-btn">
                             Get Contact
-                          </button>
+                          </button> */}
                         </div>
                       </div>
                     </div>
