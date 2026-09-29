@@ -2,7 +2,6 @@ import { Link } from 'react-router-dom';
 import { LayoutDashboard, MessageCircle, CheckCircle2, Calendar, ChevronRight, Search, Star } from 'lucide-react';
 import { mockArtists } from '../../data/mockArtists';
 import { INQUIRIES, STATUS_COLORS } from '../../data/mockPlannerActivity';
-import { ARTIST_TYPE_LABELS } from '../../types/artist';
 import './PlannerPages.css';
 
 export default function DashboardPage() {
