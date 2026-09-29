@@ -219,3 +219,10 @@
     display: none;
   }
 }
+
+.navbar-signout {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+}
