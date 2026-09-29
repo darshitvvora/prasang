@@ -1,135 +1,80 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Check, X, Crown, Zap, Star, Sparkles } from 'lucide-react';
 import Navbar from '../components/Navbar';
+import QueryState, { InlineError } from '../components/QueryState';
+import { useAuth } from '../auth/AuthProvider';
+import { ApiError } from '../api/client';
+import { useCreateSubscription, useMySubscription, usePlans, useVerifyPayment } from '../api/queries';
+import type { Plan } from '../api/types';
+import type { SubscriptionTier } from '../types/artist';
+import { openCheckout } from '../payments/razorpay';
+import { pricingCta } from './pricing/pricingCta';
 import './PricingPage.css';
 
-const PLANS = [
-  {
-    id: 'free',
-    name: 'Free',
-    icon: <Star size={22} />,
-    monthlyPrice: 0,
-    yearlyPrice: 0,
-    tagline: 'Get started, get noticed',
-    color: '#888',
-    features: {
-      'Profile listing': true,
-      'Basic search visibility': true,
-      'Contact leads per month': '3',
-      'Media uploads': '5 photos',
-      'Profile views shown': false,
-      'Instagram / YouTube link': true,
-      'Verified badge': false,
-      'Featured in search': false,
-      'Priority in search results': false,
-      // 'Analytics dashboard': false,
-      'WhatsApp lead notifications': false,
-      'Custom portfolio link': false,
-      'Priority support': false,
-    },
-  },
-  {
-    id: 'basic',
-    name: 'Basic',
-    icon: <Zap size={22} />,
-    monthlyPrice: 299,
-    yearlyPrice: 249,
-    tagline: 'For artists just getting started',
-    color: '#60a5fa',
-    features: {
-      'Profile listing': true,
-      'Basic search visibility': true,
-      'Contact leads per month': '15',
-      'Media uploads': '20 photos + 3 videos',
-      'Profile views shown': true,
-      'Instagram / YouTube link': true,
-      'Verified badge': true,
-      'Featured in search': false,
-      'Priority in search results': false,
-      // 'Analytics dashboard': 'Basic',
-      'WhatsApp lead notifications': true,
-      'Custom portfolio link': false,
-      'Priority support': false,
-    },
-  },
-  {
-    id: 'pro',
-    name: 'Pro',
-    icon: <Crown size={22} />,
-    monthlyPrice: 599,
-    yearlyPrice: 499,
-    tagline: 'For growing artists',
-    color: 'var(--color-accent)',
-    popular: true,
-    features: {
-      'Profile listing': true,
-      'Basic search visibility': true,
-      'Contact leads per month': 'Unlimited',
-      'Media uploads': '100 photos + 20 videos',
-      'Profile views shown': true,
-      'Instagram / YouTube link': true,
-      'Verified badge': true,
-      'Featured in search': true,
-      'Priority in search results': true,
-      // 'Analytics dashboard': 'Advanced',
-      'WhatsApp lead notifications': true,
-      'Custom portfolio link': true,
-      'Priority support': false,
-    },
-  },
-  {
-    id: 'premium',
-    name: 'Premium',
-    icon: <Sparkles size={22} />,
-    monthlyPrice: 1199,
-    yearlyPrice: 999,
-    tagline: 'For professionals who demand the best',
-    color: '#a78bfa',
-    features: {
-      'Profile listing': true,
-      'Basic search visibility': true,
-      'Contact leads per month': 'Unlimited',
-      'Media uploads': 'Unlimited',
-      'Profile views shown': true,
-      'Instagram / YouTube link': true,
-      'Verified badge': true,
-      'Featured in search': true,
-      'Priority in search results': 'Top 3 placement',
-      // 'Analytics dashboard': 'Full + Export',
-      'WhatsApp lead notifications': true,
-      'Custom portfolio link': true,
-      'Priority support': true,
-    },
-  },
-] as const;
+const TIER_STYLE: Record<SubscriptionTier, { icon: React.ReactNode; color: string }> = {
+  free: { icon: <Star size={22} />, color: '#888' },
+  basic: { icon: <Zap size={22} />, color: '#60a5fa' },
+  pro: { icon: <Crown size={22} />, color: 'var(--color-accent)' },
+  premium: { icon: <Sparkles size={22} />, color: '#a78bfa' },
+};
 
-const ALL_FEATURES = [
-  'Profile listing',
-  'Basic search visibility',
-  'Contact leads per month',
-  'Media uploads',
-  'Profile views shown',
-  'Instagram / YouTube link',
-  'Verified badge',
-  'Featured in search',
-  'Priority in search results',
-  // 'Analytics dashboard',
-  'WhatsApp lead notifications',
-  'Custom portfolio link',
-  'Priority support',
-] as const;
-
-type FeatureKey = typeof ALL_FEATURES[number];
-
-function FeatureValue({ value }: { value: string | boolean }) {
+function FeatureValue({ value }: { value: string | boolean | undefined }) {
   if (value === true) return <Check size={18} className="feat-check" />;
-  if (value === false) return <X size={16} className="feat-x" />;
+  if (value === false || value === undefined) return <X size={16} className="feat-x" />;
   return <span className="feat-text">{value}</span>;
 }
 
 export default function PricingPage() {
   const [annual, setAnnual] = useState(true);
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const plansQuery = usePlans();
+  const isArtist = user?.role === 'artist';
+  const subscription = useMySubscription(isArtist);
+  const createSubscription = useCreateSubscription();
+  const verifyPayment = useVerifyPayment();
+  const [busyTier, setBusyTier] = useState<SubscriptionTier | null>(null);
+  const [error, setError] = useState<unknown>(null);
+  const [success, setSuccess] = useState<string | null>(null);
+
+  const plans = plansQuery.data?.items ?? [];
+  const allFeatures = [...new Set(plans.flatMap((p) => p.features.map((f) => f.label)))];
+  const featureOf = (p: Plan, label: string) => p.features.find((f) => f.label === label)?.value;
+
+  async function subscribe(tier: Exclude<SubscriptionTier, 'free'>) {
+    setBusyTier(tier);
+    setError(null);
+    setSuccess(null);
+    try {
+      const { checkout } = await createSubscription.mutateAsync({ tier, billingCycle: annual ? 'annual' : 'monthly' });
+      const payment = await openCheckout(checkout);
+      const result = await verifyPayment.mutateAsync(payment);
+      setSuccess(result.status === 'active'
+        ? `You're on ${result.plan.name}! Your profile now gets ${result.plan.name} placement.`
+        : 'Payment received — your plan will activate in a moment.');
+    } catch (e) {
+      if (!(e instanceof ApiError && e.code === 'checkout_dismissed')) setError(e);
+    } finally {
+      setBusyTier(null);
+    }
+  }
+
+  function renderCta(plan: Plan) {
+    const cta = pricingCta(plan.tier, user, subscription.data?.plan);
+    const cls = `plan-cta${plan.popular ? ' primary' : ''}`;
+    if (cta.kind === 'link') return <Link to={cta.to} className={cls}>{cta.label}</Link>;
+    if (cta.kind === 'current') return <span className={`${cls} current`}>{cta.label}</span>;
+    if (cta.kind === 'subscribe' && plan.tier !== 'free') {
+      const tier = plan.tier;
+      return (
+        <button type="button" className={cls} disabled={busyTier !== null} onClick={() => subscribe(tier)}>
+          {busyTier === tier ? 'Opening checkout…' : cta.label}
+        </button>
+      );
+    }
+    return null;
+  }
 
   return (
     <div className="pricing-page">
@@ -163,18 +108,27 @@ export default function PricingPage() {
         </div>
       </div>
 
+      {success && (
+        <div className="pricing-status success" role="status">
+          {success} <button type="button" onClick={() => navigate('/artist/dashboard')}>Go to dashboard →</button>
+        </div>
+      )}
+      <div className="pricing-status-error"><InlineError error={error} /></div>
+
       {/* Pricing cards */}
+      <QueryState query={plansQuery}>
+        {() => (
       <div className="pricing-grid">
-        {PLANS.map((plan) => {
-          const price = annual ? plan.yearlyPrice : plan.monthlyPrice;
-          const isPopular = 'popular' in plan && plan.popular;
+        {plans.map((plan) => {
+          const price = annual ? plan.annualMonthlyEquivalent : plan.monthlyPrice;
+          const style = TIER_STYLE[plan.tier];
 
           return (
-            <div key={plan.id} className={`pricing-card${isPopular ? ' popular' : ''}`}>
-              {isPopular && <div className="popular-badge">Most Popular</div>}
+            <div key={plan.tier} className={`pricing-card${plan.popular ? ' popular' : ''}`}>
+              {plan.popular && <div className="popular-badge">Most Popular</div>}
 
               <div className="plan-header">
-                <span className="plan-icon" style={{ color: plan.color }}>{plan.icon}</span>
+                <span className="plan-icon" style={{ color: style.color }}>{style.icon}</span>
                 <div>
                   <div className="plan-name">{plan.name}</div>
                   <div className="plan-tagline">{plan.tagline}</div>
@@ -192,26 +146,20 @@ export default function PricingPage() {
                   </>
                 )}
                 {annual && price > 0 && (
-                  <span className="price-note">billed ₹{price * 12}/year</span>
+                  <span className="price-note">billed ₹{plan.annualPrice.toLocaleString('en-IN')}/year</span>
                 )}
               </div>
 
-              <Link
-                to="/signup"
-                className={`plan-cta${isPopular ? ' primary' : ''}`}
-              >
-                {plan.id === 'free' ? 'Start free' : `Get ${plan.name}`}
-              </Link>
+              {renderCta(plan)}
 
               <ul className="plan-features">
-                {ALL_FEATURES.map((feat) => {
-                  const val = (plan.features as Record<FeatureKey, string | boolean>)[feat];
-                  if (val === false) return null;
+                {plan.features.map((f) => {
+                  if (f.value === false) return null;
                   return (
-                    <li key={feat} className="plan-feature-item">
+                    <li key={f.label} className="plan-feature-item">
                       <Check size={15} className="feat-check-sm" />
-                      <span className="feat-name">{feat}</span>
-                      {typeof val === 'string' && <span className="feat-val">{val}</span>}
+                      <span className="feat-name">{f.label}</span>
+                      {typeof f.value === 'string' && <span className="feat-val">{f.value}</span>}
                     </li>
                   );
                 })}
@@ -220,6 +168,8 @@ export default function PricingPage() {
           );
         })}
       </div>
+        )}
+      </QueryState>
 
       {/* Comparison table */}
       <div className="comparison-section">
@@ -229,20 +179,20 @@ export default function PricingPage() {
             <thead>
               <tr>
                 <th className="col-feature">Features</th>
-                {PLANS.map((p) => (
-                  <th key={p.id} className={`col-plan${p.id === 'pro' ? ' col-popular' : ''}`}>
-                    <span style={{ color: p.color }}>{p.name}</span>
+                {plans.map((p) => (
+                  <th key={p.tier} className={`col-plan${p.popular ? ' col-popular' : ''}`}>
+                    <span style={{ color: TIER_STYLE[p.tier].color }}>{p.name}</span>
                   </th>
                 ))}
               </tr>
             </thead>
             <tbody>
-              {ALL_FEATURES.map((feat) => (
+              {allFeatures.map((feat) => (
                 <tr key={feat}>
                   <td className="feat-row-label">{feat}</td>
-                  {PLANS.map((p) => (
-                    <td key={p.id} className={`feat-row-val${p.id === 'pro' ? ' col-popular' : ''}`}>
-                      <FeatureValue value={(p.features as Record<FeatureKey, string | boolean>)[feat]} />
+                  {plans.map((p) => (
+                    <td key={p.tier} className={`feat-row-val${p.popular ? ' col-popular' : ''}`}>
+                      <FeatureValue value={featureOf(p, feat)} />
                     </td>
                   ))}
                 </tr>
@@ -274,7 +224,7 @@ export default function PricingPage() {
       <div className="pricing-bottom-cta">
         <h2>Ready to get more bookings?</h2>
         <p>Start free. Upgrade when you're ready.</p>
-        <Link to="/signup" className="pricing-bottom-btn">Create your profile →</Link>
+        <Link to={isArtist ? '/artist/onboarding' : '/signup?role=artist'} className="pricing-bottom-btn">{isArtist ? 'Edit your profile →' : 'Create your profile →'}</Link>
       </div>
     </div>
   );
