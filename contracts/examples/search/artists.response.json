@@ -1,0 +1,91 @@
+{
+  "items": [
+    {
+      "artistId": "art-002",
+      "name": "DJ Krish",
+      "slug": "dj-krish",
+      "artistType": "dj",
+      "profileImageUrl": "/artists/dj.png",
+      "bio": "Bollywood + EDM DJ with 10 years experience. Resident DJ at top Mumbai clubs. Weddings, sangeets, corporate events.",
+      "locationCity": "Mumbai",
+      "locationArea": "Andheri West",
+      "perEventRateMin": 20000,
+      "perEventRateMax": 35000,
+      "averageRating": 4.7,
+      "totalReviews": 89,
+      "isVerified": true,
+      "isFeatured": true,
+      "subscriptionTier": "pro",
+      "instagramHandle": "djkrish_official",
+      "youtubeChannel": "DJKrishOfficial",
+      "experienceYears": 10,
+      "eventTypesSupported": [
+        "wedding",
+        "pre_wedding",
+        "corporate",
+        "house_party",
+        "anniversary"
+      ],
+      "languagesSpoken": [
+        "Hindi",
+        "English",
+        "Punjabi"
+      ],
+      "readyToTravel": true
+    },
+    {
+      "artistId": "art-009",
+      "name": "DJ Nikhil",
+      "slug": "dj-nikhil-pune",
+      "artistType": "dj",
+      "profileImageUrl": "/artists/dj.png",
+      "bio": "Punjabi, Bollywood and house sets for college fests, sangeets and rooftop parties across Pune.",
+      "locationCity": "Pune",
+      "locationArea": "Koregaon Park",
+      "perEventRateMin": 12000,
+      "perEventRateMax": 22000,
+      "averageRating": 4.6,
+      "totalReviews": 38,
+      "isVerified": true,
+      "isFeatured": false,
+      "subscriptionTier": "basic",
+      "instagramHandle": "djnikhilpune",
+      "experienceYears": 5,
+      "eventTypesSupported": [
+        "pre_wedding",
+        "house_party",
+        "birthday",
+        "corporate"
+      ],
+      "languagesSpoken": [
+        "Hindi",
+        "English",
+        "Punjabi",
+        "Marathi"
+      ],
+      "readyToTravel": true,
+      "youtubeChannel": null
+    }
+  ],
+  "total": 2,
+  "page": 1,
+  "size": 20,
+  "facets": {
+    "artistType": [
+      {
+        "value": "dj",
+        "count": 2
+      }
+    ],
+    "city": [
+      {
+        "value": "Mumbai",
+        "count": 1
+      },
+      {
+        "value": "Pune",
+        "count": 1
+      }
+    ]
+  }
+}

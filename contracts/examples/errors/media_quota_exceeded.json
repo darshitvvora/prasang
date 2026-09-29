@@ -1,0 +1,10 @@
+{
+  "error": {
+    "code": "media_quota_exceeded",
+    "message": "Your Basic plan allows 20 photos. Upgrade to add more.",
+    "details": {
+      "limit": 20,
+      "used": 20
+    }
+  }
+}

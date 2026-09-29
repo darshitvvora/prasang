@@ -1,0 +1,22 @@
+{
+  "items": [
+    {
+      "type": "artistType",
+      "label": "DJ",
+      "value": "dj",
+      "slug": null
+    },
+    {
+      "type": "artist",
+      "label": "DJ Krish",
+      "value": "DJ Krish",
+      "slug": "dj-krish"
+    },
+    {
+      "type": "area",
+      "label": "Bandra West, Mumbai",
+      "value": "Bandra West",
+      "slug": null
+    }
+  ]
+}

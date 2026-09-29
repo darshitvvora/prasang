@@ -1,0 +1,21 @@
+{
+  "plan": {
+    "tier": "basic",
+    "name": "Basic",
+    "status": "cancelling",
+    "leadLimitMonthly": 15,
+    "leadsUsedThisMonth": 16,
+    "leadsRemaining": 0,
+    "periodEnd": "2026-10-24",
+    "trialEndsAt": null,
+    "trialAvailable": false
+  },
+  "subscription": {
+    "id": "sub-7b1e",
+    "tier": "basic",
+    "billingCycle": "monthly",
+    "status": "active",
+    "currentPeriodEnd": "2026-10-24",
+    "cancelAtPeriodEnd": true
+  }
+}

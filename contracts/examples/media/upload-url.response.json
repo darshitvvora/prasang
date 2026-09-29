@@ -1,0 +1,8 @@
+{
+  "uploadUrl": "https://prasang-media.r2.cloudflarestorage.com/artists/art-001/2f6e0c9a.jpg?X-Amz-Signature=…",
+  "storageKey": "artists/art-001/2f6e0c9a.jpg",
+  "expiresAt": "2026-09-29T10:20:00Z",
+  "headers": {
+    "Content-Type": "image/jpeg"
+  }
+}

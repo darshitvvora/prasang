@@ -1,0 +1,36 @@
+{
+  "items": [
+    {
+      "id": "med-001-4",
+      "kind": "image",
+      "url": "/artists/comedian.png",
+      "thumbnailUrl": null,
+      "caption": null,
+      "displayOrder": 0
+    },
+    {
+      "id": "med-001-3",
+      "kind": "image",
+      "url": "/artists/singer.png",
+      "thumbnailUrl": null,
+      "caption": null,
+      "displayOrder": 1
+    },
+    {
+      "id": "med-001-2",
+      "kind": "image",
+      "url": "/artists/dj.png",
+      "thumbnailUrl": null,
+      "caption": null,
+      "displayOrder": 2
+    },
+    {
+      "id": "med-001-1",
+      "kind": "image",
+      "url": "/artists/magician.png",
+      "thumbnailUrl": null,
+      "caption": "Arjun Malhotra live",
+      "displayOrder": 3
+    }
+  ]
+}

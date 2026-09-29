@@ -1,0 +1,16 @@
+{
+  "id": "lead-015",
+  "plannerName": "Rahul Mehta",
+  "plannerPhone": "9876501234",
+  "plannerEmail": "rahul.mehta@gmail.com",
+  "eventType": "wedding",
+  "eventTitle": "Wedding",
+  "eventDate": "2026-12-12",
+  "eventCity": "Mumbai",
+  "budgetMin": 25000,
+  "budgetMax": 50000,
+  "notes": "Looking for a magician for ~100 guests, 2 hours show",
+  "status": "contacted",
+  "isLocked": false,
+  "createdAt": "2026-09-29T06:10:00Z"
+}

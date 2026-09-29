@@ -1,0 +1,26 @@
+{
+  "name": "Arjun Malhotra",
+  "artistType": "magician",
+  "locationCity": "Mumbai",
+  "locationArea": "Bandra West",
+  "bio": "Award-winning close-up magician specializing in mentalism and card magic. 500+ shows across Mumbai.",
+  "experienceYears": 8,
+  "perEventRateMin": 15000,
+  "perEventRateMax": 25000,
+  "eventTypesSupported": [
+    "birthday",
+    "wedding",
+    "corporate",
+    "anniversary",
+    "house_party"
+  ],
+  "languagesSpoken": [
+    "Hindi",
+    "English"
+  ],
+  "readyToTravel": true,
+  "instagramHandle": "arjunmagic",
+  "youtubeChannel": "ArjunMalhotraMagic",
+  "contactPhone": "9820011001",
+  "whatsappNumber": "9820011001"
+}
