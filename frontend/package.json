@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "mock": "node ../mockoon/build.mjs && mockoon-cli start --data ../mockoon/prasang.json --repair",
+    "mock:smoke": "bash ../mockoon/smoke.sh"
   },
   "dependencies": {
     "lucide-react": "^1.21.0",

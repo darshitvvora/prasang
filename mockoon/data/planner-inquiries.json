@@ -1,0 +1,121 @@
+{
+  "items": [
+    {
+      "id": "lead-101",
+      "artist": {
+        "artistId": "art-005",
+        "slug": "the-raaga-collective",
+        "name": "The Raaga Collective",
+        "artistType": "band",
+        "profileImageUrl": "/artists/band.png"
+      },
+      "eventType": "birthday",
+      "eventTitle": "Birthday",
+      "eventDate": "2026-10-16",
+      "daysToEvent": 17,
+      "budgetMin": 25000,
+      "budgetMax": 50000,
+      "notes": "Live band, 2-hour set, outdoor lawn setup.",
+      "status": "pending",
+      "contactedAt": "2026-09-29T07:30:00Z"
+    },
+    {
+      "id": "lead-102",
+      "artist": {
+        "artistId": "art-003",
+        "slug": "priya-sharma-singer",
+        "name": "Priya Sharma",
+        "artistType": "singer",
+        "profileImageUrl": "/artists/singer.png"
+      },
+      "eventType": "anniversary",
+      "eventTitle": "Anniversary",
+      "eventDate": "2026-11-08",
+      "daysToEvent": 40,
+      "budgetMin": 10000,
+      "budgetMax": 15000,
+      "notes": "Live acoustic set for an intimate 40-guest dinner.",
+      "status": "pending",
+      "contactedAt": "2026-09-29T04:00:00Z"
+    },
+    {
+      "id": "lead-103",
+      "artist": {
+        "artistId": "art-002",
+        "slug": "dj-krish",
+        "name": "DJ Krish",
+        "artistType": "dj",
+        "profileImageUrl": "/artists/dj.png"
+      },
+      "eventType": "pre_wedding",
+      "eventTitle": "Pre-Wedding",
+      "eventDate": "2026-10-24",
+      "daysToEvent": 25,
+      "budgetMin": 25000,
+      "budgetMax": 50000,
+      "notes": "Sangeet night. Need a Bollywood + EDM mix, 4-hour set.",
+      "status": "responded",
+      "contactedAt": "2026-09-28T10:00:00Z"
+    },
+    {
+      "id": "lead-104",
+      "artist": {
+        "artistId": "art-001",
+        "slug": "arjun-malhotra-magic",
+        "name": "Arjun Malhotra",
+        "artistType": "magician",
+        "profileImageUrl": "/artists/magician.png"
+      },
+      "eventType": "wedding",
+      "eventTitle": "Wedding",
+      "eventDate": "2026-10-11",
+      "daysToEvent": 12,
+      "budgetMin": 15000,
+      "budgetMax": 25000,
+      "notes": "Close-up magic for cocktail hour, ~150 guests.",
+      "status": "confirmed",
+      "contactedAt": "2026-09-26T09:00:00Z"
+    },
+    {
+      "id": "lead-105",
+      "artist": {
+        "artistId": "art-004",
+        "slug": "rohan-desai-comedy",
+        "name": "Rohan Desai",
+        "artistType": "comedian",
+        "profileImageUrl": "/artists/comedian.png"
+      },
+      "eventType": "corporate",
+      "eventTitle": "Corporate",
+      "eventDate": "2026-09-27",
+      "daysToEvent": -2,
+      "budgetMin": 25000,
+      "budgetMax": 50000,
+      "notes": "30-minute stand-up set to open the evening.",
+      "status": "declined",
+      "contactedAt": "2026-09-19T15:00:00Z"
+    }
+  ],
+  "total": 5,
+  "page": 1,
+  "size": 20,
+  "counts": {
+    "all": 5,
+    "pending": 2,
+    "responded": 1,
+    "confirmed": 1,
+    "declined": 1
+  },
+  "summary": {
+    "artistsContacted": 5,
+    "responsesReceived": 2,
+    "confirmedBookings": 1,
+    "upcoming": {
+      "inquiryId": "lead-104",
+      "eventTitle": "Wedding",
+      "artistName": "Arjun Malhotra",
+      "eventDate": "2026-10-11",
+      "daysToEvent": 12
+    }
+  }
+}
