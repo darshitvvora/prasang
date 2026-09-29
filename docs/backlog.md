@@ -6,6 +6,19 @@ Legend: `[ ]` todo · `[x]` done · 🔑 = needs an external account/credential 
 
 ---
 
+## EA — API contract & mock UI ✅ (Plan A: docs/superpowers/plans/2026-09-29-plan-a-api-contract-mock-ui.md)
+- [x] TA.1 Contract conventions, error codes, TypeScript contract types (`contracts/README.md`, `frontend/src/api/types.ts`)
+- [x] TA.2 Canonical request/response examples with compile-time shape check (`contracts/examples/`)
+- [x] TA.3 Mockoon mock API generated from datasets + smoke test (`mockoon/`)
+- [x] TA.4 Typed API client, endpoints, TanStack Query hooks, Vite proxy
+- [x] TA.5 Auth provider (mock mode), role guards, shared login/signup with profile step
+- [x] TA.6 Home, search (URL-synced filters, pagination), profile, contact modal → leads
+- [x] TA.7 Artist onboarding/edit (+ contact phone/WhatsApp, avatar, media), dashboard, leads (locked leads, status actions)
+- [x] TA.8 Planner dashboard/inquiries, pricing + Razorpay checkout (mocked), inline mocks removed
+- [x] TA.9 Runbooks
+
+**Contract additions discovered from the UI (Plan B must implement):** `GET /locations`, `GET /artists/{slug}/reviews` (read-only), `GET /artists/{slug}/similar`, `POST /artists/{slug}/contact-click`, `GET /artists/me/dashboard` (month-over-month metrics → daily stats table), `POST /subscriptions/trial` (7-day, once per artist), lead `eventCity`, artist `contactPhone`/`whatsappNumber`.
+
 ## E0 — Foundation
 **S0.1 As a developer I can run the whole backend locally with one command.**
 - [ ] T0.1.1 Scaffold `backend/` with uv, FastAPI app factory, config (pydantic-settings), `/healthz`, `/readyz`
@@ -68,14 +81,9 @@ Legend: `[ ]` todo · `[x]` done · 🔑 = needs an external account/credential 
 
 ## E6 — Frontend integration
 **S6.1 Login with Google via Supabase.** 🔑 Supabase project + Google OAuth client
-- [ ] T6.1.1 supabase-js client, Google Identity Services button → `signInWithIdToken`, session store, role picker → `POST /me`
-- [ ] T6.1.2 API client with bearer token; route guards for `/artist/*`, `/planner/*`
-**S6.2 Replace mock data with API.**
-- [ ] T6.2.1 Search page, home featured, profile page
-- [ ] T6.2.2 Contact modal → `POST /leads`
-- [ ] T6.2.3 Artist onboarding (profile + media upload), dashboard, leads page
-- [ ] T6.2.4 Planner dashboard + inquiries
-- [ ] T6.2.5 Pricing → subscribe via Razorpay Checkout
+- [ ] T6.1.1 `supabase` mode in `AuthProvider`: Google Identity Services button → `signInWithIdToken`, supabase-js session → token provider
+- [x] T6.1.2 API client with bearer token; route guards for `/artist/*`, `/planner/*` (done in EA)
+**S6.2 Replace mock data with API.** ✅ done in EA against Mockoon — remaining: point `VITE_API_PROXY_TARGET` at FastAPI and run `mockoon/smoke.sh http://localhost:8000/api/v1` against the real backend
 
 ## E7 — Deploy & go-live
 - [ ] T7.1 `deploy/docker-compose.prod.yml`, Caddyfile, arm64 multi-stage Dockerfile, `.env.example` 🔑 Oracle VM
