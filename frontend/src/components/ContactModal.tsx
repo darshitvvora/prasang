@@ -106,6 +106,8 @@ export default function ContactModal({ artist, source, onClose }: Props) {
     );
   } else if (status === 'loading') {
     content = <p className="contact-modal-sub">Loading…</p>;
+  } else if (status === 'error') {
+    content = <p className="contact-modal-sub">We couldn't reach Prasang. Check your connection and try again.</p>;
   } else if (status !== 'signedIn' || !user) {
     content = (
       <div className="contact-revealed">

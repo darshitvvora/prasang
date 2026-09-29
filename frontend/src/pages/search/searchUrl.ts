@@ -45,12 +45,24 @@ function isDefault(key: string, value: unknown): boolean {
   return false;
 }
 
+// Canonical key order keeps URLs stable regardless of how params were merged.
+const KEY_ORDER: (keyof SearchParams)[] = [
+  'q', 'city', 'area', 'artistType', 'eventType', 'language', 'readyToTravel', 'minPrice', 'maxPrice',
+  'minRating', 'verifiedOnly', 'featuredOnly', 'sort', 'page', 'size',
+];
+
 export function toSearchString(params: SearchParams): string {
   const sp = new URLSearchParams();
-  for (const [key, value] of Object.entries(params)) {
+  for (const key of KEY_ORDER) {
+    const value = params[key];
     if (!isDefault(key, value)) sp.set(key, String(value));
   }
   return sp.toString();
+}
+
+/** Apply filter changes on top of the *latest* URL (use inside a functional setSearchParams). Resets to page 1. */
+export function mergeSearch(latest: URLSearchParams, changes: Partial<SearchParams>): string {
+  return toSearchString({ ...parseSearch(latest), page: 1, ...changes });
 }
 
 /** Number of sidebar filters in effect (q/city/sort/page are not sidebar filters). */

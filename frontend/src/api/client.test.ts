@@ -76,3 +76,32 @@ describe('api()', () => {
     expect(new Headers(init.headers).get('Content-Type')).toBe('application/json');
   });
 });
+
+import { setUnauthorizedHandler } from './client';
+
+describe('api() auth hooks (review fixes)', () => {
+  it('awaits an async token provider (Supabase refreshes tokens asynchronously)', async () => {
+    setTokenProvider(async () => 'fresh-token');
+    mockFetch(json(200, {}));
+    await api('/me');
+    expect(new Headers(calls[0][1]?.headers).get('Authorization')).toBe('Bearer fresh-token');
+  });
+
+  it('calls the unauthorized handler when any request gets 401 unauthenticated', async () => {
+    const seen: string[] = [];
+    setUnauthorizedHandler(() => seen.push('signed-out'));
+    mockFetch(json(401, { error: { code: 'unauthenticated', message: 'Please sign in', details: {} } }));
+    await expect(api('/leads/artist')).rejects.toMatchObject({ code: 'unauthenticated' });
+    expect(seen).toEqual(['signed-out']);
+    setUnauthorizedHandler(() => undefined);
+  });
+
+  it('does not call the unauthorized handler for other errors', async () => {
+    const seen: string[] = [];
+    setUnauthorizedHandler(() => seen.push('x'));
+    mockFetch(json(403, { error: { code: 'forbidden', message: 'No', details: {} } }));
+    await api('/leads/artist').catch(() => undefined);
+    expect(seen).toEqual([]);
+    setUnauthorizedHandler(() => undefined);
+  });
+});

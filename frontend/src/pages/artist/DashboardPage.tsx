@@ -28,7 +28,16 @@ function Dashboard({ data }: { data: ArtistDashboard }) {
 
   return (
     <>
-      {showUpgrade && (
+      {!data.isPublished && (
+        <div className="upgrade-banner unpublished">
+          <Star size={20} className="upgrade-icon" />
+          <div className="upgrade-text">
+            <strong>Your profile isn't live yet.</strong> Planners can't find you until you finish setup and launch it.
+          </div>
+          <Link to="/artist/onboarding" className="upgrade-btn">Finish setup</Link>
+        </div>
+      )}
+      {showUpgrade && data.isPublished && (
         <div className="upgrade-banner">
           <Crown size={20} className="upgrade-icon" />
           <div className="upgrade-text">
@@ -135,7 +144,7 @@ export default function DashboardPage() {
             <p className="artist-page-sub">{greeting()}{name ? `, ${name}` : ''} 👋</p>
           </div>
           <div className="topbar-actions">
-            {user?.artistSlug && (
+            {user?.artistSlug && dashboard.data?.isPublished && (
               <Link to={`/profile/${user.artistSlug}`} className="topbar-view-profile">View Profile</Link>
             )}
           </div>

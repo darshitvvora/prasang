@@ -35,3 +35,15 @@ describe('activeFilterCount', () => {
     expect(activeFilterCount({ city: 'Pune', area: 'Wakad', verifiedOnly: true, maxPrice: 20000 })).toBe(3);
   });
 });
+
+import { mergeSearch } from './searchUrl';
+
+describe('mergeSearch (review fix: debounced typing must not drop newer filters)', () => {
+  it('applies changes on top of the latest URL and resets to page 1', () => {
+    const latest = new URLSearchParams('artistType=magician&page=3');
+    expect(mergeSearch(latest, { q: 'dj' })).toBe('q=dj&artistType=magician');
+  });
+  it('removes a key when its change is undefined', () => {
+    expect(mergeSearch(new URLSearchParams('q=dj&city=Pune'), { q: undefined })).toBe('city=Pune');
+  });
+});

@@ -18,11 +18,19 @@ export class ApiError extends Error {
   }
 }
 
-let tokenProvider: () => string | null = () => null;
+type TokenProvider = () => string | null | Promise<string | null>;
+let tokenProvider: TokenProvider = () => null;
+let onUnauthorized: () => void = () => undefined;
 
-/** Registered by AuthProvider so every request carries the current session token. */
-export function setTokenProvider(fn: () => string | null): void {
+/** Registered by AuthProvider so every request carries the current session token.
+ *  May be async (Supabase refreshes access tokens before handing them out). */
+export function setTokenProvider(fn: TokenProvider): void {
   tokenProvider = fn;
+}
+
+/** Called when any request is rejected with 401 `unauthenticated` (expired/revoked session). */
+export function setUnauthorizedHandler(fn: () => void): void {
+  onUnauthorized = fn;
 }
 
 type QueryValue = string | number | boolean | undefined | null;
@@ -45,7 +53,7 @@ function buildUrl(path: string, query?: Record<string, QueryValue>): string {
 
 export async function api<T>(path: string, init: ApiInit = {}): Promise<T> {
   const headers = new Headers({ Accept: 'application/json' });
-  const token = tokenProvider();
+  const token = await tokenProvider();
   if (token) headers.set('Authorization', `Bearer ${token}`);
   let body: string | undefined;
   if (init.body !== undefined) {
@@ -71,6 +79,7 @@ export async function api<T>(path: string, init: ApiInit = {}): Promise<T> {
 
   if (!res.ok) {
     const err = (parsed as ApiErrorBody | undefined)?.error;
+    if (err?.code === 'unauthenticated') onUnauthorized();
     if (err?.code) throw new ApiError(res.status, err.code, err.message, err.details);
     throw new ApiError(res.status, `http_${res.status}`, 'Something went wrong. Please try again.');
   }

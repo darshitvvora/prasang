@@ -34,6 +34,7 @@ expect 401 '"unauthenticated"' "$BASE/me"
 expect 200 '"role": *"artist"' -H "$A" "$BASE/me"
 expect 200 '"role": *"planner"' -H "$P" "$BASE/me"
 expect 404 '"profile_required"' -H "$N" "$BASE/me"
+expect 401 '"unauthenticated"' -H 'Authorization: Bearer expired-or-junk' "$BASE/me"
 expect 200 '"fullName": *"Neha K."' -X PATCH -H "$P" -H "$J" -d '{"fullName":"Neha K."}' "$BASE/me"
 # --- public ---
 expect 200 '"Mumbai"' "$BASE/locations"
@@ -75,12 +76,15 @@ expect 200 '"status": *"active"' -X POST -H "$A" -H "$J" -d @contracts/examples/
 expect 200 '"cancelAtPeriodEnd": *true' -X POST -H "$A" "$BASE/subscriptions/cancel"
 # --- new-user journey (stateful via Mockoon global vars) ---
 expect 404 '"artist_profile_not_found"' -H "$N" "$BASE/artists/me"
+expect 404 '"artist_profile_not_found"' -H "$N" "$BASE/artists/me/dashboard"
+expect 404 '"artist_profile_not_found"' -H "$N" "$BASE/leads/artist"
 expect 201 '"role": *"artist"' -X POST -H "$N" -H "$J" -d '{"role":"artist","fullName":"Tanvi Rao"}' "$BASE/me"
 expect 200 '"artistSlug": *null' -H "$N" "$BASE/me"
 expect 200 '"trialAvailable": *true' -H "$N" "$BASE/subscriptions/me"
 expect 201 '"contactPhone"' -X POST -H "$N" -H "$J" -d @contracts/examples/artists/post.request.json "$BASE/artists"
 expect 200 '"artistSlug": *"arjun-malhotra-magic"' -H "$N" "$BASE/me"
 expect 200 '"contactPhone"' -H "$N" "$BASE/artists/me"
+expect 200 '"greetingName"' -H "$N" "$BASE/artists/me/dashboard"
 expect 200 '"status": *"trial"' -X POST -H "$N" -H "$J" -d '{"tier":"pro"}' "$BASE/subscriptions/trial"
 curl -s -X POST "$BASE/_mock/reset" >/dev/null
 
