@@ -1,0 +1,14 @@
+{
+  "status": "active",
+  "plan": {
+    "tier": "pro",
+    "name": "Pro",
+    "status": "active",
+    "leadLimitMonthly": -1,
+    "leadsUsedThisMonth": 16,
+    "leadsRemaining": null,
+    "periodEnd": "2026-10-29",
+    "trialEndsAt": null,
+    "trialAvailable": false
+  }
+}

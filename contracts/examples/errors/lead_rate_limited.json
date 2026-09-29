@@ -1,0 +1,9 @@
+{
+  "error": {
+    "code": "lead_rate_limited",
+    "message": "You have contacted many artists today. Please try again tomorrow.",
+    "details": {
+      "retryAfterSeconds": 43200
+    }
+  }
+}

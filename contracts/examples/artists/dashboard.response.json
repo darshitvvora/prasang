@@ -1,0 +1,139 @@
+{
+  "greetingName": "Arjun",
+  "plan": {
+    "tier": "basic",
+    "name": "Basic",
+    "status": "active",
+    "leadLimitMonthly": 15,
+    "leadsUsedThisMonth": 16,
+    "leadsRemaining": 0,
+    "periodEnd": "2026-10-24",
+    "trialEndsAt": null,
+    "trialAvailable": false
+  },
+  "metrics": {
+    "profileViews": {
+      "value": 1243,
+      "changePct": 18
+    },
+    "contactClicks": {
+      "value": 87,
+      "changePct": 34
+    },
+    "leadsThisMonth": {
+      "value": 16,
+      "changePct": 12
+    },
+    "averageRating": {
+      "value": 4.9,
+      "totalReviews": 127
+    }
+  },
+  "recentLeads": [
+    {
+      "id": "lead-016",
+      "plannerName": "Karan Shah",
+      "plannerPhone": null,
+      "plannerEmail": null,
+      "eventType": "birthday",
+      "eventTitle": "Birthday",
+      "eventDate": "2026-10-25",
+      "eventCity": "Mumbai",
+      "budgetMin": 10000,
+      "budgetMax": 15000,
+      "notes": null,
+      "status": "new",
+      "isLocked": true,
+      "createdAt": "2026-09-29T08:30:00Z"
+    },
+    {
+      "id": "lead-015",
+      "plannerName": "Rahul Mehta",
+      "plannerPhone": "9876501234",
+      "plannerEmail": "rahul.mehta@gmail.com",
+      "eventType": "wedding",
+      "eventTitle": "Wedding",
+      "eventDate": "2026-12-12",
+      "eventCity": "Mumbai",
+      "budgetMin": 25000,
+      "budgetMax": 50000,
+      "notes": "Looking for a magician for ~100 guests, 2 hours show",
+      "status": "new",
+      "isLocked": false,
+      "createdAt": "2026-09-29T06:10:00Z"
+    },
+    {
+      "id": "lead-014",
+      "plannerName": "Priya Gupta",
+      "plannerPhone": "8765409876",
+      "plannerEmail": "priya.g@outlook.com",
+      "eventType": "corporate",
+      "eventTitle": "Corporate",
+      "eventDate": "2026-11-05",
+      "eventCity": "Mumbai",
+      "budgetMin": 25000,
+      "budgetMax": 50000,
+      "notes": "Annual company event, need 45-min performance",
+      "status": "new",
+      "isLocked": false,
+      "createdAt": "2026-09-29T03:00:00Z"
+    }
+  ],
+  "leadSources": [
+    {
+      "source": "search",
+      "label": "Search results",
+      "pct": 42
+    },
+    {
+      "source": "featured",
+      "label": "Featured placement",
+      "pct": 28
+    },
+    {
+      "source": "direct_link",
+      "label": "Direct profile link",
+      "pct": 18
+    },
+    {
+      "source": "profile",
+      "label": "Similar artists & browse",
+      "pct": 12
+    }
+  ],
+  "completeness": {
+    "percent": 83,
+    "items": [
+      {
+        "key": "basic_info",
+        "label": "Basic info added",
+        "done": true
+      },
+      {
+        "key": "photo",
+        "label": "Profile photo uploaded",
+        "done": true
+      },
+      {
+        "key": "bio",
+        "label": "Bio written",
+        "done": true
+      },
+      {
+        "key": "media",
+        "label": "Add portfolio media",
+        "done": true
+      },
+      {
+        "key": "instagram",
+        "label": "Connect Instagram",
+        "done": true
+      },
+      {
+        "key": "review",
+        "label": "Get your first review",
+        "done": false
+      }
+    ]
+  }
+}

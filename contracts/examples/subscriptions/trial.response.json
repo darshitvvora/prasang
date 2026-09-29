@@ -1,0 +1,11 @@
+{
+  "tier": "pro",
+  "name": "Pro",
+  "status": "trial",
+  "leadLimitMonthly": -1,
+  "leadsUsedThisMonth": 0,
+  "leadsRemaining": null,
+  "periodEnd": null,
+  "trialEndsAt": "2026-10-06",
+  "trialAvailable": false
+}

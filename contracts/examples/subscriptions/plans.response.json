@@ -1,0 +1,252 @@
+{
+  "items": [
+    {
+      "tier": "free",
+      "name": "Free",
+      "tagline": "Get started, get noticed",
+      "monthlyPrice": 0,
+      "annualPrice": 0,
+      "annualMonthlyEquivalent": 0,
+      "leadLimitMonthly": 3,
+      "maxImages": 5,
+      "maxVideos": 0,
+      "popular": false,
+      "features": [
+        {
+          "label": "Profile listing",
+          "value": true
+        },
+        {
+          "label": "Basic search visibility",
+          "value": true
+        },
+        {
+          "label": "Contact leads per month",
+          "value": "3"
+        },
+        {
+          "label": "Media uploads",
+          "value": "5 photos"
+        },
+        {
+          "label": "Profile views shown",
+          "value": false
+        },
+        {
+          "label": "Instagram / YouTube link",
+          "value": true
+        },
+        {
+          "label": "Verified badge",
+          "value": false
+        },
+        {
+          "label": "Featured in search",
+          "value": false
+        },
+        {
+          "label": "Priority in search results",
+          "value": false
+        },
+        {
+          "label": "WhatsApp lead notifications",
+          "value": false
+        },
+        {
+          "label": "Custom portfolio link",
+          "value": false
+        },
+        {
+          "label": "Priority support",
+          "value": false
+        }
+      ]
+    },
+    {
+      "tier": "basic",
+      "name": "Basic",
+      "tagline": "For artists just getting started",
+      "monthlyPrice": 299,
+      "annualPrice": 2988,
+      "annualMonthlyEquivalent": 249,
+      "leadLimitMonthly": 15,
+      "maxImages": 20,
+      "maxVideos": 3,
+      "popular": false,
+      "features": [
+        {
+          "label": "Profile listing",
+          "value": true
+        },
+        {
+          "label": "Basic search visibility",
+          "value": true
+        },
+        {
+          "label": "Contact leads per month",
+          "value": "15"
+        },
+        {
+          "label": "Media uploads",
+          "value": "20 photos + 3 videos"
+        },
+        {
+          "label": "Profile views shown",
+          "value": true
+        },
+        {
+          "label": "Instagram / YouTube link",
+          "value": true
+        },
+        {
+          "label": "Verified badge",
+          "value": true
+        },
+        {
+          "label": "Featured in search",
+          "value": false
+        },
+        {
+          "label": "Priority in search results",
+          "value": false
+        },
+        {
+          "label": "WhatsApp lead notifications",
+          "value": true
+        },
+        {
+          "label": "Custom portfolio link",
+          "value": false
+        },
+        {
+          "label": "Priority support",
+          "value": false
+        }
+      ]
+    },
+    {
+      "tier": "pro",
+      "name": "Pro",
+      "tagline": "For growing artists",
+      "monthlyPrice": 599,
+      "annualPrice": 5988,
+      "annualMonthlyEquivalent": 499,
+      "leadLimitMonthly": -1,
+      "maxImages": 100,
+      "maxVideos": 20,
+      "popular": true,
+      "features": [
+        {
+          "label": "Profile listing",
+          "value": true
+        },
+        {
+          "label": "Basic search visibility",
+          "value": true
+        },
+        {
+          "label": "Contact leads per month",
+          "value": "Unlimited"
+        },
+        {
+          "label": "Media uploads",
+          "value": "100 photos + 20 videos"
+        },
+        {
+          "label": "Profile views shown",
+          "value": true
+        },
+        {
+          "label": "Instagram / YouTube link",
+          "value": true
+        },
+        {
+          "label": "Verified badge",
+          "value": true
+        },
+        {
+          "label": "Featured in search",
+          "value": true
+        },
+        {
+          "label": "Priority in search results",
+          "value": true
+        },
+        {
+          "label": "WhatsApp lead notifications",
+          "value": true
+        },
+        {
+          "label": "Custom portfolio link",
+          "value": true
+        },
+        {
+          "label": "Priority support",
+          "value": false
+        }
+      ]
+    },
+    {
+      "tier": "premium",
+      "name": "Premium",
+      "tagline": "For professionals who demand the best",
+      "monthlyPrice": 1199,
+      "annualPrice": 11988,
+      "annualMonthlyEquivalent": 999,
+      "leadLimitMonthly": -1,
+      "maxImages": -1,
+      "maxVideos": -1,
+      "popular": false,
+      "features": [
+        {
+          "label": "Profile listing",
+          "value": true
+        },
+        {
+          "label": "Basic search visibility",
+          "value": true
+        },
+        {
+          "label": "Contact leads per month",
+          "value": "Unlimited"
+        },
+        {
+          "label": "Media uploads",
+          "value": "Unlimited"
+        },
+        {
+          "label": "Profile views shown",
+          "value": true
+        },
+        {
+          "label": "Instagram / YouTube link",
+          "value": true
+        },
+        {
+          "label": "Verified badge",
+          "value": true
+        },
+        {
+          "label": "Featured in search",
+          "value": true
+        },
+        {
+          "label": "Priority in search results",
+          "value": "Top 3 placement"
+        },
+        {
+          "label": "WhatsApp lead notifications",
+          "value": true
+        },
+        {
+          "label": "Custom portfolio link",
+          "value": true
+        },
+        {
+          "label": "Priority support",
+          "value": true
+        }
+      ]
+    }
+  ]
+}

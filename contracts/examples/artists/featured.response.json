@@ -1,0 +1,101 @@
+{
+  "items": [
+    {
+      "artistId": "art-001",
+      "name": "Arjun Malhotra",
+      "slug": "arjun-malhotra-magic",
+      "artistType": "magician",
+      "profileImageUrl": "/artists/magician.png",
+      "bio": "Award-winning close-up magician specializing in mentalism and card magic. 500+ shows across Mumbai.",
+      "locationCity": "Mumbai",
+      "locationArea": "Bandra West",
+      "perEventRateMin": 15000,
+      "perEventRateMax": 25000,
+      "averageRating": 4.9,
+      "totalReviews": 127,
+      "isVerified": true,
+      "isFeatured": true,
+      "subscriptionTier": "basic",
+      "instagramHandle": "arjunmagic",
+      "youtubeChannel": "ArjunMalhotraMagic",
+      "experienceYears": 8,
+      "eventTypesSupported": [
+        "birthday",
+        "wedding",
+        "corporate",
+        "anniversary",
+        "house_party"
+      ],
+      "languagesSpoken": [
+        "Hindi",
+        "English"
+      ],
+      "readyToTravel": true
+    },
+    {
+      "artistId": "art-002",
+      "name": "DJ Krish",
+      "slug": "dj-krish",
+      "artistType": "dj",
+      "profileImageUrl": "/artists/dj.png",
+      "bio": "Bollywood + EDM DJ with 10 years experience. Resident DJ at top Mumbai clubs. Weddings, sangeets, corporate events.",
+      "locationCity": "Mumbai",
+      "locationArea": "Andheri West",
+      "perEventRateMin": 20000,
+      "perEventRateMax": 35000,
+      "averageRating": 4.7,
+      "totalReviews": 89,
+      "isVerified": true,
+      "isFeatured": true,
+      "subscriptionTier": "pro",
+      "instagramHandle": "djkrish_official",
+      "youtubeChannel": "DJKrishOfficial",
+      "experienceYears": 10,
+      "eventTypesSupported": [
+        "wedding",
+        "pre_wedding",
+        "corporate",
+        "house_party",
+        "anniversary"
+      ],
+      "languagesSpoken": [
+        "Hindi",
+        "English",
+        "Punjabi"
+      ],
+      "readyToTravel": true
+    },
+    {
+      "artistId": "art-005",
+      "name": "The Raaga Collective",
+      "slug": "the-raaga-collective",
+      "artistType": "band",
+      "profileImageUrl": "/artists/band.png",
+      "bio": "5-piece fusion band blending Indian classical with rock. Perfect for weddings, sangeets, corporate galas & concert nights.",
+      "locationCity": "Mumbai",
+      "locationArea": "Lower Parel",
+      "perEventRateMin": 30000,
+      "perEventRateMax": 60000,
+      "averageRating": 4.9,
+      "totalReviews": 64,
+      "isVerified": true,
+      "isFeatured": true,
+      "subscriptionTier": "premium",
+      "instagramHandle": "theraagacollective",
+      "youtubeChannel": "TheRaagaCollective",
+      "experienceYears": 7,
+      "eventTypesSupported": [
+        "wedding",
+        "corporate",
+        "anniversary",
+        "other"
+      ],
+      "languagesSpoken": [
+        "Hindi",
+        "English",
+        "Tamil"
+      ],
+      "readyToTravel": true
+    }
+  ]
+}
