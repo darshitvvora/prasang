@@ -711,3 +711,5 @@
   .planner-metrics-grid { grid-template-columns: 1fr; }
   .planner-saved-preview-grid { grid-template-columns: 1fr 1fr; }
 }
+
+a.planner-inquiry-preview-item { text-decoration: none; color: inherit; }

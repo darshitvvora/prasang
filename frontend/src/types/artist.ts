@@ -11,8 +11,6 @@ export type ArtistType =
 
 export type SubscriptionTier = 'free' | 'basic' | 'pro' | 'premium';
 
-export type AvailabilityStatus = 'available' | 'busy' | 'unavailable';
-
 export type EventType =
   | 'birthday'
   | 'wedding'
@@ -46,31 +44,6 @@ export const LANGUAGES = [
 ] as const;
 
 export type Language = typeof LANGUAGES[number];
-
-export interface Artist {
-  artistId: string;
-  name: string;
-  slug: string;
-  artistType: ArtistType;
-  profileImageUrl: string;
-  bio: string;
-  locationCity: string;
-  locationArea: string;
-  perEventRateMin: number;
-  perEventRateMax: number;
-  averageRating: number;
-  totalReviews: number;
-  isVerified: boolean;
-  isFeatured: boolean;
-  subscriptionTier: SubscriptionTier;
-  instagramHandle?: string;
-  youtubeChannel?: string;
-  experienceYears: number;
-  eventTypesSupported: EventType[];
-  languagesSpoken: string[];
-  readyToTravel: boolean;
-  availabilityStatus?: AvailabilityStatus;
-}
 
 export const ARTIST_TYPE_LABELS: Record<ArtistType, string> = {
   magician: 'Magician',
