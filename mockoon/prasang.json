@@ -1,0 +1,2273 @@
+{
+  "uuid": "b1d6a2e4-7c1f-4f3e-9a55-5c0e2f6d7a10",
+  "lastMigration": 33,
+  "name": "Prasang API (mock)",
+  "endpointPrefix": "api/v1",
+  "latency": 300,
+  "port": 3001,
+  "hostname": "",
+  "cors": true,
+  "headers": [
+    {
+      "key": "Content-Type",
+      "value": "application/json"
+    }
+  ],
+  "proxyMode": false,
+  "data": [
+    {
+      "uuid": "26b36bd0-1ee3-4f64-af37-5f1fe5d726b0",
+      "id": "artist-leads",
+      "name": "artist-leads",
+      "documentation": "",
+      "value": "{\"items\":[{\"id\":\"lead-016\",\"plannerName\":\"Karan Shah\",\"plannerPhone\":null,\"plannerEmail\":null,\"eventType\":\"birthday\",\"eventTitle\":\"Birthday\",\"eventDate\":\"2026-10-25\",\"eventCity\":\"Mumbai\",\"budgetMin\":10000,\"budgetMax\":15000,\"notes\":null,\"status\":\"new\",\"isLocked\":true,\"createdAt\":\"2026-09-29T08:30:00Z\"},{\"id\":\"lead-015\",\"plannerName\":\"Rahul Mehta\",\"plannerPhone\":\"9876501234\",\"plannerEmail\":\"rahul.mehta@gmail.com\",\"eventType\":\"wedding\",\"eventTitle\":\"Wedding\",\"eventDate\":\"2026-12-12\",\"eventCity\":\"Mumbai\",\"budgetMin\":25000,\"budgetMax\":50000,\"notes\":\"Looking for a magician for ~100 guests, 2 hours show\",\"status\":\"new\",\"isLocked\":false,\"createdAt\":\"2026-09-29T06:10:00Z\"},{\"id\":\"lead-014\",\"plannerName\":\"Priya Gupta\",\"plannerPhone\":\"8765409876\",\"plannerEmail\":\"priya.g@outlook.com\",\"eventType\":\"corporate\",\"eventTitle\":\"Corporate\",\"eventDate\":\"2026-11-05\",\"eventCity\":\"Mumbai\",\"budgetMin\":25000,\"budgetMax\":50000,\"notes\":\"Annual company event, need 45-min performance\",\"status\":\"new\",\"isLocked\":false,\"createdAt\":\"2026-09-29T03:00:00Z\"},{\"id\":\"lead-013\",\"plannerName\":\"Arjun Singh\",\"plannerPhone\":\"7654308765\",\"plannerEmail\":null,\"eventType\":\"birthday\",\"eventTitle\":\"Birthday\",\"eventDate\":\"2026-10-31\",\"eventCity\":\"Pune\",\"budgetMin\":15000,\"budgetMax\":25000,\"notes\":\"Kid-friendly magic show, 30-40 children\",\"status\":\"contacted\",\"isLocked\":false,\"createdAt\":\"2026-09-28T11:20:00Z\"},{\"id\":\"lead-012\",\"plannerName\":\"Sneha Patel\",\"plannerPhone\":\"6543207654\",\"plannerEmail\":\"sneha@acme.in\",\"eventType\":\"corporate\",\"eventTitle\":\"Corporate\",\"eventDate\":\"2026-11-12\",\"eventCity\":\"Mumbai\",\"budgetMin\":50000,\"budgetMax\":null,\"notes\":\"Tech company launch event, 200 attendees\",\"status\":\"converted\",\"isLocked\":false,\"createdAt\":\"2026-09-26T09:45:00Z\"},{\"id\":\"lead-011\",\"plannerName\":\"Vikram Joshi\",\"plannerPhone\":\"9432106543\",\"plannerEmail\":null,\"eventType\":\"anniversary\",\"eventTitle\":\"Anniversary\",\"eventDate\":\"2026-09-20\",\"eventCity\":\"Thane\",\"budgetMin\":15000,\"budgetMax\":25000,\"notes\":\"Silver jubilee celebration\",\"status\":\"expired\",\"isLocked\":false,\"createdAt\":\"2026-09-19T16:00:00Z\"},{\"id\":\"lead-010\",\"plannerName\":\"Meenal Rao\",\"plannerPhone\":\"9321005432\",\"plannerEmail\":\"meenal.rao@gmail.com\",\"eventType\":\"house_party\",\"eventTitle\":\"House Party\",\"eventDate\":\"2026-10-10\",\"eventCity\":\"Mumbai\",\"budgetMin\":10000,\"budgetMax\":15000,\"notes\":\"Diwali get-together, 25 guests\",\"status\":\"declined\",\"isLocked\":false,\"createdAt\":\"2026-09-15T12:30:00Z\"}],\"total\":7,\"page\":1,\"size\":20,\"counts\":{\"all\":7,\"new\":3,\"contacted\":1,\"converted\":1,\"declined\":1,\"expired\":1},\"plan\":{\"tier\":\"basic\",\"name\":\"Basic\",\"status\":\"active\",\"leadLimitMonthly\":15,\"leadsUsedThisMonth\":16,\"leadsRemaining\":0,\"periodEnd\":\"2026-10-24\",\"trialEndsAt\":null,\"trialAvailable\":false}}"
+    },
+    {
+      "uuid": "287ba084-40c7-4508-ab56-41250a5281d7",
+      "id": "artists",
+      "name": "artists",
+      "documentation": "",
+      "value": "[{\"artistId\":\"art-001\",\"name\":\"Arjun Malhotra\",\"slug\":\"arjun-malhotra-magic\",\"artistType\":\"magician\",\"profileImageUrl\":\"/artists/magician.png\",\"bio\":\"Award-winning close-up magician specializing in mentalism and card magic. 500+ shows across Mumbai.\",\"locationCity\":\"Mumbai\",\"locationArea\":\"Bandra West\",\"perEventRateMin\":15000,\"perEventRateMax\":25000,\"averageRating\":4.9,\"totalReviews\":127,\"isVerified\":true,\"isFeatured\":true,\"subscriptionTier\":\"basic\",\"instagramHandle\":\"arjunmagic\",\"youtubeChannel\":\"ArjunMalhotraMagic\",\"experienceYears\":8,\"eventTypesSupported\":[\"birthday\",\"wedding\",\"corporate\",\"anniversary\",\"house_party\"],\"languagesSpoken\":[\"Hindi\",\"English\"],\"readyToTravel\":true,\"media\":[{\"id\":\"med-001-1\",\"kind\":\"image\",\"url\":\"/artists/magician.png\",\"thumbnailUrl\":null,\"caption\":\"Arjun Malhotra live\",\"displayOrder\":0},{\"id\":\"med-001-2\",\"kind\":\"image\",\"url\":\"/artists/dj.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":1},{\"id\":\"med-001-3\",\"kind\":\"image\",\"url\":\"/artists/singer.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":2},{\"id\":\"med-001-4\",\"kind\":\"image\",\"url\":\"/artists/comedian.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":3}],\"contactPhone\":\"9820011001\",\"whatsappNumber\":\"9820011001\"},{\"artistId\":\"art-002\",\"name\":\"DJ Krish\",\"slug\":\"dj-krish\",\"artistType\":\"dj\",\"profileImageUrl\":\"/artists/dj.png\",\"bio\":\"Bollywood + EDM DJ with 10 years experience. Resident DJ at top Mumbai clubs. Weddings, sangeets, corporate events.\",\"locationCity\":\"Mumbai\",\"locationArea\":\"Andheri West\",\"perEventRateMin\":20000,\"perEventRateMax\":35000,\"averageRating\":4.7,\"totalReviews\":89,\"isVerified\":true,\"isFeatured\":true,\"subscriptionTier\":\"pro\",\"instagramHandle\":\"djkrish_official\",\"youtubeChannel\":\"DJKrishOfficial\",\"experienceYears\":10,\"eventTypesSupported\":[\"wedding\",\"pre_wedding\",\"corporate\",\"house_party\",\"anniversary\"],\"languagesSpoken\":[\"Hindi\",\"English\",\"Punjabi\"],\"readyToTravel\":true,\"media\":[{\"id\":\"med-002-1\",\"kind\":\"image\",\"url\":\"/artists/dj.png\",\"thumbnailUrl\":null,\"caption\":\"DJ Krish live\",\"displayOrder\":0},{\"id\":\"med-002-2\",\"kind\":\"image\",\"url\":\"/artists/magician.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":1},{\"id\":\"med-002-3\",\"kind\":\"image\",\"url\":\"/artists/singer.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":2},{\"id\":\"med-002-4\",\"kind\":\"image\",\"url\":\"/artists/comedian.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":3}],\"contactPhone\":\"9820011002\",\"whatsappNumber\":\"9820011002\"},{\"artistId\":\"art-003\",\"name\":\"Priya Sharma\",\"slug\":\"priya-sharma-singer\",\"artistType\":\"singer\",\"profileImageUrl\":\"/artists/singer.png\",\"bio\":\"Classically trained vocalist performing Bollywood, ghazals, and sufi music. Perfect for mehendi, sangeet & receptions.\",\"locationCity\":\"Mumbai\",\"locationArea\":\"Juhu\",\"perEventRateMin\":10000,\"perEventRateMax\":20000,\"averageRating\":4.8,\"totalReviews\":156,\"isVerified\":true,\"isFeatured\":false,\"subscriptionTier\":\"pro\",\"instagramHandle\":\"priyasharmamusic\",\"youtubeChannel\":\"PriyaSharmaLive\",\"experienceYears\":6,\"eventTypesSupported\":[\"wedding\",\"pre_wedding\",\"anniversary\",\"birthday\"],\"languagesSpoken\":[\"Hindi\",\"English\",\"Marathi\"],\"readyToTravel\":false,\"media\":[{\"id\":\"med-003-1\",\"kind\":\"image\",\"url\":\"/artists/singer.png\",\"thumbnailUrl\":null,\"caption\":\"Priya Sharma live\",\"displayOrder\":0},{\"id\":\"med-003-2\",\"kind\":\"image\",\"url\":\"/artists/magician.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":1},{\"id\":\"med-003-3\",\"kind\":\"image\",\"url\":\"/artists/dj.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":2},{\"id\":\"med-003-4\",\"kind\":\"image\",\"url\":\"/artists/comedian.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":3}],\"contactPhone\":\"9820011003\",\"whatsappNumber\":null},{\"artistId\":\"art-004\",\"name\":\"Rohan Desai\",\"slug\":\"rohan-desai-comedy\",\"artistType\":\"comedian\",\"profileImageUrl\":\"/artists/comedian.png\",\"bio\":\"Stand-up comedian & improv artist. Featured on Amazon Prime. Clean comedy for corporate events, house parties & college fests.\",\"locationCity\":\"Mumbai\",\"locationArea\":\"Powai\",\"perEventRateMin\":25000,\"perEventRateMax\":50000,\"averageRating\":4.6,\"totalReviews\":72,\"isVerified\":true,\"isFeatured\":false,\"subscriptionTier\":\"premium\",\"instagramHandle\":\"rohandesaicomedy\",\"youtubeChannel\":\"RohanDesaiComedy\",\"experienceYears\":5,\"eventTypesSupported\":[\"corporate\",\"house_party\",\"birthday\",\"other\"],\"languagesSpoken\":[\"Hindi\",\"English\",\"Marathi\"],\"readyToTravel\":true,\"media\":[{\"id\":\"med-004-1\",\"kind\":\"image\",\"url\":\"/artists/comedian.png\",\"thumbnailUrl\":null,\"caption\":\"Rohan Desai live\",\"displayOrder\":0},{\"id\":\"med-004-2\",\"kind\":\"image\",\"url\":\"/artists/magician.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":1},{\"id\":\"med-004-3\",\"kind\":\"image\",\"url\":\"/artists/dj.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":2},{\"id\":\"med-004-4\",\"kind\":\"image\",\"url\":\"/artists/singer.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":3}],\"contactPhone\":\"9820011004\",\"whatsappNumber\":\"9820011004\"},{\"artistId\":\"art-005\",\"name\":\"The Raaga Collective\",\"slug\":\"the-raaga-collective\",\"artistType\":\"band\",\"profileImageUrl\":\"/artists/band.png\",\"bio\":\"5-piece fusion band blending Indian classical with rock. Perfect for weddings, sangeets, corporate galas & concert nights.\",\"locationCity\":\"Mumbai\",\"locationArea\":\"Lower Parel\",\"perEventRateMin\":30000,\"perEventRateMax\":60000,\"averageRating\":4.9,\"totalReviews\":64,\"isVerified\":true,\"isFeatured\":true,\"subscriptionTier\":\"premium\",\"instagramHandle\":\"theraagacollective\",\"youtubeChannel\":\"TheRaagaCollective\",\"experienceYears\":7,\"eventTypesSupported\":[\"wedding\",\"corporate\",\"anniversary\",\"other\"],\"languagesSpoken\":[\"Hindi\",\"English\",\"Tamil\"],\"readyToTravel\":true,\"media\":[{\"id\":\"med-005-1\",\"kind\":\"image\",\"url\":\"/artists/band.png\",\"thumbnailUrl\":null,\"caption\":\"The Raaga Collective live\",\"displayOrder\":0},{\"id\":\"med-005-2\",\"kind\":\"image\",\"url\":\"/artists/magician.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":1},{\"id\":\"med-005-3\",\"kind\":\"image\",\"url\":\"/artists/dj.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":2},{\"id\":\"med-005-4\",\"kind\":\"image\",\"url\":\"/artists/singer.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":3}],\"contactPhone\":\"9820011005\",\"whatsappNumber\":\"9820011005\"},{\"artistId\":\"art-006\",\"name\":\"Meera Kapoor\",\"slug\":\"meera-kapoor-anchor\",\"artistType\":\"anchor\",\"profileImageUrl\":\"/artists/anchor.png\",\"bio\":\"Bilingual event host (Hindi/English). Weddings, corporate events, award nights. Energetic, witty, and always on cue.\",\"locationCity\":\"Mumbai\",\"locationArea\":\"Dadar\",\"perEventRateMin\":8000,\"perEventRateMax\":15000,\"averageRating\":4.5,\"totalReviews\":93,\"isVerified\":false,\"isFeatured\":false,\"subscriptionTier\":\"basic\",\"instagramHandle\":\"meerakapoor_mc\",\"experienceYears\":4,\"eventTypesSupported\":[\"wedding\",\"corporate\",\"anniversary\",\"birthday\"],\"languagesSpoken\":[\"Hindi\",\"English\"],\"readyToTravel\":false,\"youtubeChannel\":null,\"media\":[{\"id\":\"med-006-1\",\"kind\":\"image\",\"url\":\"/artists/anchor.png\",\"thumbnailUrl\":null,\"caption\":\"Meera Kapoor live\",\"displayOrder\":0},{\"id\":\"med-006-2\",\"kind\":\"image\",\"url\":\"/artists/magician.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":1},{\"id\":\"med-006-3\",\"kind\":\"image\",\"url\":\"/artists/dj.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":2},{\"id\":\"med-006-4\",\"kind\":\"image\",\"url\":\"/artists/singer.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":3}],\"contactPhone\":\"9820011006\",\"whatsappNumber\":null},{\"artistId\":\"art-007\",\"name\":\"Vikram Bubbles\",\"slug\":\"vikram-bubbles\",\"artistType\":\"bubble_artist\",\"profileImageUrl\":\"/artists/magician.png\",\"bio\":\"India's premier bubble artist! Giant bubbles, bubble-in-bubble tricks, and UV glow bubble shows for kids parties & events.\",\"locationCity\":\"Mumbai\",\"locationArea\":\"Goregaon\",\"perEventRateMin\":5000,\"perEventRateMax\":10000,\"averageRating\":4.8,\"totalReviews\":211,\"isVerified\":true,\"isFeatured\":false,\"subscriptionTier\":\"pro\",\"instagramHandle\":\"vikrambubbles\",\"youtubeChannel\":\"VikramBubbleShow\",\"experienceYears\":9,\"eventTypesSupported\":[\"birthday\",\"house_party\",\"corporate\",\"wedding\"],\"languagesSpoken\":[\"Hindi\",\"English\",\"Marathi\",\"Gujarati\"],\"readyToTravel\":true,\"media\":[{\"id\":\"med-007-1\",\"kind\":\"image\",\"url\":\"/artists/magician.png\",\"thumbnailUrl\":null,\"caption\":\"Vikram Bubbles live\",\"displayOrder\":0},{\"id\":\"med-007-2\",\"kind\":\"image\",\"url\":\"/artists/dj.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":1},{\"id\":\"med-007-3\",\"kind\":\"image\",\"url\":\"/artists/singer.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":2},{\"id\":\"med-007-4\",\"kind\":\"image\",\"url\":\"/artists/comedian.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":3}],\"contactPhone\":\"9820011007\",\"whatsappNumber\":\"9820011007\"},{\"artistId\":\"art-008\",\"name\":\"Aditya Naik\",\"slug\":\"aditya-naik-singer\",\"artistType\":\"singer\",\"profileImageUrl\":\"/artists/comedian.png\",\"bio\":\"Sufi & Bollywood playback singer. Performed at 200+ live events. Soulful voice for intimate gatherings & grand celebrations.\",\"locationCity\":\"Mumbai\",\"locationArea\":\"Malad\",\"perEventRateMin\":15000,\"perEventRateMax\":30000,\"averageRating\":4.7,\"totalReviews\":45,\"isVerified\":false,\"isFeatured\":false,\"subscriptionTier\":\"basic\",\"instagramHandle\":\"adityanaik_music\",\"experienceYears\":3,\"eventTypesSupported\":[\"wedding\",\"anniversary\",\"birthday\",\"house_party\"],\"languagesSpoken\":[\"Hindi\",\"Marathi\",\"Kannada\"],\"readyToTravel\":false,\"youtubeChannel\":null,\"media\":[{\"id\":\"med-008-1\",\"kind\":\"image\",\"url\":\"/artists/comedian.png\",\"thumbnailUrl\":null,\"caption\":\"Aditya Naik live\",\"displayOrder\":0},{\"id\":\"med-008-2\",\"kind\":\"image\",\"url\":\"/artists/magician.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":1},{\"id\":\"med-008-3\",\"kind\":\"image\",\"url\":\"/artists/dj.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":2},{\"id\":\"med-008-4\",\"kind\":\"image\",\"url\":\"/artists/singer.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":3}],\"contactPhone\":\"9820011008\",\"whatsappNumber\":\"9820011008\"},{\"artistId\":\"art-009\",\"name\":\"DJ Nikhil\",\"slug\":\"dj-nikhil-pune\",\"artistType\":\"dj\",\"profileImageUrl\":\"/artists/dj.png\",\"bio\":\"Punjabi, Bollywood and house sets for college fests, sangeets and rooftop parties across Pune.\",\"locationCity\":\"Pune\",\"locationArea\":\"Koregaon Park\",\"perEventRateMin\":12000,\"perEventRateMax\":22000,\"averageRating\":4.6,\"totalReviews\":38,\"isVerified\":true,\"isFeatured\":false,\"subscriptionTier\":\"basic\",\"instagramHandle\":\"djnikhilpune\",\"experienceYears\":5,\"eventTypesSupported\":[\"pre_wedding\",\"house_party\",\"birthday\",\"corporate\"],\"languagesSpoken\":[\"Hindi\",\"English\",\"Punjabi\",\"Marathi\"],\"readyToTravel\":true,\"youtubeChannel\":null,\"media\":[{\"id\":\"med-009-1\",\"kind\":\"image\",\"url\":\"/artists/dj.png\",\"thumbnailUrl\":null,\"caption\":\"DJ Nikhil live\",\"displayOrder\":0},{\"id\":\"med-009-2\",\"kind\":\"image\",\"url\":\"/artists/magician.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":1},{\"id\":\"med-009-3\",\"kind\":\"image\",\"url\":\"/artists/singer.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":2},{\"id\":\"med-009-4\",\"kind\":\"image\",\"url\":\"/artists/comedian.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":3}],\"contactPhone\":\"9820011009\",\"whatsappNumber\":null},{\"artistId\":\"art-010\",\"name\":\"Sana Qureshi\",\"slug\":\"sana-qureshi-live\",\"artistType\":\"singer\",\"profileImageUrl\":\"/artists/singer.png\",\"bio\":\"Ghazal, qawwali and retro Bollywood vocalist with a 4-piece acoustic ensemble. Mehendi and reception specialist.\",\"locationCity\":\"Delhi\",\"locationArea\":\"Hauz Khas\",\"perEventRateMin\":18000,\"perEventRateMax\":35000,\"averageRating\":4.8,\"totalReviews\":51,\"isVerified\":true,\"isFeatured\":true,\"subscriptionTier\":\"pro\",\"instagramHandle\":\"sanaqureshilive\",\"youtubeChannel\":\"SanaQureshiLive\",\"experienceYears\":7,\"eventTypesSupported\":[\"wedding\",\"pre_wedding\",\"anniversary\",\"corporate\"],\"languagesSpoken\":[\"Hindi\",\"English\",\"Punjabi\"],\"readyToTravel\":true,\"media\":[{\"id\":\"med-010-1\",\"kind\":\"image\",\"url\":\"/artists/singer.png\",\"thumbnailUrl\":null,\"caption\":\"Sana Qureshi live\",\"displayOrder\":0},{\"id\":\"med-010-2\",\"kind\":\"image\",\"url\":\"/artists/magician.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":1},{\"id\":\"med-010-3\",\"kind\":\"image\",\"url\":\"/artists/dj.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":2},{\"id\":\"med-010-4\",\"kind\":\"image\",\"url\":\"/artists/comedian.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":3}],\"contactPhone\":\"9820011010\",\"whatsappNumber\":\"9820011010\"},{\"artistId\":\"art-011\",\"name\":\"Kabir the Mentalist\",\"slug\":\"kabir-mentalist\",\"artistType\":\"magician\",\"profileImageUrl\":\"/artists/magician.png\",\"bio\":\"Mind-reading and interactive mentalism for corporate offsites and intimate house parties.\",\"locationCity\":\"Bengaluru\",\"locationArea\":\"Indiranagar\",\"perEventRateMin\":10000,\"perEventRateMax\":20000,\"averageRating\":4.4,\"totalReviews\":22,\"isVerified\":false,\"isFeatured\":false,\"subscriptionTier\":\"free\",\"instagramHandle\":\"kabirmentalist\",\"experienceYears\":3,\"eventTypesSupported\":[\"corporate\",\"house_party\",\"birthday\"],\"languagesSpoken\":[\"English\",\"Hindi\",\"Kannada\"],\"readyToTravel\":false,\"youtubeChannel\":null,\"media\":[{\"id\":\"med-011-1\",\"kind\":\"image\",\"url\":\"/artists/magician.png\",\"thumbnailUrl\":null,\"caption\":\"Kabir the Mentalist live\",\"displayOrder\":0},{\"id\":\"med-011-2\",\"kind\":\"image\",\"url\":\"/artists/dj.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":1},{\"id\":\"med-011-3\",\"kind\":\"image\",\"url\":\"/artists/singer.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":2},{\"id\":\"med-011-4\",\"kind\":\"image\",\"url\":\"/artists/comedian.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":3}],\"contactPhone\":\"9820011011\",\"whatsappNumber\":\"9820011011\"},{\"artistId\":\"art-012\",\"name\":\"Ravi Laugh Riot\",\"slug\":\"ravi-laugh-riot\",\"artistType\":\"comedian\",\"profileImageUrl\":\"/artists/comedian.png\",\"bio\":\"Marathi and Hindi stand-up. Clean, family-friendly sets for society events and birthday parties.\",\"locationCity\":\"Pune\",\"locationArea\":\"Viman Nagar\",\"perEventRateMin\":8000,\"perEventRateMax\":15000,\"averageRating\":4.3,\"totalReviews\":17,\"isVerified\":false,\"isFeatured\":false,\"subscriptionTier\":\"free\",\"experienceYears\":2,\"eventTypesSupported\":[\"birthday\",\"house_party\",\"other\"],\"languagesSpoken\":[\"Marathi\",\"Hindi\"],\"readyToTravel\":false,\"instagramHandle\":null,\"youtubeChannel\":null,\"media\":[{\"id\":\"med-012-1\",\"kind\":\"image\",\"url\":\"/artists/comedian.png\",\"thumbnailUrl\":null,\"caption\":\"Ravi Laugh Riot live\",\"displayOrder\":0},{\"id\":\"med-012-2\",\"kind\":\"image\",\"url\":\"/artists/magician.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":1},{\"id\":\"med-012-3\",\"kind\":\"image\",\"url\":\"/artists/dj.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":2},{\"id\":\"med-012-4\",\"kind\":\"image\",\"url\":\"/artists/singer.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":3}],\"contactPhone\":\"9820011012\",\"whatsappNumber\":null}]"
+    },
+    {
+      "uuid": "0f57ba93-fcf4-4bd3-812b-1e712574021f",
+      "id": "locations",
+      "name": "locations",
+      "documentation": "",
+      "value": "{\"cities\":[{\"name\":\"Mumbai\",\"areas\":[\"Bandra West\",\"Andheri West\",\"Juhu\",\"Powai\",\"Lower Parel\",\"Dadar\",\"Goregaon\",\"Malad\"]},{\"name\":\"Delhi\",\"areas\":[\"South Delhi\",\"Connaught Place\",\"Hauz Khas\",\"Dwarka\"]},{\"name\":\"Bengaluru\",\"areas\":[\"Indiranagar\",\"Koramangala\",\"Whitefield\",\"HSR Layout\"]},{\"name\":\"Hyderabad\",\"areas\":[\"Banjara Hills\",\"Jubilee Hills\",\"Gachibowli\"]},{\"name\":\"Chennai\",\"areas\":[\"T. Nagar\",\"Adyar\",\"Anna Nagar\"]},{\"name\":\"Kolkata\",\"areas\":[]},{\"name\":\"Pune\",\"areas\":[\"Koregaon Park\",\"Viman Nagar\",\"Hinjewadi\",\"Wakad\"]},{\"name\":\"Ahmedabad\",\"areas\":[]},{\"name\":\"Jaipur\",\"areas\":[]},{\"name\":\"Surat\",\"areas\":[]},{\"name\":\"Lucknow\",\"areas\":[]},{\"name\":\"Kanpur\",\"areas\":[]},{\"name\":\"Nagpur\",\"areas\":[]},{\"name\":\"Indore\",\"areas\":[]},{\"name\":\"Bhopal\",\"areas\":[]},{\"name\":\"Visakhapatnam\",\"areas\":[]},{\"name\":\"Patna\",\"areas\":[]},{\"name\":\"Ludhiana\",\"areas\":[]},{\"name\":\"Agra\",\"areas\":[]},{\"name\":\"Nashik\",\"areas\":[]}]}"
+    },
+    {
+      "uuid": "2cf60f9e-2b2c-4905-aad2-4ba4999ee366",
+      "id": "planner-inquiries",
+      "name": "planner-inquiries",
+      "documentation": "",
+      "value": "{\"items\":[{\"id\":\"lead-101\",\"artist\":{\"artistId\":\"art-005\",\"slug\":\"the-raaga-collective\",\"name\":\"The Raaga Collective\",\"artistType\":\"band\",\"profileImageUrl\":\"/artists/band.png\"},\"eventType\":\"birthday\",\"eventTitle\":\"Birthday\",\"eventDate\":\"2026-10-16\",\"daysToEvent\":17,\"budgetMin\":25000,\"budgetMax\":50000,\"notes\":\"Live band, 2-hour set, outdoor lawn setup.\",\"status\":\"pending\",\"contactedAt\":\"2026-09-29T07:30:00Z\"},{\"id\":\"lead-102\",\"artist\":{\"artistId\":\"art-003\",\"slug\":\"priya-sharma-singer\",\"name\":\"Priya Sharma\",\"artistType\":\"singer\",\"profileImageUrl\":\"/artists/singer.png\"},\"eventType\":\"anniversary\",\"eventTitle\":\"Anniversary\",\"eventDate\":\"2026-11-08\",\"daysToEvent\":40,\"budgetMin\":10000,\"budgetMax\":15000,\"notes\":\"Live acoustic set for an intimate 40-guest dinner.\",\"status\":\"pending\",\"contactedAt\":\"2026-09-29T04:00:00Z\"},{\"id\":\"lead-103\",\"artist\":{\"artistId\":\"art-002\",\"slug\":\"dj-krish\",\"name\":\"DJ Krish\",\"artistType\":\"dj\",\"profileImageUrl\":\"/artists/dj.png\"},\"eventType\":\"pre_wedding\",\"eventTitle\":\"Pre-Wedding\",\"eventDate\":\"2026-10-24\",\"daysToEvent\":25,\"budgetMin\":25000,\"budgetMax\":50000,\"notes\":\"Sangeet night. Need a Bollywood + EDM mix, 4-hour set.\",\"status\":\"responded\",\"contactedAt\":\"2026-09-28T10:00:00Z\"},{\"id\":\"lead-104\",\"artist\":{\"artistId\":\"art-001\",\"slug\":\"arjun-malhotra-magic\",\"name\":\"Arjun Malhotra\",\"artistType\":\"magician\",\"profileImageUrl\":\"/artists/magician.png\"},\"eventType\":\"wedding\",\"eventTitle\":\"Wedding\",\"eventDate\":\"2026-10-11\",\"daysToEvent\":12,\"budgetMin\":15000,\"budgetMax\":25000,\"notes\":\"Close-up magic for cocktail hour, ~150 guests.\",\"status\":\"confirmed\",\"contactedAt\":\"2026-09-26T09:00:00Z\"},{\"id\":\"lead-105\",\"artist\":{\"artistId\":\"art-004\",\"slug\":\"rohan-desai-comedy\",\"name\":\"Rohan Desai\",\"artistType\":\"comedian\",\"profileImageUrl\":\"/artists/comedian.png\"},\"eventType\":\"corporate\",\"eventTitle\":\"Corporate\",\"eventDate\":\"2026-09-27\",\"daysToEvent\":-2,\"budgetMin\":25000,\"budgetMax\":50000,\"notes\":\"30-minute stand-up set to open the evening.\",\"status\":\"declined\",\"contactedAt\":\"2026-09-19T15:00:00Z\"}],\"total\":5,\"page\":1,\"size\":20,\"counts\":{\"all\":5,\"pending\":2,\"responded\":1,\"confirmed\":1,\"declined\":1},\"summary\":{\"artistsContacted\":5,\"responsesReceived\":2,\"confirmedBookings\":1,\"upcoming\":{\"inquiryId\":\"lead-104\",\"eventTitle\":\"Wedding\",\"artistName\":\"Arjun Malhotra\",\"eventDate\":\"2026-10-11\",\"daysToEvent\":12}}}"
+    },
+    {
+      "uuid": "d66dc3de-fb71-462c-ac57-ddf66c6ca672",
+      "id": "plans",
+      "name": "plans",
+      "documentation": "",
+      "value": "[{\"tier\":\"free\",\"name\":\"Free\",\"tagline\":\"Get started, get noticed\",\"monthlyPrice\":0,\"annualPrice\":0,\"annualMonthlyEquivalent\":0,\"leadLimitMonthly\":3,\"maxImages\":5,\"maxVideos\":0,\"popular\":false,\"features\":[{\"label\":\"Profile listing\",\"value\":true},{\"label\":\"Basic search visibility\",\"value\":true},{\"label\":\"Contact leads per month\",\"value\":\"3\"},{\"label\":\"Media uploads\",\"value\":\"5 photos\"},{\"label\":\"Profile views shown\",\"value\":false},{\"label\":\"Instagram / YouTube link\",\"value\":true},{\"label\":\"Verified badge\",\"value\":false},{\"label\":\"Featured in search\",\"value\":false},{\"label\":\"Priority in search results\",\"value\":false},{\"label\":\"WhatsApp lead notifications\",\"value\":false},{\"label\":\"Custom portfolio link\",\"value\":false},{\"label\":\"Priority support\",\"value\":false}]},{\"tier\":\"basic\",\"name\":\"Basic\",\"tagline\":\"For artists just getting started\",\"monthlyPrice\":299,\"annualPrice\":2988,\"annualMonthlyEquivalent\":249,\"leadLimitMonthly\":15,\"maxImages\":20,\"maxVideos\":3,\"popular\":false,\"features\":[{\"label\":\"Profile listing\",\"value\":true},{\"label\":\"Basic search visibility\",\"value\":true},{\"label\":\"Contact leads per month\",\"value\":\"15\"},{\"label\":\"Media uploads\",\"value\":\"20 photos + 3 videos\"},{\"label\":\"Profile views shown\",\"value\":true},{\"label\":\"Instagram / YouTube link\",\"value\":true},{\"label\":\"Verified badge\",\"value\":true},{\"label\":\"Featured in search\",\"value\":false},{\"label\":\"Priority in search results\",\"value\":false},{\"label\":\"WhatsApp lead notifications\",\"value\":true},{\"label\":\"Custom portfolio link\",\"value\":false},{\"label\":\"Priority support\",\"value\":false}]},{\"tier\":\"pro\",\"name\":\"Pro\",\"tagline\":\"For growing artists\",\"monthlyPrice\":599,\"annualPrice\":5988,\"annualMonthlyEquivalent\":499,\"leadLimitMonthly\":-1,\"maxImages\":100,\"maxVideos\":20,\"popular\":true,\"features\":[{\"label\":\"Profile listing\",\"value\":true},{\"label\":\"Basic search visibility\",\"value\":true},{\"label\":\"Contact leads per month\",\"value\":\"Unlimited\"},{\"label\":\"Media uploads\",\"value\":\"100 photos + 20 videos\"},{\"label\":\"Profile views shown\",\"value\":true},{\"label\":\"Instagram / YouTube link\",\"value\":true},{\"label\":\"Verified badge\",\"value\":true},{\"label\":\"Featured in search\",\"value\":true},{\"label\":\"Priority in search results\",\"value\":true},{\"label\":\"WhatsApp lead notifications\",\"value\":true},{\"label\":\"Custom portfolio link\",\"value\":true},{\"label\":\"Priority support\",\"value\":false}]},{\"tier\":\"premium\",\"name\":\"Premium\",\"tagline\":\"For professionals who demand the best\",\"monthlyPrice\":1199,\"annualPrice\":11988,\"annualMonthlyEquivalent\":999,\"leadLimitMonthly\":-1,\"maxImages\":-1,\"maxVideos\":-1,\"popular\":false,\"features\":[{\"label\":\"Profile listing\",\"value\":true},{\"label\":\"Basic search visibility\",\"value\":true},{\"label\":\"Contact leads per month\",\"value\":\"Unlimited\"},{\"label\":\"Media uploads\",\"value\":\"Unlimited\"},{\"label\":\"Profile views shown\",\"value\":true},{\"label\":\"Instagram / YouTube link\",\"value\":true},{\"label\":\"Verified badge\",\"value\":true},{\"label\":\"Featured in search\",\"value\":true},{\"label\":\"Priority in search results\",\"value\":\"Top 3 placement\"},{\"label\":\"WhatsApp lead notifications\",\"value\":true},{\"label\":\"Custom portfolio link\",\"value\":true},{\"label\":\"Priority support\",\"value\":true}]}]"
+    },
+    {
+      "uuid": "f52befd6-441f-448d-befa-02a23f1bb424",
+      "id": "reviews",
+      "name": "reviews",
+      "documentation": "",
+      "value": "[{\"id\":\"rev-1\",\"reviewerName\":\"Rahul Mehta\",\"rating\":5,\"eventType\":\"wedding\",\"eventMonth\":\"2026-08\",\"text\":\"Absolutely phenomenal! The crowd went wild. Best decision we made for our wedding.\",\"createdAt\":\"2026-08-21T09:12:00Z\"},{\"id\":\"rev-2\",\"reviewerName\":\"Sneha Patel\",\"rating\":5,\"eventType\":\"corporate\",\"eventMonth\":\"2026-07\",\"text\":\"Very professional, arrived early, took briefing seriously. Our team loved every moment.\",\"createdAt\":\"2026-07-30T14:40:00Z\"},{\"id\":\"rev-3\",\"reviewerName\":\"Ankit Sharma\",\"rating\":4,\"eventType\":\"birthday\",\"eventMonth\":\"2026-06\",\"text\":\"Great performer! Kept the energy up the entire evening. Will book again for sure.\",\"createdAt\":\"2026-06-18T18:05:00Z\"}]"
+    },
+    {
+      "uuid": "596b5d55-70d9-4899-b5db-6a40d9ec5c76",
+      "id": "artistCards",
+      "name": "artistCards",
+      "documentation": "",
+      "value": "[{\"artistId\":\"art-001\",\"name\":\"Arjun Malhotra\",\"slug\":\"arjun-malhotra-magic\",\"artistType\":\"magician\",\"profileImageUrl\":\"/artists/magician.png\",\"bio\":\"Award-winning close-up magician specializing in mentalism and card magic. 500+ shows across Mumbai.\",\"locationCity\":\"Mumbai\",\"locationArea\":\"Bandra West\",\"perEventRateMin\":15000,\"perEventRateMax\":25000,\"averageRating\":4.9,\"totalReviews\":127,\"isVerified\":true,\"isFeatured\":true,\"subscriptionTier\":\"basic\",\"instagramHandle\":\"arjunmagic\",\"youtubeChannel\":\"ArjunMalhotraMagic\",\"experienceYears\":8,\"eventTypesSupported\":[\"birthday\",\"wedding\",\"corporate\",\"anniversary\",\"house_party\"],\"languagesSpoken\":[\"Hindi\",\"English\"],\"readyToTravel\":true},{\"artistId\":\"art-002\",\"name\":\"DJ Krish\",\"slug\":\"dj-krish\",\"artistType\":\"dj\",\"profileImageUrl\":\"/artists/dj.png\",\"bio\":\"Bollywood + EDM DJ with 10 years experience. Resident DJ at top Mumbai clubs. Weddings, sangeets, corporate events.\",\"locationCity\":\"Mumbai\",\"locationArea\":\"Andheri West\",\"perEventRateMin\":20000,\"perEventRateMax\":35000,\"averageRating\":4.7,\"totalReviews\":89,\"isVerified\":true,\"isFeatured\":true,\"subscriptionTier\":\"pro\",\"instagramHandle\":\"djkrish_official\",\"youtubeChannel\":\"DJKrishOfficial\",\"experienceYears\":10,\"eventTypesSupported\":[\"wedding\",\"pre_wedding\",\"corporate\",\"house_party\",\"anniversary\"],\"languagesSpoken\":[\"Hindi\",\"English\",\"Punjabi\"],\"readyToTravel\":true},{\"artistId\":\"art-003\",\"name\":\"Priya Sharma\",\"slug\":\"priya-sharma-singer\",\"artistType\":\"singer\",\"profileImageUrl\":\"/artists/singer.png\",\"bio\":\"Classically trained vocalist performing Bollywood, ghazals, and sufi music. Perfect for mehendi, sangeet & receptions.\",\"locationCity\":\"Mumbai\",\"locationArea\":\"Juhu\",\"perEventRateMin\":10000,\"perEventRateMax\":20000,\"averageRating\":4.8,\"totalReviews\":156,\"isVerified\":true,\"isFeatured\":false,\"subscriptionTier\":\"pro\",\"instagramHandle\":\"priyasharmamusic\",\"youtubeChannel\":\"PriyaSharmaLive\",\"experienceYears\":6,\"eventTypesSupported\":[\"wedding\",\"pre_wedding\",\"anniversary\",\"birthday\"],\"languagesSpoken\":[\"Hindi\",\"English\",\"Marathi\"],\"readyToTravel\":false},{\"artistId\":\"art-004\",\"name\":\"Rohan Desai\",\"slug\":\"rohan-desai-comedy\",\"artistType\":\"comedian\",\"profileImageUrl\":\"/artists/comedian.png\",\"bio\":\"Stand-up comedian & improv artist. Featured on Amazon Prime. Clean comedy for corporate events, house parties & college fests.\",\"locationCity\":\"Mumbai\",\"locationArea\":\"Powai\",\"perEventRateMin\":25000,\"perEventRateMax\":50000,\"averageRating\":4.6,\"totalReviews\":72,\"isVerified\":true,\"isFeatured\":false,\"subscriptionTier\":\"premium\",\"instagramHandle\":\"rohandesaicomedy\",\"youtubeChannel\":\"RohanDesaiComedy\",\"experienceYears\":5,\"eventTypesSupported\":[\"corporate\",\"house_party\",\"birthday\",\"other\"],\"languagesSpoken\":[\"Hindi\",\"English\",\"Marathi\"],\"readyToTravel\":true},{\"artistId\":\"art-005\",\"name\":\"The Raaga Collective\",\"slug\":\"the-raaga-collective\",\"artistType\":\"band\",\"profileImageUrl\":\"/artists/band.png\",\"bio\":\"5-piece fusion band blending Indian classical with rock. Perfect for weddings, sangeets, corporate galas & concert nights.\",\"locationCity\":\"Mumbai\",\"locationArea\":\"Lower Parel\",\"perEventRateMin\":30000,\"perEventRateMax\":60000,\"averageRating\":4.9,\"totalReviews\":64,\"isVerified\":true,\"isFeatured\":true,\"subscriptionTier\":\"premium\",\"instagramHandle\":\"theraagacollective\",\"youtubeChannel\":\"TheRaagaCollective\",\"experienceYears\":7,\"eventTypesSupported\":[\"wedding\",\"corporate\",\"anniversary\",\"other\"],\"languagesSpoken\":[\"Hindi\",\"English\",\"Tamil\"],\"readyToTravel\":true},{\"artistId\":\"art-006\",\"name\":\"Meera Kapoor\",\"slug\":\"meera-kapoor-anchor\",\"artistType\":\"anchor\",\"profileImageUrl\":\"/artists/anchor.png\",\"bio\":\"Bilingual event host (Hindi/English). Weddings, corporate events, award nights. Energetic, witty, and always on cue.\",\"locationCity\":\"Mumbai\",\"locationArea\":\"Dadar\",\"perEventRateMin\":8000,\"perEventRateMax\":15000,\"averageRating\":4.5,\"totalReviews\":93,\"isVerified\":false,\"isFeatured\":false,\"subscriptionTier\":\"basic\",\"instagramHandle\":\"meerakapoor_mc\",\"experienceYears\":4,\"eventTypesSupported\":[\"wedding\",\"corporate\",\"anniversary\",\"birthday\"],\"languagesSpoken\":[\"Hindi\",\"English\"],\"readyToTravel\":false,\"youtubeChannel\":null},{\"artistId\":\"art-007\",\"name\":\"Vikram Bubbles\",\"slug\":\"vikram-bubbles\",\"artistType\":\"bubble_artist\",\"profileImageUrl\":\"/artists/magician.png\",\"bio\":\"India's premier bubble artist! Giant bubbles, bubble-in-bubble tricks, and UV glow bubble shows for kids parties & events.\",\"locationCity\":\"Mumbai\",\"locationArea\":\"Goregaon\",\"perEventRateMin\":5000,\"perEventRateMax\":10000,\"averageRating\":4.8,\"totalReviews\":211,\"isVerified\":true,\"isFeatured\":false,\"subscriptionTier\":\"pro\",\"instagramHandle\":\"vikrambubbles\",\"youtubeChannel\":\"VikramBubbleShow\",\"experienceYears\":9,\"eventTypesSupported\":[\"birthday\",\"house_party\",\"corporate\",\"wedding\"],\"languagesSpoken\":[\"Hindi\",\"English\",\"Marathi\",\"Gujarati\"],\"readyToTravel\":true},{\"artistId\":\"art-008\",\"name\":\"Aditya Naik\",\"slug\":\"aditya-naik-singer\",\"artistType\":\"singer\",\"profileImageUrl\":\"/artists/comedian.png\",\"bio\":\"Sufi & Bollywood playback singer. Performed at 200+ live events. Soulful voice for intimate gatherings & grand celebrations.\",\"locationCity\":\"Mumbai\",\"locationArea\":\"Malad\",\"perEventRateMin\":15000,\"perEventRateMax\":30000,\"averageRating\":4.7,\"totalReviews\":45,\"isVerified\":false,\"isFeatured\":false,\"subscriptionTier\":\"basic\",\"instagramHandle\":\"adityanaik_music\",\"experienceYears\":3,\"eventTypesSupported\":[\"wedding\",\"anniversary\",\"birthday\",\"house_party\"],\"languagesSpoken\":[\"Hindi\",\"Marathi\",\"Kannada\"],\"readyToTravel\":false,\"youtubeChannel\":null},{\"artistId\":\"art-009\",\"name\":\"DJ Nikhil\",\"slug\":\"dj-nikhil-pune\",\"artistType\":\"dj\",\"profileImageUrl\":\"/artists/dj.png\",\"bio\":\"Punjabi, Bollywood and house sets for college fests, sangeets and rooftop parties across Pune.\",\"locationCity\":\"Pune\",\"locationArea\":\"Koregaon Park\",\"perEventRateMin\":12000,\"perEventRateMax\":22000,\"averageRating\":4.6,\"totalReviews\":38,\"isVerified\":true,\"isFeatured\":false,\"subscriptionTier\":\"basic\",\"instagramHandle\":\"djnikhilpune\",\"experienceYears\":5,\"eventTypesSupported\":[\"pre_wedding\",\"house_party\",\"birthday\",\"corporate\"],\"languagesSpoken\":[\"Hindi\",\"English\",\"Punjabi\",\"Marathi\"],\"readyToTravel\":true,\"youtubeChannel\":null},{\"artistId\":\"art-010\",\"name\":\"Sana Qureshi\",\"slug\":\"sana-qureshi-live\",\"artistType\":\"singer\",\"profileImageUrl\":\"/artists/singer.png\",\"bio\":\"Ghazal, qawwali and retro Bollywood vocalist with a 4-piece acoustic ensemble. Mehendi and reception specialist.\",\"locationCity\":\"Delhi\",\"locationArea\":\"Hauz Khas\",\"perEventRateMin\":18000,\"perEventRateMax\":35000,\"averageRating\":4.8,\"totalReviews\":51,\"isVerified\":true,\"isFeatured\":true,\"subscriptionTier\":\"pro\",\"instagramHandle\":\"sanaqureshilive\",\"youtubeChannel\":\"SanaQureshiLive\",\"experienceYears\":7,\"eventTypesSupported\":[\"wedding\",\"pre_wedding\",\"anniversary\",\"corporate\"],\"languagesSpoken\":[\"Hindi\",\"English\",\"Punjabi\"],\"readyToTravel\":true},{\"artistId\":\"art-011\",\"name\":\"Kabir the Mentalist\",\"slug\":\"kabir-mentalist\",\"artistType\":\"magician\",\"profileImageUrl\":\"/artists/magician.png\",\"bio\":\"Mind-reading and interactive mentalism for corporate offsites and intimate house parties.\",\"locationCity\":\"Bengaluru\",\"locationArea\":\"Indiranagar\",\"perEventRateMin\":10000,\"perEventRateMax\":20000,\"averageRating\":4.4,\"totalReviews\":22,\"isVerified\":false,\"isFeatured\":false,\"subscriptionTier\":\"free\",\"instagramHandle\":\"kabirmentalist\",\"experienceYears\":3,\"eventTypesSupported\":[\"corporate\",\"house_party\",\"birthday\"],\"languagesSpoken\":[\"English\",\"Hindi\",\"Kannada\"],\"readyToTravel\":false,\"youtubeChannel\":null},{\"artistId\":\"art-012\",\"name\":\"Ravi Laugh Riot\",\"slug\":\"ravi-laugh-riot\",\"artistType\":\"comedian\",\"profileImageUrl\":\"/artists/comedian.png\",\"bio\":\"Marathi and Hindi stand-up. Clean, family-friendly sets for society events and birthday parties.\",\"locationCity\":\"Pune\",\"locationArea\":\"Viman Nagar\",\"perEventRateMin\":8000,\"perEventRateMax\":15000,\"averageRating\":4.3,\"totalReviews\":17,\"isVerified\":false,\"isFeatured\":false,\"subscriptionTier\":\"free\",\"experienceYears\":2,\"eventTypesSupported\":[\"birthday\",\"house_party\",\"other\"],\"languagesSpoken\":[\"Marathi\",\"Hindi\"],\"readyToTravel\":false,\"instagramHandle\":null,\"youtubeChannel\":null}]"
+    },
+    {
+      "uuid": "9c86bf64-091d-4811-82d8-b3ee95c719dd",
+      "id": "artistDetails",
+      "name": "artistDetails",
+      "documentation": "",
+      "value": "[{\"artistId\":\"art-001\",\"name\":\"Arjun Malhotra\",\"slug\":\"arjun-malhotra-magic\",\"artistType\":\"magician\",\"profileImageUrl\":\"/artists/magician.png\",\"bio\":\"Award-winning close-up magician specializing in mentalism and card magic. 500+ shows across Mumbai.\",\"locationCity\":\"Mumbai\",\"locationArea\":\"Bandra West\",\"perEventRateMin\":15000,\"perEventRateMax\":25000,\"averageRating\":4.9,\"totalReviews\":127,\"isVerified\":true,\"isFeatured\":true,\"subscriptionTier\":\"basic\",\"instagramHandle\":\"arjunmagic\",\"youtubeChannel\":\"ArjunMalhotraMagic\",\"experienceYears\":8,\"eventTypesSupported\":[\"birthday\",\"wedding\",\"corporate\",\"anniversary\",\"house_party\"],\"languagesSpoken\":[\"Hindi\",\"English\"],\"readyToTravel\":true,\"media\":[{\"id\":\"med-001-1\",\"kind\":\"image\",\"url\":\"/artists/magician.png\",\"thumbnailUrl\":null,\"caption\":\"Arjun Malhotra live\",\"displayOrder\":0},{\"id\":\"med-001-2\",\"kind\":\"image\",\"url\":\"/artists/dj.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":1},{\"id\":\"med-001-3\",\"kind\":\"image\",\"url\":\"/artists/singer.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":2},{\"id\":\"med-001-4\",\"kind\":\"image\",\"url\":\"/artists/comedian.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":3}]},{\"artistId\":\"art-002\",\"name\":\"DJ Krish\",\"slug\":\"dj-krish\",\"artistType\":\"dj\",\"profileImageUrl\":\"/artists/dj.png\",\"bio\":\"Bollywood + EDM DJ with 10 years experience. Resident DJ at top Mumbai clubs. Weddings, sangeets, corporate events.\",\"locationCity\":\"Mumbai\",\"locationArea\":\"Andheri West\",\"perEventRateMin\":20000,\"perEventRateMax\":35000,\"averageRating\":4.7,\"totalReviews\":89,\"isVerified\":true,\"isFeatured\":true,\"subscriptionTier\":\"pro\",\"instagramHandle\":\"djkrish_official\",\"youtubeChannel\":\"DJKrishOfficial\",\"experienceYears\":10,\"eventTypesSupported\":[\"wedding\",\"pre_wedding\",\"corporate\",\"house_party\",\"anniversary\"],\"languagesSpoken\":[\"Hindi\",\"English\",\"Punjabi\"],\"readyToTravel\":true,\"media\":[{\"id\":\"med-002-1\",\"kind\":\"image\",\"url\":\"/artists/dj.png\",\"thumbnailUrl\":null,\"caption\":\"DJ Krish live\",\"displayOrder\":0},{\"id\":\"med-002-2\",\"kind\":\"image\",\"url\":\"/artists/magician.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":1},{\"id\":\"med-002-3\",\"kind\":\"image\",\"url\":\"/artists/singer.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":2},{\"id\":\"med-002-4\",\"kind\":\"image\",\"url\":\"/artists/comedian.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":3}]},{\"artistId\":\"art-003\",\"name\":\"Priya Sharma\",\"slug\":\"priya-sharma-singer\",\"artistType\":\"singer\",\"profileImageUrl\":\"/artists/singer.png\",\"bio\":\"Classically trained vocalist performing Bollywood, ghazals, and sufi music. Perfect for mehendi, sangeet & receptions.\",\"locationCity\":\"Mumbai\",\"locationArea\":\"Juhu\",\"perEventRateMin\":10000,\"perEventRateMax\":20000,\"averageRating\":4.8,\"totalReviews\":156,\"isVerified\":true,\"isFeatured\":false,\"subscriptionTier\":\"pro\",\"instagramHandle\":\"priyasharmamusic\",\"youtubeChannel\":\"PriyaSharmaLive\",\"experienceYears\":6,\"eventTypesSupported\":[\"wedding\",\"pre_wedding\",\"anniversary\",\"birthday\"],\"languagesSpoken\":[\"Hindi\",\"English\",\"Marathi\"],\"readyToTravel\":false,\"media\":[{\"id\":\"med-003-1\",\"kind\":\"image\",\"url\":\"/artists/singer.png\",\"thumbnailUrl\":null,\"caption\":\"Priya Sharma live\",\"displayOrder\":0},{\"id\":\"med-003-2\",\"kind\":\"image\",\"url\":\"/artists/magician.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":1},{\"id\":\"med-003-3\",\"kind\":\"image\",\"url\":\"/artists/dj.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":2},{\"id\":\"med-003-4\",\"kind\":\"image\",\"url\":\"/artists/comedian.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":3}]},{\"artistId\":\"art-004\",\"name\":\"Rohan Desai\",\"slug\":\"rohan-desai-comedy\",\"artistType\":\"comedian\",\"profileImageUrl\":\"/artists/comedian.png\",\"bio\":\"Stand-up comedian & improv artist. Featured on Amazon Prime. Clean comedy for corporate events, house parties & college fests.\",\"locationCity\":\"Mumbai\",\"locationArea\":\"Powai\",\"perEventRateMin\":25000,\"perEventRateMax\":50000,\"averageRating\":4.6,\"totalReviews\":72,\"isVerified\":true,\"isFeatured\":false,\"subscriptionTier\":\"premium\",\"instagramHandle\":\"rohandesaicomedy\",\"youtubeChannel\":\"RohanDesaiComedy\",\"experienceYears\":5,\"eventTypesSupported\":[\"corporate\",\"house_party\",\"birthday\",\"other\"],\"languagesSpoken\":[\"Hindi\",\"English\",\"Marathi\"],\"readyToTravel\":true,\"media\":[{\"id\":\"med-004-1\",\"kind\":\"image\",\"url\":\"/artists/comedian.png\",\"thumbnailUrl\":null,\"caption\":\"Rohan Desai live\",\"displayOrder\":0},{\"id\":\"med-004-2\",\"kind\":\"image\",\"url\":\"/artists/magician.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":1},{\"id\":\"med-004-3\",\"kind\":\"image\",\"url\":\"/artists/dj.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":2},{\"id\":\"med-004-4\",\"kind\":\"image\",\"url\":\"/artists/singer.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":3}]},{\"artistId\":\"art-005\",\"name\":\"The Raaga Collective\",\"slug\":\"the-raaga-collective\",\"artistType\":\"band\",\"profileImageUrl\":\"/artists/band.png\",\"bio\":\"5-piece fusion band blending Indian classical with rock. Perfect for weddings, sangeets, corporate galas & concert nights.\",\"locationCity\":\"Mumbai\",\"locationArea\":\"Lower Parel\",\"perEventRateMin\":30000,\"perEventRateMax\":60000,\"averageRating\":4.9,\"totalReviews\":64,\"isVerified\":true,\"isFeatured\":true,\"subscriptionTier\":\"premium\",\"instagramHandle\":\"theraagacollective\",\"youtubeChannel\":\"TheRaagaCollective\",\"experienceYears\":7,\"eventTypesSupported\":[\"wedding\",\"corporate\",\"anniversary\",\"other\"],\"languagesSpoken\":[\"Hindi\",\"English\",\"Tamil\"],\"readyToTravel\":true,\"media\":[{\"id\":\"med-005-1\",\"kind\":\"image\",\"url\":\"/artists/band.png\",\"thumbnailUrl\":null,\"caption\":\"The Raaga Collective live\",\"displayOrder\":0},{\"id\":\"med-005-2\",\"kind\":\"image\",\"url\":\"/artists/magician.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":1},{\"id\":\"med-005-3\",\"kind\":\"image\",\"url\":\"/artists/dj.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":2},{\"id\":\"med-005-4\",\"kind\":\"image\",\"url\":\"/artists/singer.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":3}]},{\"artistId\":\"art-006\",\"name\":\"Meera Kapoor\",\"slug\":\"meera-kapoor-anchor\",\"artistType\":\"anchor\",\"profileImageUrl\":\"/artists/anchor.png\",\"bio\":\"Bilingual event host (Hindi/English). Weddings, corporate events, award nights. Energetic, witty, and always on cue.\",\"locationCity\":\"Mumbai\",\"locationArea\":\"Dadar\",\"perEventRateMin\":8000,\"perEventRateMax\":15000,\"averageRating\":4.5,\"totalReviews\":93,\"isVerified\":false,\"isFeatured\":false,\"subscriptionTier\":\"basic\",\"instagramHandle\":\"meerakapoor_mc\",\"experienceYears\":4,\"eventTypesSupported\":[\"wedding\",\"corporate\",\"anniversary\",\"birthday\"],\"languagesSpoken\":[\"Hindi\",\"English\"],\"readyToTravel\":false,\"youtubeChannel\":null,\"media\":[{\"id\":\"med-006-1\",\"kind\":\"image\",\"url\":\"/artists/anchor.png\",\"thumbnailUrl\":null,\"caption\":\"Meera Kapoor live\",\"displayOrder\":0},{\"id\":\"med-006-2\",\"kind\":\"image\",\"url\":\"/artists/magician.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":1},{\"id\":\"med-006-3\",\"kind\":\"image\",\"url\":\"/artists/dj.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":2},{\"id\":\"med-006-4\",\"kind\":\"image\",\"url\":\"/artists/singer.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":3}]},{\"artistId\":\"art-007\",\"name\":\"Vikram Bubbles\",\"slug\":\"vikram-bubbles\",\"artistType\":\"bubble_artist\",\"profileImageUrl\":\"/artists/magician.png\",\"bio\":\"India's premier bubble artist! Giant bubbles, bubble-in-bubble tricks, and UV glow bubble shows for kids parties & events.\",\"locationCity\":\"Mumbai\",\"locationArea\":\"Goregaon\",\"perEventRateMin\":5000,\"perEventRateMax\":10000,\"averageRating\":4.8,\"totalReviews\":211,\"isVerified\":true,\"isFeatured\":false,\"subscriptionTier\":\"pro\",\"instagramHandle\":\"vikrambubbles\",\"youtubeChannel\":\"VikramBubbleShow\",\"experienceYears\":9,\"eventTypesSupported\":[\"birthday\",\"house_party\",\"corporate\",\"wedding\"],\"languagesSpoken\":[\"Hindi\",\"English\",\"Marathi\",\"Gujarati\"],\"readyToTravel\":true,\"media\":[{\"id\":\"med-007-1\",\"kind\":\"image\",\"url\":\"/artists/magician.png\",\"thumbnailUrl\":null,\"caption\":\"Vikram Bubbles live\",\"displayOrder\":0},{\"id\":\"med-007-2\",\"kind\":\"image\",\"url\":\"/artists/dj.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":1},{\"id\":\"med-007-3\",\"kind\":\"image\",\"url\":\"/artists/singer.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":2},{\"id\":\"med-007-4\",\"kind\":\"image\",\"url\":\"/artists/comedian.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":3}]},{\"artistId\":\"art-008\",\"name\":\"Aditya Naik\",\"slug\":\"aditya-naik-singer\",\"artistType\":\"singer\",\"profileImageUrl\":\"/artists/comedian.png\",\"bio\":\"Sufi & Bollywood playback singer. Performed at 200+ live events. Soulful voice for intimate gatherings & grand celebrations.\",\"locationCity\":\"Mumbai\",\"locationArea\":\"Malad\",\"perEventRateMin\":15000,\"perEventRateMax\":30000,\"averageRating\":4.7,\"totalReviews\":45,\"isVerified\":false,\"isFeatured\":false,\"subscriptionTier\":\"basic\",\"instagramHandle\":\"adityanaik_music\",\"experienceYears\":3,\"eventTypesSupported\":[\"wedding\",\"anniversary\",\"birthday\",\"house_party\"],\"languagesSpoken\":[\"Hindi\",\"Marathi\",\"Kannada\"],\"readyToTravel\":false,\"youtubeChannel\":null,\"media\":[{\"id\":\"med-008-1\",\"kind\":\"image\",\"url\":\"/artists/comedian.png\",\"thumbnailUrl\":null,\"caption\":\"Aditya Naik live\",\"displayOrder\":0},{\"id\":\"med-008-2\",\"kind\":\"image\",\"url\":\"/artists/magician.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":1},{\"id\":\"med-008-3\",\"kind\":\"image\",\"url\":\"/artists/dj.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":2},{\"id\":\"med-008-4\",\"kind\":\"image\",\"url\":\"/artists/singer.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":3}]},{\"artistId\":\"art-009\",\"name\":\"DJ Nikhil\",\"slug\":\"dj-nikhil-pune\",\"artistType\":\"dj\",\"profileImageUrl\":\"/artists/dj.png\",\"bio\":\"Punjabi, Bollywood and house sets for college fests, sangeets and rooftop parties across Pune.\",\"locationCity\":\"Pune\",\"locationArea\":\"Koregaon Park\",\"perEventRateMin\":12000,\"perEventRateMax\":22000,\"averageRating\":4.6,\"totalReviews\":38,\"isVerified\":true,\"isFeatured\":false,\"subscriptionTier\":\"basic\",\"instagramHandle\":\"djnikhilpune\",\"experienceYears\":5,\"eventTypesSupported\":[\"pre_wedding\",\"house_party\",\"birthday\",\"corporate\"],\"languagesSpoken\":[\"Hindi\",\"English\",\"Punjabi\",\"Marathi\"],\"readyToTravel\":true,\"youtubeChannel\":null,\"media\":[{\"id\":\"med-009-1\",\"kind\":\"image\",\"url\":\"/artists/dj.png\",\"thumbnailUrl\":null,\"caption\":\"DJ Nikhil live\",\"displayOrder\":0},{\"id\":\"med-009-2\",\"kind\":\"image\",\"url\":\"/artists/magician.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":1},{\"id\":\"med-009-3\",\"kind\":\"image\",\"url\":\"/artists/singer.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":2},{\"id\":\"med-009-4\",\"kind\":\"image\",\"url\":\"/artists/comedian.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":3}]},{\"artistId\":\"art-010\",\"name\":\"Sana Qureshi\",\"slug\":\"sana-qureshi-live\",\"artistType\":\"singer\",\"profileImageUrl\":\"/artists/singer.png\",\"bio\":\"Ghazal, qawwali and retro Bollywood vocalist with a 4-piece acoustic ensemble. Mehendi and reception specialist.\",\"locationCity\":\"Delhi\",\"locationArea\":\"Hauz Khas\",\"perEventRateMin\":18000,\"perEventRateMax\":35000,\"averageRating\":4.8,\"totalReviews\":51,\"isVerified\":true,\"isFeatured\":true,\"subscriptionTier\":\"pro\",\"instagramHandle\":\"sanaqureshilive\",\"youtubeChannel\":\"SanaQureshiLive\",\"experienceYears\":7,\"eventTypesSupported\":[\"wedding\",\"pre_wedding\",\"anniversary\",\"corporate\"],\"languagesSpoken\":[\"Hindi\",\"English\",\"Punjabi\"],\"readyToTravel\":true,\"media\":[{\"id\":\"med-010-1\",\"kind\":\"image\",\"url\":\"/artists/singer.png\",\"thumbnailUrl\":null,\"caption\":\"Sana Qureshi live\",\"displayOrder\":0},{\"id\":\"med-010-2\",\"kind\":\"image\",\"url\":\"/artists/magician.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":1},{\"id\":\"med-010-3\",\"kind\":\"image\",\"url\":\"/artists/dj.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":2},{\"id\":\"med-010-4\",\"kind\":\"image\",\"url\":\"/artists/comedian.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":3}]},{\"artistId\":\"art-011\",\"name\":\"Kabir the Mentalist\",\"slug\":\"kabir-mentalist\",\"artistType\":\"magician\",\"profileImageUrl\":\"/artists/magician.png\",\"bio\":\"Mind-reading and interactive mentalism for corporate offsites and intimate house parties.\",\"locationCity\":\"Bengaluru\",\"locationArea\":\"Indiranagar\",\"perEventRateMin\":10000,\"perEventRateMax\":20000,\"averageRating\":4.4,\"totalReviews\":22,\"isVerified\":false,\"isFeatured\":false,\"subscriptionTier\":\"free\",\"instagramHandle\":\"kabirmentalist\",\"experienceYears\":3,\"eventTypesSupported\":[\"corporate\",\"house_party\",\"birthday\"],\"languagesSpoken\":[\"English\",\"Hindi\",\"Kannada\"],\"readyToTravel\":false,\"youtubeChannel\":null,\"media\":[{\"id\":\"med-011-1\",\"kind\":\"image\",\"url\":\"/artists/magician.png\",\"thumbnailUrl\":null,\"caption\":\"Kabir the Mentalist live\",\"displayOrder\":0},{\"id\":\"med-011-2\",\"kind\":\"image\",\"url\":\"/artists/dj.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":1},{\"id\":\"med-011-3\",\"kind\":\"image\",\"url\":\"/artists/singer.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":2},{\"id\":\"med-011-4\",\"kind\":\"image\",\"url\":\"/artists/comedian.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":3}]},{\"artistId\":\"art-012\",\"name\":\"Ravi Laugh Riot\",\"slug\":\"ravi-laugh-riot\",\"artistType\":\"comedian\",\"profileImageUrl\":\"/artists/comedian.png\",\"bio\":\"Marathi and Hindi stand-up. Clean, family-friendly sets for society events and birthday parties.\",\"locationCity\":\"Pune\",\"locationArea\":\"Viman Nagar\",\"perEventRateMin\":8000,\"perEventRateMax\":15000,\"averageRating\":4.3,\"totalReviews\":17,\"isVerified\":false,\"isFeatured\":false,\"subscriptionTier\":\"free\",\"experienceYears\":2,\"eventTypesSupported\":[\"birthday\",\"house_party\",\"other\"],\"languagesSpoken\":[\"Marathi\",\"Hindi\"],\"readyToTravel\":false,\"instagramHandle\":null,\"youtubeChannel\":null,\"media\":[{\"id\":\"med-012-1\",\"kind\":\"image\",\"url\":\"/artists/comedian.png\",\"thumbnailUrl\":null,\"caption\":\"Ravi Laugh Riot live\",\"displayOrder\":0},{\"id\":\"med-012-2\",\"kind\":\"image\",\"url\":\"/artists/magician.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":1},{\"id\":\"med-012-3\",\"kind\":\"image\",\"url\":\"/artists/dj.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":2},{\"id\":\"med-012-4\",\"kind\":\"image\",\"url\":\"/artists/singer.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":3}]}]"
+    },
+    {
+      "uuid": "c8e18be9-a944-4c63-baff-a93b030be83f",
+      "id": "artistContacts",
+      "name": "artistContacts",
+      "documentation": "",
+      "value": "[{\"artistId\":\"art-001\",\"name\":\"Arjun Malhotra\",\"contactPhone\":\"9820011001\",\"whatsappNumber\":\"9820011001\",\"instagramHandle\":\"arjunmagic\"},{\"artistId\":\"art-002\",\"name\":\"DJ Krish\",\"contactPhone\":\"9820011002\",\"whatsappNumber\":\"9820011002\",\"instagramHandle\":\"djkrish_official\"},{\"artistId\":\"art-003\",\"name\":\"Priya Sharma\",\"contactPhone\":\"9820011003\",\"whatsappNumber\":null,\"instagramHandle\":\"priyasharmamusic\"},{\"artistId\":\"art-004\",\"name\":\"Rohan Desai\",\"contactPhone\":\"9820011004\",\"whatsappNumber\":\"9820011004\",\"instagramHandle\":\"rohandesaicomedy\"},{\"artistId\":\"art-005\",\"name\":\"The Raaga Collective\",\"contactPhone\":\"9820011005\",\"whatsappNumber\":\"9820011005\",\"instagramHandle\":\"theraagacollective\"},{\"artistId\":\"art-006\",\"name\":\"Meera Kapoor\",\"contactPhone\":\"9820011006\",\"whatsappNumber\":null,\"instagramHandle\":\"meerakapoor_mc\"},{\"artistId\":\"art-007\",\"name\":\"Vikram Bubbles\",\"contactPhone\":\"9820011007\",\"whatsappNumber\":\"9820011007\",\"instagramHandle\":\"vikrambubbles\"},{\"artistId\":\"art-008\",\"name\":\"Aditya Naik\",\"contactPhone\":\"9820011008\",\"whatsappNumber\":\"9820011008\",\"instagramHandle\":\"adityanaik_music\"},{\"artistId\":\"art-009\",\"name\":\"DJ Nikhil\",\"contactPhone\":\"9820011009\",\"whatsappNumber\":null,\"instagramHandle\":\"djnikhilpune\"},{\"artistId\":\"art-010\",\"name\":\"Sana Qureshi\",\"contactPhone\":\"9820011010\",\"whatsappNumber\":\"9820011010\",\"instagramHandle\":\"sanaqureshilive\"},{\"artistId\":\"art-011\",\"name\":\"Kabir the Mentalist\",\"contactPhone\":\"9820011011\",\"whatsappNumber\":\"9820011011\",\"instagramHandle\":\"kabirmentalist\"},{\"artistId\":\"art-012\",\"name\":\"Ravi Laugh Riot\",\"contactPhone\":\"9820011012\",\"whatsappNumber\":null,\"instagramHandle\":null}]"
+    },
+    {
+      "uuid": "51bb88ca-3507-46e1-8d3e-2930f2b05582",
+      "id": "artist-profile",
+      "name": "artist-profile",
+      "documentation": "",
+      "value": "{\"artistId\":\"art-001\",\"name\":\"Arjun Malhotra\",\"slug\":\"arjun-malhotra-magic\",\"artistType\":\"magician\",\"profileImageUrl\":\"/artists/magician.png\",\"bio\":\"Award-winning close-up magician specializing in mentalism and card magic. 500+ shows across Mumbai.\",\"locationCity\":\"Mumbai\",\"locationArea\":\"Bandra West\",\"perEventRateMin\":15000,\"perEventRateMax\":25000,\"averageRating\":4.9,\"totalReviews\":127,\"isVerified\":true,\"isFeatured\":true,\"subscriptionTier\":\"basic\",\"instagramHandle\":\"arjunmagic\",\"youtubeChannel\":\"ArjunMalhotraMagic\",\"experienceYears\":8,\"eventTypesSupported\":[\"birthday\",\"wedding\",\"corporate\",\"anniversary\",\"house_party\"],\"languagesSpoken\":[\"Hindi\",\"English\"],\"readyToTravel\":true,\"media\":[{\"id\":\"med-001-1\",\"kind\":\"image\",\"url\":\"/artists/magician.png\",\"thumbnailUrl\":null,\"caption\":\"Arjun Malhotra live\",\"displayOrder\":0},{\"id\":\"med-001-2\",\"kind\":\"image\",\"url\":\"/artists/dj.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":1},{\"id\":\"med-001-3\",\"kind\":\"image\",\"url\":\"/artists/singer.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":2},{\"id\":\"med-001-4\",\"kind\":\"image\",\"url\":\"/artists/comedian.png\",\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":3}],\"contactPhone\":\"9820011001\",\"whatsappNumber\":\"9820011001\",\"isPublished\":true,\"completeness\":{\"percent\":83,\"items\":[{\"key\":\"basic_info\",\"label\":\"Basic info added\",\"done\":true},{\"key\":\"photo\",\"label\":\"Profile photo uploaded\",\"done\":true},{\"key\":\"bio\",\"label\":\"Bio written\",\"done\":true},{\"key\":\"media\",\"label\":\"Add portfolio media\",\"done\":true},{\"key\":\"instagram\",\"label\":\"Connect Instagram\",\"done\":true},{\"key\":\"review\",\"label\":\"Get your first review\",\"done\":false}]}}"
+    },
+    {
+      "uuid": "29a36c15-1ab7-4ed3-b98d-ca817a9500bb",
+      "id": "me-planner",
+      "name": "me-planner",
+      "documentation": "",
+      "value": "{\"id\":\"3b9e7a51-2c4d-4e8f-a1b2-c3d4e5f60718\",\"email\":\"neha.kulkarni@gmail.com\",\"fullName\":\"Neha Kulkarni\",\"phone\":\"9920012345\",\"role\":\"planner\",\"avatarUrl\":null,\"artistSlug\":null,\"createdAt\":\"2026-09-01T08:00:00Z\"}"
+    }
+  ],
+  "routes": [
+    {
+      "uuid": "426e0f77-3689-453e-9b70-0fcd34f0e12b",
+      "type": "http",
+      "documentation": "Clears new-user journey state",
+      "method": "post",
+      "endpoint": "_mock/reset",
+      "responses": [
+        {
+          "uuid": "e28e6b72-36e3-4639-8b39-fd529865e6ba",
+          "label": "",
+          "statusCode": 200,
+          "body": "{{setGlobalVar 'newRole' ''}}{{setGlobalVar 'newName' ''}}{{setGlobalVar 'newSlug' ''}}{\"ok\": true}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [],
+          "rulesOperator": "AND",
+          "default": true,
+          "latency": 0,
+          "disableTemplating": false
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "8fb3b955-ff76-4533-a246-f158db2f6c62",
+      "type": "http",
+      "documentation": "Stands in for the presigned R2 upload URL",
+      "method": "put",
+      "endpoint": "_mock/upload/:key",
+      "responses": [
+        {
+          "uuid": "c86dc0a8-e56c-42c7-9fa0-d419be8bb964",
+          "label": "",
+          "statusCode": 200,
+          "body": "{\"ok\": true}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [],
+          "rulesOperator": "AND",
+          "default": true,
+          "latency": 0,
+          "disableTemplating": false
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "2bed2a39-6469-42ed-a917-297112f61323",
+      "type": "http",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "me",
+      "responses": [
+        {
+          "uuid": "4c0463a1-3c04-4bf5-991d-419d96881cbf",
+          "label": "",
+          "statusCode": 401,
+          "body": "{\"error\":{\"code\":\"unauthenticated\",\"message\":\"Please sign in to continue\",\"details\":{}}}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [
+            {
+              "operator": "null",
+              "invert": false,
+              "target": "header",
+              "modifier": "Authorization",
+              "value": ""
+            }
+          ],
+          "rulesOperator": "AND",
+          "default": false,
+          "latency": 0,
+          "disableTemplating": false
+        },
+        {
+          "uuid": "316196f0-8d30-4cf6-b1d9-636111284432",
+          "label": "",
+          "statusCode": 200,
+          "body": "{\n  \"id\": \"3b9e7a51-2c4d-4e8f-a1b2-c3d4e5f60718\",\n  \"email\": \"neha.kulkarni@gmail.com\",\n  \"fullName\": \"Neha Kulkarni\",\n  \"phone\": \"9920012345\",\n  \"role\": \"planner\",\n  \"avatarUrl\": null,\n  \"artistSlug\": null,\n  \"createdAt\": \"2026-09-01T08:00:00Z\"\n}\n",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [
+            {
+              "operator": "equals",
+              "invert": false,
+              "target": "header",
+              "modifier": "Authorization",
+              "value": "Bearer mock-planner"
+            }
+          ],
+          "rulesOperator": "AND",
+          "default": false,
+          "latency": 0,
+          "disableTemplating": false
+        },
+        {
+          "uuid": "90899163-c142-4757-91c9-4d904bb2ad0e",
+          "label": "",
+          "statusCode": 200,
+          "body": "{\"id\": \"c0ffee00-0000-4000-8000-000000000001\", \"email\": \"new.user@gmail.com\", \"fullName\": \"{{getGlobalVar 'newName'}}\", \"phone\": null, \"role\": \"{{getGlobalVar 'newRole'}}\", \"avatarUrl\": null, \"artistSlug\": \"{{getGlobalVar 'newSlug'}}\", \"createdAt\": \"2026-09-29T10:00:00Z\"}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [
+            {
+              "operator": "equals",
+              "invert": false,
+              "target": "header",
+              "modifier": "Authorization",
+              "value": "Bearer mock-new"
+            },
+            {
+              "operator": "regex",
+              "invert": false,
+              "target": "global_var",
+              "modifier": "newRole",
+              "value": "^(artist|planner)$"
+            },
+            {
+              "operator": "regex",
+              "invert": false,
+              "target": "global_var",
+              "modifier": "newSlug",
+              "value": ".+"
+            }
+          ],
+          "rulesOperator": "AND",
+          "default": false,
+          "latency": 0,
+          "disableTemplating": false
+        },
+        {
+          "uuid": "2a4a8e3f-ced7-4694-a786-6af594929d71",
+          "label": "",
+          "statusCode": 200,
+          "body": "{\"id\": \"c0ffee00-0000-4000-8000-000000000001\", \"email\": \"new.user@gmail.com\", \"fullName\": \"{{getGlobalVar 'newName'}}\", \"phone\": null, \"role\": \"{{getGlobalVar 'newRole'}}\", \"avatarUrl\": null, \"artistSlug\": null, \"createdAt\": \"2026-09-29T10:00:00Z\"}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [
+            {
+              "operator": "equals",
+              "invert": false,
+              "target": "header",
+              "modifier": "Authorization",
+              "value": "Bearer mock-new"
+            },
+            {
+              "operator": "regex",
+              "invert": false,
+              "target": "global_var",
+              "modifier": "newRole",
+              "value": "^(artist|planner)$"
+            }
+          ],
+          "rulesOperator": "AND",
+          "default": false,
+          "latency": 0,
+          "disableTemplating": false
+        },
+        {
+          "uuid": "cfa756d4-df22-44eb-847a-60554bd5c71f",
+          "label": "",
+          "statusCode": 404,
+          "body": "{\"error\":{\"code\":\"profile_required\",\"message\":\"Complete your profile to continue\",\"details\":{}}}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [
+            {
+              "operator": "equals",
+              "invert": false,
+              "target": "header",
+              "modifier": "Authorization",
+              "value": "Bearer mock-new"
+            }
+          ],
+          "rulesOperator": "AND",
+          "default": false,
+          "latency": 0,
+          "disableTemplating": false
+        },
+        {
+          "uuid": "04ae2014-e35d-4790-868c-17d0d0fcfe70",
+          "label": "",
+          "statusCode": 200,
+          "body": "{\n  \"id\": \"8f5c2d1e-6a3b-4c7d-9e0f-1a2b3c4d5e6f\",\n  \"email\": \"arjun.malhotra@gmail.com\",\n  \"fullName\": \"Arjun Malhotra\",\n  \"phone\": \"9820011001\",\n  \"role\": \"artist\",\n  \"avatarUrl\": null,\n  \"artistSlug\": \"arjun-malhotra-magic\",\n  \"createdAt\": \"2026-07-01T10:00:00Z\"\n}\n",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [],
+          "rulesOperator": "AND",
+          "default": true,
+          "latency": 0,
+          "disableTemplating": false
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "6f775dae-57a2-42a2-8ffd-2d62f8ef0435",
+      "type": "http",
+      "documentation": "",
+      "method": "post",
+      "endpoint": "me",
+      "responses": [
+        {
+          "uuid": "c6067ef8-64f5-4bd1-b9fc-d41555e2713d",
+          "label": "",
+          "statusCode": 401,
+          "body": "{\"error\":{\"code\":\"unauthenticated\",\"message\":\"Please sign in to continue\",\"details\":{}}}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [
+            {
+              "operator": "null",
+              "invert": false,
+              "target": "header",
+              "modifier": "Authorization",
+              "value": ""
+            }
+          ],
+          "rulesOperator": "AND",
+          "default": false,
+          "latency": 0,
+          "disableTemplating": false
+        },
+        {
+          "uuid": "0090c9d9-c631-4b1f-b113-ae353c15cdb5",
+          "label": "",
+          "statusCode": 201,
+          "body": "{{setGlobalVar 'newRole' (body 'role')}}{{setGlobalVar 'newName' (body 'fullName')}}{\"id\": \"c0ffee00-0000-4000-8000-000000000001\", \"email\": \"new.user@gmail.com\", \"fullName\": \"{{body 'fullName'}}\", \"phone\": {{#if (eq (body 'phone' '') '')}}null{{else}}\"{{body 'phone'}}\"{{/if}}, \"role\": \"{{body 'role'}}\", \"avatarUrl\": null, \"artistSlug\": null, \"createdAt\": \"2026-09-29T10:00:00Z\"}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [
+            {
+              "operator": "equals",
+              "invert": false,
+              "target": "header",
+              "modifier": "Authorization",
+              "value": "Bearer mock-new"
+            }
+          ],
+          "rulesOperator": "AND",
+          "default": false,
+          "latency": 0,
+          "disableTemplating": false
+        },
+        {
+          "uuid": "6abe9893-f52c-4096-b7b9-d41d1205e0f6",
+          "label": "",
+          "statusCode": 409,
+          "body": "{\"error\":{\"code\":\"profile_exists\",\"message\":\"Your profile already exists\",\"details\":{}}}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [],
+          "rulesOperator": "AND",
+          "default": true,
+          "latency": 0,
+          "disableTemplating": false
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "c69e675c-6dd9-4a72-90f9-45228816c62d",
+      "type": "http",
+      "documentation": "",
+      "method": "patch",
+      "endpoint": "me",
+      "responses": [
+        {
+          "uuid": "f9534343-341f-41dd-8ce7-240aa352ee77",
+          "label": "",
+          "statusCode": 401,
+          "body": "{\"error\":{\"code\":\"unauthenticated\",\"message\":\"Please sign in to continue\",\"details\":{}}}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [
+            {
+              "operator": "null",
+              "invert": false,
+              "target": "header",
+              "modifier": "Authorization",
+              "value": ""
+            }
+          ],
+          "rulesOperator": "AND",
+          "default": false,
+          "latency": 0,
+          "disableTemplating": false
+        },
+        {
+          "uuid": "9aa40a55-eaf8-494d-8189-a6b86e80fb7e",
+          "label": "",
+          "statusCode": 200,
+          "body": "{{setVar 'm' (dataRaw 'me-planner')}}{{{replace (stringify @m) (concat '\"fullName\": \"' @m.fullName '\"') (concat '\"fullName\": \"' (body 'fullName' @m.fullName) '\"')}}}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [
+            {
+              "operator": "equals",
+              "invert": false,
+              "target": "header",
+              "modifier": "Authorization",
+              "value": "Bearer mock-planner"
+            }
+          ],
+          "rulesOperator": "AND",
+          "default": false,
+          "latency": 0,
+          "disableTemplating": false
+        },
+        {
+          "uuid": "2d3ce5fe-d73c-4939-a79a-21120774209f",
+          "label": "",
+          "statusCode": 200,
+          "body": "{\n  \"id\": \"8f5c2d1e-6a3b-4c7d-9e0f-1a2b3c4d5e6f\",\n  \"email\": \"arjun.malhotra@gmail.com\",\n  \"fullName\": \"Arjun Malhotra\",\n  \"phone\": \"9820011001\",\n  \"role\": \"artist\",\n  \"avatarUrl\": null,\n  \"artistSlug\": \"arjun-malhotra-magic\",\n  \"createdAt\": \"2026-07-01T10:00:00Z\"\n}\n",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [],
+          "rulesOperator": "AND",
+          "default": true,
+          "latency": 0,
+          "disableTemplating": false
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "b6ae250e-a4f0-4512-b326-bb4c30342457",
+      "type": "http",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "locations",
+      "responses": [
+        {
+          "uuid": "cef2279e-d6ad-4155-8ef0-8d0c2bb3f700",
+          "label": "",
+          "statusCode": 200,
+          "body": "{{{stringify (dataRaw 'locations')}}}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [],
+          "rulesOperator": "AND",
+          "default": true,
+          "latency": 0,
+          "disableTemplating": false
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "fccc121d-fe2c-4267-a2d7-b7ceeac6a4e8",
+      "type": "http",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "search/suggestions",
+      "responses": [
+        {
+          "uuid": "144f745a-e0bd-4417-9642-fabc08e52b1d",
+          "label": "",
+          "statusCode": 200,
+          "body": "{\n  \"items\": [\n    {\n      \"type\": \"artistType\",\n      \"label\": \"DJ\",\n      \"value\": \"dj\",\n      \"slug\": null\n    },\n    {\n      \"type\": \"artist\",\n      \"label\": \"DJ Krish\",\n      \"value\": \"DJ Krish\",\n      \"slug\": \"dj-krish\"\n    },\n    {\n      \"type\": \"area\",\n      \"label\": \"Bandra West, Mumbai\",\n      \"value\": \"Bandra West\",\n      \"slug\": null\n    }\n  ]\n}\n",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [],
+          "rulesOperator": "AND",
+          "default": true,
+          "latency": 0,
+          "disableTemplating": false
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "0b9c9217-ae11-4e4f-a657-8791371b2756",
+      "type": "http",
+      "documentation": "Mock filters: artistType, city, area, featuredOnly, verifiedOnly (exact match). Others accepted, ignored.",
+      "method": "get",
+      "endpoint": "search/artists",
+      "responses": [
+        {
+          "uuid": "aae70425-35aa-414a-b0c1-32a995e2ec1d",
+          "label": "",
+          "statusCode": 200,
+          "body": "{{setVar 'list' (dataRaw 'artistCards')}}{{#unless (eq (queryParam 'artistType' '') '')}}{{setVar 'list' (filter @list (object artistType=(queryParam 'artistType')))}}{{/unless}}{{#unless (eq (queryParam 'city' '') '')}}{{setVar 'list' (filter @list (object locationCity=(queryParam 'city')))}}{{/unless}}{{#unless (eq (queryParam 'area' '') '')}}{{setVar 'list' (filter @list (object locationArea=(queryParam 'area')))}}{{/unless}}{{#if (eq (queryParam 'featuredOnly' '') 'true')}}{{setVar 'list' (filter @list (object isFeatured=true))}}{{/if}}{{#if (eq (queryParam 'verifiedOnly' '') 'true')}}{{setVar 'list' (filter @list (object isVerified=true))}}{{/if}}{\"items\": {{{stringify @list}}} , \"total\": {{len @list}}, \"page\": 1, \"size\": 20, \"facets\": {\"artistType\": [], \"city\": []}}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [],
+          "rulesOperator": "AND",
+          "default": true,
+          "latency": 0,
+          "disableTemplating": false
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "f6c56c56-3af3-4393-b60b-d9cc8bb135d6",
+      "type": "http",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "artists/featured",
+      "responses": [
+        {
+          "uuid": "a61aa4b9-67c7-461d-b798-2b0ad1f236c5",
+          "label": "",
+          "statusCode": 200,
+          "body": "{{setVar 'list' (filter (dataRaw 'artistCards') (object isFeatured=true))}}{\"items\": {{{stringify @list}}} }",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [],
+          "rulesOperator": "AND",
+          "default": true,
+          "latency": 0,
+          "disableTemplating": false
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "0103bb80-9b37-4de5-bd11-013926b553aa",
+      "type": "http",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "artists/me",
+      "responses": [
+        {
+          "uuid": "9ca5abc1-34f7-43e9-96da-150c7d1c7102",
+          "label": "",
+          "statusCode": 401,
+          "body": "{\"error\":{\"code\":\"unauthenticated\",\"message\":\"Please sign in to continue\",\"details\":{}}}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [
+            {
+              "operator": "null",
+              "invert": false,
+              "target": "header",
+              "modifier": "Authorization",
+              "value": ""
+            }
+          ],
+          "rulesOperator": "AND",
+          "default": false,
+          "latency": 0,
+          "disableTemplating": false
+        },
+        {
+          "uuid": "1bf4f24c-70c2-4fb2-800a-cf58c734f1e8",
+          "label": "",
+          "statusCode": 403,
+          "body": "{\"error\":{\"code\":\"forbidden\",\"message\":\"This action is not available for your account\",\"details\":{}}}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [
+            {
+              "operator": "equals",
+              "invert": false,
+              "target": "header",
+              "modifier": "Authorization",
+              "value": "Bearer mock-planner"
+            }
+          ],
+          "rulesOperator": "OR",
+          "default": false,
+          "latency": 0,
+          "disableTemplating": false
+        },
+        {
+          "uuid": "7e3edc11-aa79-453f-bb6d-60f66393e02f",
+          "label": "",
+          "statusCode": 200,
+          "body": "{{{stringify (dataRaw 'artist-profile')}}}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [
+            {
+              "operator": "equals",
+              "invert": false,
+              "target": "header",
+              "modifier": "Authorization",
+              "value": "Bearer mock-new"
+            },
+            {
+              "operator": "regex",
+              "invert": false,
+              "target": "global_var",
+              "modifier": "newSlug",
+              "value": ".+"
+            }
+          ],
+          "rulesOperator": "AND",
+          "default": false,
+          "latency": 0,
+          "disableTemplating": false
+        },
+        {
+          "uuid": "570493f6-19e4-4a83-bc68-381dae4ba424",
+          "label": "",
+          "statusCode": 404,
+          "body": "{\"error\":{\"code\":\"artist_profile_not_found\",\"message\":\"Create your artist profile to continue\",\"details\":{}}}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [
+            {
+              "operator": "equals",
+              "invert": false,
+              "target": "header",
+              "modifier": "Authorization",
+              "value": "Bearer mock-new"
+            }
+          ],
+          "rulesOperator": "AND",
+          "default": false,
+          "latency": 0,
+          "disableTemplating": false
+        },
+        {
+          "uuid": "c911c8ee-f5db-4c31-ae43-a31897f9f549",
+          "label": "",
+          "statusCode": 200,
+          "body": "{{{stringify (dataRaw 'artist-profile')}}}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [],
+          "rulesOperator": "AND",
+          "default": true,
+          "latency": 0,
+          "disableTemplating": false
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "87d26a38-a2da-4fbc-961c-7a00d60d537e",
+      "type": "http",
+      "documentation": "",
+      "method": "post",
+      "endpoint": "artists",
+      "responses": [
+        {
+          "uuid": "ccdd553a-67f7-485c-a1cb-1ff531dec177",
+          "label": "",
+          "statusCode": 401,
+          "body": "{\"error\":{\"code\":\"unauthenticated\",\"message\":\"Please sign in to continue\",\"details\":{}}}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [
+            {
+              "operator": "null",
+              "invert": false,
+              "target": "header",
+              "modifier": "Authorization",
+              "value": ""
+            }
+          ],
+          "rulesOperator": "AND",
+          "default": false,
+          "latency": 0,
+          "disableTemplating": false
+        },
+        {
+          "uuid": "04ac355c-6988-451c-bbdc-77ff1036f97e",
+          "label": "",
+          "statusCode": 403,
+          "body": "{\"error\":{\"code\":\"forbidden\",\"message\":\"This action is not available for your account\",\"details\":{}}}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [
+            {
+              "operator": "equals",
+              "invert": false,
+              "target": "header",
+              "modifier": "Authorization",
+              "value": "Bearer mock-planner"
+            }
+          ],
+          "rulesOperator": "OR",
+          "default": false,
+          "latency": 0,
+          "disableTemplating": false
+        },
+        {
+          "uuid": "97672147-0e1d-44e4-9d61-e86630edde7b",
+          "label": "",
+          "statusCode": 201,
+          "body": "{{setGlobalVar 'newSlug' 'arjun-malhotra-magic'}}{{{stringify (dataRaw 'artist-profile')}}}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [
+            {
+              "operator": "equals",
+              "invert": false,
+              "target": "header",
+              "modifier": "Authorization",
+              "value": "Bearer mock-new"
+            }
+          ],
+          "rulesOperator": "AND",
+          "default": false,
+          "latency": 0,
+          "disableTemplating": false
+        },
+        {
+          "uuid": "894d7dc5-09bb-4fcc-93c9-450e559bede6",
+          "label": "",
+          "statusCode": 409,
+          "body": "{\"error\":{\"code\":\"artist_exists\",\"message\":\"You already have an artist profile\",\"details\":{}}}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [],
+          "rulesOperator": "AND",
+          "default": true,
+          "latency": 0,
+          "disableTemplating": false
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "1174a1bb-a783-4b78-bdc0-3a1069ac7f3e",
+      "type": "http",
+      "documentation": "",
+      "method": "patch",
+      "endpoint": "artists/me",
+      "responses": [
+        {
+          "uuid": "e7aa0287-7c74-4439-91ea-bb04acea1bab",
+          "label": "",
+          "statusCode": 401,
+          "body": "{\"error\":{\"code\":\"unauthenticated\",\"message\":\"Please sign in to continue\",\"details\":{}}}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [
+            {
+              "operator": "null",
+              "invert": false,
+              "target": "header",
+              "modifier": "Authorization",
+              "value": ""
+            }
+          ],
+          "rulesOperator": "AND",
+          "default": false,
+          "latency": 0,
+          "disableTemplating": false
+        },
+        {
+          "uuid": "1a2b718b-0ce9-4e1d-9db4-c6030f5868b4",
+          "label": "",
+          "statusCode": 403,
+          "body": "{\"error\":{\"code\":\"forbidden\",\"message\":\"This action is not available for your account\",\"details\":{}}}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [
+            {
+              "operator": "equals",
+              "invert": false,
+              "target": "header",
+              "modifier": "Authorization",
+              "value": "Bearer mock-planner"
+            }
+          ],
+          "rulesOperator": "OR",
+          "default": false,
+          "latency": 0,
+          "disableTemplating": false
+        },
+        {
+          "uuid": "4d9b6e54-dd9e-410d-a913-462e56047d69",
+          "label": "",
+          "statusCode": 200,
+          "body": "{{{stringify (dataRaw 'artist-profile')}}}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [],
+          "rulesOperator": "AND",
+          "default": true,
+          "latency": 0,
+          "disableTemplating": false
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "87000fc8-fd9d-42c2-8997-be43c6d46e6c",
+      "type": "http",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "artists/me/dashboard",
+      "responses": [
+        {
+          "uuid": "7eb24a13-0a3e-4a5b-bc94-44306ebc5629",
+          "label": "",
+          "statusCode": 401,
+          "body": "{\"error\":{\"code\":\"unauthenticated\",\"message\":\"Please sign in to continue\",\"details\":{}}}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [
+            {
+              "operator": "null",
+              "invert": false,
+              "target": "header",
+              "modifier": "Authorization",
+              "value": ""
+            }
+          ],
+          "rulesOperator": "AND",
+          "default": false,
+          "latency": 0,
+          "disableTemplating": false
+        },
+        {
+          "uuid": "c4c04861-404b-4f52-99c7-d40f64e57926",
+          "label": "",
+          "statusCode": 403,
+          "body": "{\"error\":{\"code\":\"forbidden\",\"message\":\"This action is not available for your account\",\"details\":{}}}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [
+            {
+              "operator": "equals",
+              "invert": false,
+              "target": "header",
+              "modifier": "Authorization",
+              "value": "Bearer mock-planner"
+            }
+          ],
+          "rulesOperator": "OR",
+          "default": false,
+          "latency": 0,
+          "disableTemplating": false
+        },
+        {
+          "uuid": "d5007d28-c61a-4fae-b408-8058cd7f5999",
+          "label": "",
+          "statusCode": 200,
+          "body": "{\n  \"greetingName\": \"Arjun\",\n  \"plan\": {\n    \"tier\": \"basic\",\n    \"name\": \"Basic\",\n    \"status\": \"active\",\n    \"leadLimitMonthly\": 15,\n    \"leadsUsedThisMonth\": 16,\n    \"leadsRemaining\": 0,\n    \"periodEnd\": \"2026-10-24\",\n    \"trialEndsAt\": null,\n    \"trialAvailable\": false\n  },\n  \"metrics\": {\n    \"profileViews\": {\n      \"value\": 1243,\n      \"changePct\": 18\n    },\n    \"contactClicks\": {\n      \"value\": 87,\n      \"changePct\": 34\n    },\n    \"leadsThisMonth\": {\n      \"value\": 16,\n      \"changePct\": 12\n    },\n    \"averageRating\": {\n      \"value\": 4.9,\n      \"totalReviews\": 127\n    }\n  },\n  \"recentLeads\": [\n    {\n      \"id\": \"lead-016\",\n      \"plannerName\": \"Karan Shah\",\n      \"plannerPhone\": null,\n      \"plannerEmail\": null,\n      \"eventType\": \"birthday\",\n      \"eventTitle\": \"Birthday\",\n      \"eventDate\": \"2026-10-25\",\n      \"eventCity\": \"Mumbai\",\n      \"budgetMin\": 10000,\n      \"budgetMax\": 15000,\n      \"notes\": null,\n      \"status\": \"new\",\n      \"isLocked\": true,\n      \"createdAt\": \"2026-09-29T08:30:00Z\"\n    },\n    {\n      \"id\": \"lead-015\",\n      \"plannerName\": \"Rahul Mehta\",\n      \"plannerPhone\": \"9876501234\",\n      \"plannerEmail\": \"rahul.mehta@gmail.com\",\n      \"eventType\": \"wedding\",\n      \"eventTitle\": \"Wedding\",\n      \"eventDate\": \"2026-12-12\",\n      \"eventCity\": \"Mumbai\",\n      \"budgetMin\": 25000,\n      \"budgetMax\": 50000,\n      \"notes\": \"Looking for a magician for ~100 guests, 2 hours show\",\n      \"status\": \"new\",\n      \"isLocked\": false,\n      \"createdAt\": \"2026-09-29T06:10:00Z\"\n    },\n    {\n      \"id\": \"lead-014\",\n      \"plannerName\": \"Priya Gupta\",\n      \"plannerPhone\": \"8765409876\",\n      \"plannerEmail\": \"priya.g@outlook.com\",\n      \"eventType\": \"corporate\",\n      \"eventTitle\": \"Corporate\",\n      \"eventDate\": \"2026-11-05\",\n      \"eventCity\": \"Mumbai\",\n      \"budgetMin\": 25000,\n      \"budgetMax\": 50000,\n      \"notes\": \"Annual company event, need 45-min performance\",\n      \"status\": \"new\",\n      \"isLocked\": false,\n      \"createdAt\": \"2026-09-29T03:00:00Z\"\n    }\n  ],\n  \"leadSources\": [\n    {\n      \"source\": \"search\",\n      \"label\": \"Search results\",\n      \"pct\": 42\n    },\n    {\n      \"source\": \"featured\",\n      \"label\": \"Featured placement\",\n      \"pct\": 28\n    },\n    {\n      \"source\": \"direct_link\",\n      \"label\": \"Direct profile link\",\n      \"pct\": 18\n    },\n    {\n      \"source\": \"profile\",\n      \"label\": \"Similar artists & browse\",\n      \"pct\": 12\n    }\n  ],\n  \"completeness\": {\n    \"percent\": 83,\n    \"items\": [\n      {\n        \"key\": \"basic_info\",\n        \"label\": \"Basic info added\",\n        \"done\": true\n      },\n      {\n        \"key\": \"photo\",\n        \"label\": \"Profile photo uploaded\",\n        \"done\": true\n      },\n      {\n        \"key\": \"bio\",\n        \"label\": \"Bio written\",\n        \"done\": true\n      },\n      {\n        \"key\": \"media\",\n        \"label\": \"Add portfolio media\",\n        \"done\": true\n      },\n      {\n        \"key\": \"instagram\",\n        \"label\": \"Connect Instagram\",\n        \"done\": true\n      },\n      {\n        \"key\": \"review\",\n        \"label\": \"Get your first review\",\n        \"done\": false\n      }\n    ]\n  }\n}\n",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [],
+          "rulesOperator": "AND",
+          "default": true,
+          "latency": 0,
+          "disableTemplating": false
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "d5117e37-1496-4bb8-8341-6e41e79225ea",
+      "type": "http",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "artists/me/media",
+      "responses": [
+        {
+          "uuid": "ef9c67ec-8cf6-4797-8be7-2c24eb80cb68",
+          "label": "",
+          "statusCode": 401,
+          "body": "{\"error\":{\"code\":\"unauthenticated\",\"message\":\"Please sign in to continue\",\"details\":{}}}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [
+            {
+              "operator": "null",
+              "invert": false,
+              "target": "header",
+              "modifier": "Authorization",
+              "value": ""
+            }
+          ],
+          "rulesOperator": "AND",
+          "default": false,
+          "latency": 0,
+          "disableTemplating": false
+        },
+        {
+          "uuid": "01a1546b-fc06-4ca2-b0eb-43b930170eb2",
+          "label": "",
+          "statusCode": 200,
+          "body": "{\n  \"items\": [\n    {\n      \"id\": \"med-001-1\",\n      \"kind\": \"image\",\n      \"url\": \"/artists/magician.png\",\n      \"thumbnailUrl\": null,\n      \"caption\": \"Arjun Malhotra live\",\n      \"displayOrder\": 0\n    },\n    {\n      \"id\": \"med-001-2\",\n      \"kind\": \"image\",\n      \"url\": \"/artists/dj.png\",\n      \"thumbnailUrl\": null,\n      \"caption\": null,\n      \"displayOrder\": 1\n    },\n    {\n      \"id\": \"med-001-3\",\n      \"kind\": \"image\",\n      \"url\": \"/artists/singer.png\",\n      \"thumbnailUrl\": null,\n      \"caption\": null,\n      \"displayOrder\": 2\n    },\n    {\n      \"id\": \"med-001-4\",\n      \"kind\": \"image\",\n      \"url\": \"/artists/comedian.png\",\n      \"thumbnailUrl\": null,\n      \"caption\": null,\n      \"displayOrder\": 3\n    }\n  ],\n  \"quota\": {\n    \"images\": {\n      \"used\": 4,\n      \"limit\": 20\n    },\n    \"videos\": {\n      \"used\": 0,\n      \"limit\": 3\n    }\n  }\n}\n",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [],
+          "rulesOperator": "AND",
+          "default": true,
+          "latency": 0,
+          "disableTemplating": false
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "b91c49f7-2fb8-4957-8812-a76500e29a19",
+      "type": "http",
+      "documentation": "",
+      "method": "post",
+      "endpoint": "artists/me/media/upload-url",
+      "responses": [
+        {
+          "uuid": "cebf29da-94b2-4a86-9932-23a5603296b3",
+          "label": "",
+          "statusCode": 401,
+          "body": "{\"error\":{\"code\":\"unauthenticated\",\"message\":\"Please sign in to continue\",\"details\":{}}}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [
+            {
+              "operator": "null",
+              "invert": false,
+              "target": "header",
+              "modifier": "Authorization",
+              "value": ""
+            }
+          ],
+          "rulesOperator": "AND",
+          "default": false,
+          "latency": 0,
+          "disableTemplating": false
+        },
+        {
+          "uuid": "74d808a0-8e1d-4cce-8b60-d58590f69ba2",
+          "label": "",
+          "statusCode": 200,
+          "body": "{{setVar 'k' (concat 'artists/art-001/' (faker 'string.alphanumeric' 8))}}{\"uploadUrl\": \"http://localhost:3001/api/v1/_mock/upload/{{urlEncode @k}}\", \"storageKey\": \"{{@k}}\", \"expiresAt\": \"{{dateTimeShift date=(now) minutes=5 format=\"yyyy-MM-dd'T'HH:mm:ss'Z'\"}}\", \"headers\": {\"Content-Type\": \"{{body 'contentType'}}\"} }",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [],
+          "rulesOperator": "AND",
+          "default": true,
+          "latency": 0,
+          "disableTemplating": false
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "44add89e-6580-43b8-bed5-6c3007ada483",
+      "type": "http",
+      "documentation": "",
+      "method": "post",
+      "endpoint": "artists/me/media",
+      "responses": [
+        {
+          "uuid": "33cd6209-3cdd-4e51-9541-7d28572349bd",
+          "label": "",
+          "statusCode": 401,
+          "body": "{\"error\":{\"code\":\"unauthenticated\",\"message\":\"Please sign in to continue\",\"details\":{}}}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [
+            {
+              "operator": "null",
+              "invert": false,
+              "target": "header",
+              "modifier": "Authorization",
+              "value": ""
+            }
+          ],
+          "rulesOperator": "AND",
+          "default": false,
+          "latency": 0,
+          "disableTemplating": false
+        },
+        {
+          "uuid": "02f4e633-bdd7-4ac9-9447-72671b1b4ed3",
+          "label": "",
+          "statusCode": 201,
+          "body": "{\"id\": \"med-{{faker 'string.alphanumeric' 6}}\", \"kind\": \"{{body 'kind'}}\", \"url\": \"{{#if (eq (body 'url' '') '')}}/artists/magician.png{{else}}{{body 'url'}}{{/if}}\", \"thumbnailUrl\": null, \"caption\": {{#if (eq (body 'caption' '') '')}}null{{else}}\"{{body 'caption'}}\"{{/if}}, \"displayOrder\": 9}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [],
+          "rulesOperator": "AND",
+          "default": true,
+          "latency": 0,
+          "disableTemplating": false
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "ce81ef96-48fa-41bb-9cb7-78e823a375a6",
+      "type": "http",
+      "documentation": "",
+      "method": "post",
+      "endpoint": "artists/me/avatar",
+      "responses": [
+        {
+          "uuid": "a5ac2a4e-bfdd-416b-9e6a-2ad10cc6b1fe",
+          "label": "",
+          "statusCode": 401,
+          "body": "{\"error\":{\"code\":\"unauthenticated\",\"message\":\"Please sign in to continue\",\"details\":{}}}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [
+            {
+              "operator": "null",
+              "invert": false,
+              "target": "header",
+              "modifier": "Authorization",
+              "value": ""
+            }
+          ],
+          "rulesOperator": "AND",
+          "default": false,
+          "latency": 0,
+          "disableTemplating": false
+        },
+        {
+          "uuid": "50d8f21a-874d-4470-b0b2-2a05e157556e",
+          "label": "",
+          "statusCode": 200,
+          "body": "{\"profileImageUrl\": \"/artists/magician.png\"}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [],
+          "rulesOperator": "AND",
+          "default": true,
+          "latency": 0,
+          "disableTemplating": false
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "6f2de91c-0661-4080-b810-a80ee1b27d4f",
+      "type": "http",
+      "documentation": "",
+      "method": "delete",
+      "endpoint": "artists/me/media/:id",
+      "responses": [
+        {
+          "uuid": "1178836f-12fb-4fd7-a8c2-d2a65b346da3",
+          "label": "",
+          "statusCode": 401,
+          "body": "{\"error\":{\"code\":\"unauthenticated\",\"message\":\"Please sign in to continue\",\"details\":{}}}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [
+            {
+              "operator": "null",
+              "invert": false,
+              "target": "header",
+              "modifier": "Authorization",
+              "value": ""
+            }
+          ],
+          "rulesOperator": "AND",
+          "default": false,
+          "latency": 0,
+          "disableTemplating": false
+        },
+        {
+          "uuid": "d406aaa4-ecd7-4769-813a-3d4664819755",
+          "label": "",
+          "statusCode": 204,
+          "body": "",
+          "bodyType": "INLINE",
+          "headers": [],
+          "rules": [],
+          "rulesOperator": "AND",
+          "default": true,
+          "latency": 0,
+          "disableTemplating": false
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "2dae3487-a23c-4cf5-bd87-12a5f0a65dbf",
+      "type": "http",
+      "documentation": "",
+      "method": "put",
+      "endpoint": "artists/me/media/order",
+      "responses": [
+        {
+          "uuid": "b9f26ecb-d114-40ac-a324-dea17bd4d31b",
+          "label": "",
+          "statusCode": 401,
+          "body": "{\"error\":{\"code\":\"unauthenticated\",\"message\":\"Please sign in to continue\",\"details\":{}}}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [
+            {
+              "operator": "null",
+              "invert": false,
+              "target": "header",
+              "modifier": "Authorization",
+              "value": ""
+            }
+          ],
+          "rulesOperator": "AND",
+          "default": false,
+          "latency": 0,
+          "disableTemplating": false
+        },
+        {
+          "uuid": "fae55345-bfaa-4f27-b00a-26c74ea77bda",
+          "label": "",
+          "statusCode": 200,
+          "body": "{\n  \"items\": [\n    {\n      \"id\": \"med-001-4\",\n      \"kind\": \"image\",\n      \"url\": \"/artists/comedian.png\",\n      \"thumbnailUrl\": null,\n      \"caption\": null,\n      \"displayOrder\": 0\n    },\n    {\n      \"id\": \"med-001-3\",\n      \"kind\": \"image\",\n      \"url\": \"/artists/singer.png\",\n      \"thumbnailUrl\": null,\n      \"caption\": null,\n      \"displayOrder\": 1\n    },\n    {\n      \"id\": \"med-001-2\",\n      \"kind\": \"image\",\n      \"url\": \"/artists/dj.png\",\n      \"thumbnailUrl\": null,\n      \"caption\": null,\n      \"displayOrder\": 2\n    },\n    {\n      \"id\": \"med-001-1\",\n      \"kind\": \"image\",\n      \"url\": \"/artists/magician.png\",\n      \"thumbnailUrl\": null,\n      \"caption\": \"Arjun Malhotra live\",\n      \"displayOrder\": 3\n    }\n  ]\n}\n",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [],
+          "rulesOperator": "AND",
+          "default": true,
+          "latency": 0,
+          "disableTemplating": false
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "64b8cde4-9bdc-4670-95a8-816b8bd44dad",
+      "type": "http",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "artists/:slug/reviews",
+      "responses": [
+        {
+          "uuid": "e8a7e1bd-f958-4006-8235-c95aa34e6114",
+          "label": "",
+          "statusCode": 200,
+          "body": "{{setVar 'list' (dataRaw 'reviews')}}{\"items\": {{{stringify @list}}} , \"total\": {{len @list}}, \"page\": 1, \"size\": 20}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [],
+          "rulesOperator": "AND",
+          "default": true,
+          "latency": 0,
+          "disableTemplating": false
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "e7e5f687-2194-496c-858f-b9f37261403c",
+      "type": "http",
+      "documentation": "Same artistType; mock may include the artist itself (UI filters it out).",
+      "method": "get",
+      "endpoint": "artists/:slug/similar",
+      "responses": [
+        {
+          "uuid": "3eb1281a-856d-4071-9c10-6d4cbcf0ed5c",
+          "label": "",
+          "statusCode": 200,
+          "body": "{{setVar 'a' (find (dataRaw 'artistCards') (object slug=(urlParam 'slug')))}}{{#if @a}}{{setVar 'list' (filter (dataRaw 'artistCards') (object artistType=@a.artistType))}}{{else}}{{setVar 'list' (array)}}{{/if}}{\"items\": {{{stringify @list}}} }",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [],
+          "rulesOperator": "AND",
+          "default": true,
+          "latency": 0,
+          "disableTemplating": false
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "1cd82346-3a51-48b1-8186-29bf6ca3997d",
+      "type": "http",
+      "documentation": "",
+      "method": "post",
+      "endpoint": "artists/:slug/contact-click",
+      "responses": [
+        {
+          "uuid": "4982581c-d673-410a-866e-28bfb0eb1092",
+          "label": "",
+          "statusCode": 204,
+          "body": "",
+          "bodyType": "INLINE",
+          "headers": [],
+          "rules": [],
+          "rulesOperator": "AND",
+          "default": true,
+          "latency": 0,
+          "disableTemplating": false
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "ebfb6cd7-f9d3-4c6e-8b43-1158cb55af77",
+      "type": "http",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "artists/:slug",
+      "responses": [
+        {
+          "uuid": "1b740102-0df6-4edb-b324-945e9b440449",
+          "label": "",
+          "statusCode": 200,
+          "body": "{{{stringify (find (dataRaw 'artistDetails') (object slug=(urlParam 'slug')))}}}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [
+            {
+              "operator": "regex",
+              "invert": false,
+              "target": "params",
+              "modifier": "slug",
+              "value": "^(arjun\\-malhotra\\-magic|dj\\-krish|priya\\-sharma\\-singer|rohan\\-desai\\-comedy|the\\-raaga\\-collective|meera\\-kapoor\\-anchor|vikram\\-bubbles|aditya\\-naik\\-singer|dj\\-nikhil\\-pune|sana\\-qureshi\\-live|kabir\\-mentalist|ravi\\-laugh\\-riot)$"
+            }
+          ],
+          "rulesOperator": "AND",
+          "default": false,
+          "latency": 0,
+          "disableTemplating": false
+        },
+        {
+          "uuid": "a194319c-94cc-452c-b906-2afc843e6b3d",
+          "label": "",
+          "statusCode": 404,
+          "body": "{\"error\":{\"code\":\"artist_not_found\",\"message\":\"No artist found for this link\",\"details\":{}}}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [],
+          "rulesOperator": "AND",
+          "default": true,
+          "latency": 0,
+          "disableTemplating": false
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "7195616c-3062-408c-88db-1f44ee1f7056",
+      "type": "http",
+      "documentation": "",
+      "method": "post",
+      "endpoint": "leads",
+      "responses": [
+        {
+          "uuid": "b4d8ca55-0148-49b7-85d1-aa92f516b156",
+          "label": "",
+          "statusCode": 401,
+          "body": "{\"error\":{\"code\":\"unauthenticated\",\"message\":\"Please sign in to continue\",\"details\":{}}}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [
+            {
+              "operator": "null",
+              "invert": false,
+              "target": "header",
+              "modifier": "Authorization",
+              "value": ""
+            }
+          ],
+          "rulesOperator": "AND",
+          "default": false,
+          "latency": 0,
+          "disableTemplating": false
+        },
+        {
+          "uuid": "a4727328-aa3c-4071-8529-bb86b039b0f9",
+          "label": "",
+          "statusCode": 403,
+          "body": "{\"error\":{\"code\":\"forbidden\",\"message\":\"This action is not available for your account\",\"details\":{}}}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [
+            {
+              "operator": "equals",
+              "invert": false,
+              "target": "header",
+              "modifier": "Authorization",
+              "value": "Bearer mock-artist"
+            }
+          ],
+          "rulesOperator": "OR",
+          "default": false,
+          "latency": 0,
+          "disableTemplating": false
+        },
+        {
+          "uuid": "5a9ef98a-0a27-46e7-98e8-83192e116927",
+          "label": "",
+          "statusCode": 201,
+          "body": "{{setVar 'c' (find (dataRaw 'artistContacts') (object artistId=(body 'artistId')))}}{\"leadId\": \"lead-{{faker 'string.numeric' 4}}\", \"artist\": {\"name\": \"{{@c.name}}\", \"contactPhone\": \"{{@c.contactPhone}}\", \"whatsappNumber\": {{#if @c.whatsappNumber}}\"{{@c.whatsappNumber}}\"{{else}}null{{/if}}, \"instagramHandle\": {{#if @c.instagramHandle}}\"{{@c.instagramHandle}}\"{{else}}null{{/if}} } }",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [],
+          "rulesOperator": "AND",
+          "default": true,
+          "latency": 0,
+          "disableTemplating": false
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "ccafd894-78bf-46f7-aa14-0b4af94d15ea",
+      "type": "http",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "leads/artist",
+      "responses": [
+        {
+          "uuid": "9eb6d04b-38dd-4929-8668-539ae7f158aa",
+          "label": "",
+          "statusCode": 401,
+          "body": "{\"error\":{\"code\":\"unauthenticated\",\"message\":\"Please sign in to continue\",\"details\":{}}}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [
+            {
+              "operator": "null",
+              "invert": false,
+              "target": "header",
+              "modifier": "Authorization",
+              "value": ""
+            }
+          ],
+          "rulesOperator": "AND",
+          "default": false,
+          "latency": 0,
+          "disableTemplating": false
+        },
+        {
+          "uuid": "a329b640-0fa5-4191-9c66-100f150520d0",
+          "label": "",
+          "statusCode": 403,
+          "body": "{\"error\":{\"code\":\"forbidden\",\"message\":\"This action is not available for your account\",\"details\":{}}}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [
+            {
+              "operator": "equals",
+              "invert": false,
+              "target": "header",
+              "modifier": "Authorization",
+              "value": "Bearer mock-planner"
+            }
+          ],
+          "rulesOperator": "OR",
+          "default": false,
+          "latency": 0,
+          "disableTemplating": false
+        },
+        {
+          "uuid": "a10dea32-a5ec-4204-9888-caf0f54c91e7",
+          "label": "",
+          "statusCode": 200,
+          "body": "{{setVar 'list' (dataRaw 'artist-leads' 'items')}}{{#unless (eq (queryParam 'status' '') '')}}{{setVar 'list' (filter @list (object status=(queryParam 'status')))}}{{/unless}}{\"items\": {{{stringify @list}}} , \"total\": {{len @list}}, \"page\": 1, \"size\": 20, \"counts\": {{{stringify (dataRaw 'artist-leads' 'counts')}}} , \"plan\": {{{stringify (dataRaw 'artist-leads' 'plan')}}} }",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [],
+          "rulesOperator": "AND",
+          "default": true,
+          "latency": 0,
+          "disableTemplating": false
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "85df2169-308f-45fc-a2bd-d3e6db2dbe95",
+      "type": "http",
+      "documentation": "",
+      "method": "patch",
+      "endpoint": "leads/:id",
+      "responses": [
+        {
+          "uuid": "8b4be359-b2e1-481b-a9f5-4301edf5dda6",
+          "label": "",
+          "statusCode": 401,
+          "body": "{\"error\":{\"code\":\"unauthenticated\",\"message\":\"Please sign in to continue\",\"details\":{}}}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [
+            {
+              "operator": "null",
+              "invert": false,
+              "target": "header",
+              "modifier": "Authorization",
+              "value": ""
+            }
+          ],
+          "rulesOperator": "AND",
+          "default": false,
+          "latency": 0,
+          "disableTemplating": false
+        },
+        {
+          "uuid": "16a9dce3-945d-46ab-a52c-275d0474b180",
+          "label": "",
+          "statusCode": 200,
+          "body": "{{setVar 'l' (find (dataRaw 'artist-leads' 'items') (object id=(urlParam 'id')))}}{{{replace (stringify @l) (concat '\"status\": \"' @l.status '\"') (concat '\"status\": \"' (body 'status') '\"')}}}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [],
+          "rulesOperator": "AND",
+          "default": true,
+          "latency": 0,
+          "disableTemplating": false
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "31ce341d-e3ec-4e16-9504-5da04a3272b7",
+      "type": "http",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "leads/planner",
+      "responses": [
+        {
+          "uuid": "9e4de9cd-1cfb-4d5c-a198-f2b4643d06f3",
+          "label": "",
+          "statusCode": 401,
+          "body": "{\"error\":{\"code\":\"unauthenticated\",\"message\":\"Please sign in to continue\",\"details\":{}}}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [
+            {
+              "operator": "null",
+              "invert": false,
+              "target": "header",
+              "modifier": "Authorization",
+              "value": ""
+            }
+          ],
+          "rulesOperator": "AND",
+          "default": false,
+          "latency": 0,
+          "disableTemplating": false
+        },
+        {
+          "uuid": "963dab6a-a725-4daa-8c49-6f05b676d2ca",
+          "label": "",
+          "statusCode": 403,
+          "body": "{\"error\":{\"code\":\"forbidden\",\"message\":\"This action is not available for your account\",\"details\":{}}}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [
+            {
+              "operator": "equals",
+              "invert": false,
+              "target": "header",
+              "modifier": "Authorization",
+              "value": "Bearer mock-artist"
+            }
+          ],
+          "rulesOperator": "OR",
+          "default": false,
+          "latency": 0,
+          "disableTemplating": false
+        },
+        {
+          "uuid": "68670e9c-5e5a-44e7-9782-3b60d6c52e22",
+          "label": "",
+          "statusCode": 200,
+          "body": "{{setVar 'list' (dataRaw 'planner-inquiries' 'items')}}{{#unless (eq (queryParam 'status' '') '')}}{{setVar 'list' (filter @list (object status=(queryParam 'status')))}}{{/unless}}{\"items\": {{{stringify @list}}} , \"total\": {{len @list}}, \"page\": 1, \"size\": 20, \"counts\": {{{stringify (dataRaw 'planner-inquiries' 'counts')}}} , \"summary\": {{{stringify (dataRaw 'planner-inquiries' 'summary')}}} }",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [],
+          "rulesOperator": "AND",
+          "default": true,
+          "latency": 0,
+          "disableTemplating": false
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "313b2d4b-9ad6-478e-aac1-2d6bcbafb97b",
+      "type": "http",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "subscriptions/plans",
+      "responses": [
+        {
+          "uuid": "fa216cbc-d16c-4c3c-bde6-b6ef774aef7c",
+          "label": "",
+          "statusCode": 200,
+          "body": "{\"items\": {{{stringify (dataRaw 'plans')}}} }",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [],
+          "rulesOperator": "AND",
+          "default": true,
+          "latency": 0,
+          "disableTemplating": false
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "660d009f-7355-423b-a2ee-1b73af3e6cf7",
+      "type": "http",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "subscriptions/me",
+      "responses": [
+        {
+          "uuid": "e1828d85-7e70-4f43-bffa-50966b7b4f5f",
+          "label": "",
+          "statusCode": 401,
+          "body": "{\"error\":{\"code\":\"unauthenticated\",\"message\":\"Please sign in to continue\",\"details\":{}}}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [
+            {
+              "operator": "null",
+              "invert": false,
+              "target": "header",
+              "modifier": "Authorization",
+              "value": ""
+            }
+          ],
+          "rulesOperator": "AND",
+          "default": false,
+          "latency": 0,
+          "disableTemplating": false
+        },
+        {
+          "uuid": "2e90d79c-2c99-44f7-b281-6dbdad5a7473",
+          "label": "",
+          "statusCode": 200,
+          "body": "{\"plan\": {\"tier\": \"free\", \"name\": \"Free\", \"status\": \"free\", \"leadLimitMonthly\": 3, \"leadsUsedThisMonth\": 0, \"leadsRemaining\": 3, \"periodEnd\": null, \"trialEndsAt\": null, \"trialAvailable\": true}, \"subscription\": null}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [
+            {
+              "operator": "equals",
+              "invert": false,
+              "target": "header",
+              "modifier": "Authorization",
+              "value": "Bearer mock-new"
+            }
+          ],
+          "rulesOperator": "AND",
+          "default": false,
+          "latency": 0,
+          "disableTemplating": false
+        },
+        {
+          "uuid": "016f0ea4-a1d0-4b2d-a3a7-39cb032b9284",
+          "label": "",
+          "statusCode": 200,
+          "body": "{\n  \"plan\": {\n    \"tier\": \"basic\",\n    \"name\": \"Basic\",\n    \"status\": \"active\",\n    \"leadLimitMonthly\": 15,\n    \"leadsUsedThisMonth\": 16,\n    \"leadsRemaining\": 0,\n    \"periodEnd\": \"2026-10-24\",\n    \"trialEndsAt\": null,\n    \"trialAvailable\": false\n  },\n  \"subscription\": {\n    \"id\": \"sub-7b1e\",\n    \"tier\": \"basic\",\n    \"billingCycle\": \"monthly\",\n    \"status\": \"active\",\n    \"currentPeriodEnd\": \"2026-10-24\",\n    \"cancelAtPeriodEnd\": false\n  }\n}\n",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [],
+          "rulesOperator": "AND",
+          "default": true,
+          "latency": 0,
+          "disableTemplating": false
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "719012ab-945b-4cf7-8d00-1711dcfa5396",
+      "type": "http",
+      "documentation": "",
+      "method": "post",
+      "endpoint": "subscriptions/trial",
+      "responses": [
+        {
+          "uuid": "9ac694c4-4654-46ed-86fe-2f6abab5e820",
+          "label": "",
+          "statusCode": 401,
+          "body": "{\"error\":{\"code\":\"unauthenticated\",\"message\":\"Please sign in to continue\",\"details\":{}}}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [
+            {
+              "operator": "null",
+              "invert": false,
+              "target": "header",
+              "modifier": "Authorization",
+              "value": ""
+            }
+          ],
+          "rulesOperator": "AND",
+          "default": false,
+          "latency": 0,
+          "disableTemplating": false
+        },
+        {
+          "uuid": "37b63a53-c9b5-412c-a549-367dfc76a492",
+          "label": "",
+          "statusCode": 200,
+          "body": "{\"tier\": \"{{body 'tier'}}\", \"name\": \"{{capitalize (body 'tier')}}\", \"status\": \"trial\", \"leadLimitMonthly\": {{#if (eq (body 'tier') 'basic')}}15{{else}}-1{{/if}}, \"leadsUsedThisMonth\": 0, \"leadsRemaining\": {{#if (eq (body 'tier') 'basic')}}15{{else}}null{{/if}}, \"periodEnd\": null, \"trialEndsAt\": \"{{dateTimeShift date=(now) days=7 format='yyyy-MM-dd'}}\", \"trialAvailable\": false}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [
+            {
+              "operator": "equals",
+              "invert": false,
+              "target": "header",
+              "modifier": "Authorization",
+              "value": "Bearer mock-new"
+            }
+          ],
+          "rulesOperator": "AND",
+          "default": false,
+          "latency": 0,
+          "disableTemplating": false
+        },
+        {
+          "uuid": "fa85bbe9-680a-4694-b4a8-200667aebe5e",
+          "label": "",
+          "statusCode": 409,
+          "body": "{\"error\":{\"code\":\"trial_used\",\"message\":\"You have already used your free trial\",\"details\":{}}}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [],
+          "rulesOperator": "AND",
+          "default": true,
+          "latency": 0,
+          "disableTemplating": false
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "f247ff6f-fe4a-4e9e-8a77-9880afb3cd67",
+      "type": "http",
+      "documentation": "",
+      "method": "post",
+      "endpoint": "subscriptions",
+      "responses": [
+        {
+          "uuid": "16e28ecd-e58c-4160-bf01-01571c4a59fa",
+          "label": "",
+          "statusCode": 401,
+          "body": "{\"error\":{\"code\":\"unauthenticated\",\"message\":\"Please sign in to continue\",\"details\":{}}}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [
+            {
+              "operator": "null",
+              "invert": false,
+              "target": "header",
+              "modifier": "Authorization",
+              "value": ""
+            }
+          ],
+          "rulesOperator": "AND",
+          "default": false,
+          "latency": 0,
+          "disableTemplating": false
+        },
+        {
+          "uuid": "59589e51-c2bf-47a3-979c-930c43bf5f4f",
+          "label": "",
+          "statusCode": 201,
+          "body": "{\"subscriptionId\": \"sub-{{faker 'string.alphanumeric' 4}}\", \"checkout\": {\"keyId\": \"rzp_test_mock\", \"razorpaySubscriptionId\": \"sub_mock{{faker 'string.alphanumeric' 10}}\", \"name\": \"Prasang\", \"description\": \"{{capitalize (body 'tier')}} plan — {{body 'billingCycle'}}\", \"prefill\": {\"name\": \"Arjun Malhotra\", \"email\": \"arjun.malhotra@gmail.com\", \"contact\": \"9820011001\"} } }",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [],
+          "rulesOperator": "AND",
+          "default": true,
+          "latency": 0,
+          "disableTemplating": false
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "2f612f1a-747d-4ab6-9794-eed2d5e78d5c",
+      "type": "http",
+      "documentation": "",
+      "method": "post",
+      "endpoint": "subscriptions/verify",
+      "responses": [
+        {
+          "uuid": "8f9473c9-4838-47cf-b733-faee39c83fdd",
+          "label": "",
+          "statusCode": 401,
+          "body": "{\"error\":{\"code\":\"unauthenticated\",\"message\":\"Please sign in to continue\",\"details\":{}}}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [
+            {
+              "operator": "null",
+              "invert": false,
+              "target": "header",
+              "modifier": "Authorization",
+              "value": ""
+            }
+          ],
+          "rulesOperator": "AND",
+          "default": false,
+          "latency": 0,
+          "disableTemplating": false
+        },
+        {
+          "uuid": "0a45fd31-3721-44ef-bdf4-7b8d6caed739",
+          "label": "",
+          "statusCode": 200,
+          "body": "{\n  \"status\": \"active\",\n  \"plan\": {\n    \"tier\": \"pro\",\n    \"name\": \"Pro\",\n    \"status\": \"active\",\n    \"leadLimitMonthly\": -1,\n    \"leadsUsedThisMonth\": 16,\n    \"leadsRemaining\": null,\n    \"periodEnd\": \"2026-10-29\",\n    \"trialEndsAt\": null,\n    \"trialAvailable\": false\n  }\n}\n",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [],
+          "rulesOperator": "AND",
+          "default": true,
+          "latency": 0,
+          "disableTemplating": false
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "d1d09c8f-a66f-4aeb-88e1-cf200918c797",
+      "type": "http",
+      "documentation": "",
+      "method": "post",
+      "endpoint": "subscriptions/cancel",
+      "responses": [
+        {
+          "uuid": "3ba6bbce-d642-477c-959f-db9881275717",
+          "label": "",
+          "statusCode": 401,
+          "body": "{\"error\":{\"code\":\"unauthenticated\",\"message\":\"Please sign in to continue\",\"details\":{}}}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [
+            {
+              "operator": "null",
+              "invert": false,
+              "target": "header",
+              "modifier": "Authorization",
+              "value": ""
+            }
+          ],
+          "rulesOperator": "AND",
+          "default": false,
+          "latency": 0,
+          "disableTemplating": false
+        },
+        {
+          "uuid": "87e3e21c-8cae-4667-91f9-911ad6080639",
+          "label": "",
+          "statusCode": 200,
+          "body": "{\n  \"plan\": {\n    \"tier\": \"basic\",\n    \"name\": \"Basic\",\n    \"status\": \"cancelling\",\n    \"leadLimitMonthly\": 15,\n    \"leadsUsedThisMonth\": 16,\n    \"leadsRemaining\": 0,\n    \"periodEnd\": \"2026-10-24\",\n    \"trialEndsAt\": null,\n    \"trialAvailable\": false\n  },\n  \"subscription\": {\n    \"id\": \"sub-7b1e\",\n    \"tier\": \"basic\",\n    \"billingCycle\": \"monthly\",\n    \"status\": \"active\",\n    \"currentPeriodEnd\": \"2026-10-24\",\n    \"cancelAtPeriodEnd\": true\n  }\n}\n",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [],
+          "rulesOperator": "AND",
+          "default": true,
+          "latency": 0,
+          "disableTemplating": false
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "10755cb0-913c-4d57-b98a-833ee65c3a17",
+      "type": "http",
+      "documentation": "",
+      "method": "post",
+      "endpoint": "subscriptions/webhook",
+      "responses": [
+        {
+          "uuid": "cf27b0ab-7ff2-481b-8380-af62b926603f",
+          "label": "",
+          "statusCode": 200,
+          "body": "{\"ok\": true}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [],
+          "rulesOperator": "AND",
+          "default": true,
+          "latency": 0,
+          "disableTemplating": false
+        }
+      ],
+      "responseMode": null
+    }
+  ],
+  "rootChildren": [
+    {
+      "type": "route",
+      "uuid": "426e0f77-3689-453e-9b70-0fcd34f0e12b"
+    },
+    {
+      "type": "route",
+      "uuid": "8fb3b955-ff76-4533-a246-f158db2f6c62"
+    },
+    {
+      "type": "route",
+      "uuid": "2bed2a39-6469-42ed-a917-297112f61323"
+    },
+    {
+      "type": "route",
+      "uuid": "6f775dae-57a2-42a2-8ffd-2d62f8ef0435"
+    },
+    {
+      "type": "route",
+      "uuid": "c69e675c-6dd9-4a72-90f9-45228816c62d"
+    },
+    {
+      "type": "route",
+      "uuid": "b6ae250e-a4f0-4512-b326-bb4c30342457"
+    },
+    {
+      "type": "route",
+      "uuid": "fccc121d-fe2c-4267-a2d7-b7ceeac6a4e8"
+    },
+    {
+      "type": "route",
+      "uuid": "0b9c9217-ae11-4e4f-a657-8791371b2756"
+    },
+    {
+      "type": "route",
+      "uuid": "f6c56c56-3af3-4393-b60b-d9cc8bb135d6"
+    },
+    {
+      "type": "route",
+      "uuid": "0103bb80-9b37-4de5-bd11-013926b553aa"
+    },
+    {
+      "type": "route",
+      "uuid": "87d26a38-a2da-4fbc-961c-7a00d60d537e"
+    },
+    {
+      "type": "route",
+      "uuid": "1174a1bb-a783-4b78-bdc0-3a1069ac7f3e"
+    },
+    {
+      "type": "route",
+      "uuid": "87000fc8-fd9d-42c2-8997-be43c6d46e6c"
+    },
+    {
+      "type": "route",
+      "uuid": "d5117e37-1496-4bb8-8341-6e41e79225ea"
+    },
+    {
+      "type": "route",
+      "uuid": "b91c49f7-2fb8-4957-8812-a76500e29a19"
+    },
+    {
+      "type": "route",
+      "uuid": "44add89e-6580-43b8-bed5-6c3007ada483"
+    },
+    {
+      "type": "route",
+      "uuid": "ce81ef96-48fa-41bb-9cb7-78e823a375a6"
+    },
+    {
+      "type": "route",
+      "uuid": "6f2de91c-0661-4080-b810-a80ee1b27d4f"
+    },
+    {
+      "type": "route",
+      "uuid": "2dae3487-a23c-4cf5-bd87-12a5f0a65dbf"
+    },
+    {
+      "type": "route",
+      "uuid": "64b8cde4-9bdc-4670-95a8-816b8bd44dad"
+    },
+    {
+      "type": "route",
+      "uuid": "e7e5f687-2194-496c-858f-b9f37261403c"
+    },
+    {
+      "type": "route",
+      "uuid": "1cd82346-3a51-48b1-8186-29bf6ca3997d"
+    },
+    {
+      "type": "route",
+      "uuid": "ebfb6cd7-f9d3-4c6e-8b43-1158cb55af77"
+    },
+    {
+      "type": "route",
+      "uuid": "7195616c-3062-408c-88db-1f44ee1f7056"
+    },
+    {
+      "type": "route",
+      "uuid": "ccafd894-78bf-46f7-aa14-0b4af94d15ea"
+    },
+    {
+      "type": "route",
+      "uuid": "85df2169-308f-45fc-a2bd-d3e6db2dbe95"
+    },
+    {
+      "type": "route",
+      "uuid": "31ce341d-e3ec-4e16-9504-5da04a3272b7"
+    },
+    {
+      "type": "route",
+      "uuid": "313b2d4b-9ad6-478e-aac1-2d6bcbafb97b"
+    },
+    {
+      "type": "route",
+      "uuid": "660d009f-7355-423b-a2ee-1b73af3e6cf7"
+    },
+    {
+      "type": "route",
+      "uuid": "719012ab-945b-4cf7-8d00-1711dcfa5396"
+    },
+    {
+      "type": "route",
+      "uuid": "f247ff6f-fe4a-4e9e-8a77-9880afb3cd67"
+    },
+    {
+      "type": "route",
+      "uuid": "2f612f1a-747d-4ab6-9794-eed2d5e78d5c"
+    },
+    {
+      "type": "route",
+      "uuid": "d1d09c8f-a66f-4aeb-88e1-cf200918c797"
+    },
+    {
+      "type": "route",
+      "uuid": "10755cb0-913c-4d57-b98a-833ee65c3a17"
+    }
+  ],
+  "folders": []
+}

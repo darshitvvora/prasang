@@ -1,0 +1,116 @@
+{
+  "cities": [
+    {
+      "name": "Mumbai",
+      "areas": [
+        "Bandra West",
+        "Andheri West",
+        "Juhu",
+        "Powai",
+        "Lower Parel",
+        "Dadar",
+        "Goregaon",
+        "Malad"
+      ]
+    },
+    {
+      "name": "Delhi",
+      "areas": [
+        "South Delhi",
+        "Connaught Place",
+        "Hauz Khas",
+        "Dwarka"
+      ]
+    },
+    {
+      "name": "Bengaluru",
+      "areas": [
+        "Indiranagar",
+        "Koramangala",
+        "Whitefield",
+        "HSR Layout"
+      ]
+    },
+    {
+      "name": "Hyderabad",
+      "areas": [
+        "Banjara Hills",
+        "Jubilee Hills",
+        "Gachibowli"
+      ]
+    },
+    {
+      "name": "Chennai",
+      "areas": [
+        "T. Nagar",
+        "Adyar",
+        "Anna Nagar"
+      ]
+    },
+    {
+      "name": "Kolkata",
+      "areas": []
+    },
+    {
+      "name": "Pune",
+      "areas": [
+        "Koregaon Park",
+        "Viman Nagar",
+        "Hinjewadi",
+        "Wakad"
+      ]
+    },
+    {
+      "name": "Ahmedabad",
+      "areas": []
+    },
+    {
+      "name": "Jaipur",
+      "areas": []
+    },
+    {
+      "name": "Surat",
+      "areas": []
+    },
+    {
+      "name": "Lucknow",
+      "areas": []
+    },
+    {
+      "name": "Kanpur",
+      "areas": []
+    },
+    {
+      "name": "Nagpur",
+      "areas": []
+    },
+    {
+      "name": "Indore",
+      "areas": []
+    },
+    {
+      "name": "Bhopal",
+      "areas": []
+    },
+    {
+      "name": "Visakhapatnam",
+      "areas": []
+    },
+    {
+      "name": "Patna",
+      "areas": []
+    },
+    {
+      "name": "Ludhiana",
+      "areas": []
+    },
+    {
+      "name": "Agra",
+      "areas": []
+    },
+    {
+      "name": "Nashik",
+      "areas": []
+    }
+  ]
+}

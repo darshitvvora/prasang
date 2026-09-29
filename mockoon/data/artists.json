@@ -1,0 +1,817 @@
+[
+  {
+    "artistId": "art-001",
+    "name": "Arjun Malhotra",
+    "slug": "arjun-malhotra-magic",
+    "artistType": "magician",
+    "profileImageUrl": "/artists/magician.png",
+    "bio": "Award-winning close-up magician specializing in mentalism and card magic. 500+ shows across Mumbai.",
+    "locationCity": "Mumbai",
+    "locationArea": "Bandra West",
+    "perEventRateMin": 15000,
+    "perEventRateMax": 25000,
+    "averageRating": 4.9,
+    "totalReviews": 127,
+    "isVerified": true,
+    "isFeatured": true,
+    "subscriptionTier": "basic",
+    "instagramHandle": "arjunmagic",
+    "youtubeChannel": "ArjunMalhotraMagic",
+    "experienceYears": 8,
+    "eventTypesSupported": [
+      "birthday",
+      "wedding",
+      "corporate",
+      "anniversary",
+      "house_party"
+    ],
+    "languagesSpoken": [
+      "Hindi",
+      "English"
+    ],
+    "readyToTravel": true,
+    "media": [
+      {
+        "id": "med-001-1",
+        "kind": "image",
+        "url": "/artists/magician.png",
+        "thumbnailUrl": null,
+        "caption": "Arjun Malhotra live",
+        "displayOrder": 0
+      },
+      {
+        "id": "med-001-2",
+        "kind": "image",
+        "url": "/artists/dj.png",
+        "thumbnailUrl": null,
+        "caption": null,
+        "displayOrder": 1
+      },
+      {
+        "id": "med-001-3",
+        "kind": "image",
+        "url": "/artists/singer.png",
+        "thumbnailUrl": null,
+        "caption": null,
+        "displayOrder": 2
+      },
+      {
+        "id": "med-001-4",
+        "kind": "image",
+        "url": "/artists/comedian.png",
+        "thumbnailUrl": null,
+        "caption": null,
+        "displayOrder": 3
+      }
+    ],
+    "contactPhone": "9820011001",
+    "whatsappNumber": "9820011001"
+  },
+  {
+    "artistId": "art-002",
+    "name": "DJ Krish",
+    "slug": "dj-krish",
+    "artistType": "dj",
+    "profileImageUrl": "/artists/dj.png",
+    "bio": "Bollywood + EDM DJ with 10 years experience. Resident DJ at top Mumbai clubs. Weddings, sangeets, corporate events.",
+    "locationCity": "Mumbai",
+    "locationArea": "Andheri West",
+    "perEventRateMin": 20000,
+    "perEventRateMax": 35000,
+    "averageRating": 4.7,
+    "totalReviews": 89,
+    "isVerified": true,
+    "isFeatured": true,
+    "subscriptionTier": "pro",
+    "instagramHandle": "djkrish_official",
+    "youtubeChannel": "DJKrishOfficial",
+    "experienceYears": 10,
+    "eventTypesSupported": [
+      "wedding",
+      "pre_wedding",
+      "corporate",
+      "house_party",
+      "anniversary"
+    ],
+    "languagesSpoken": [
+      "Hindi",
+      "English",
+      "Punjabi"
+    ],
+    "readyToTravel": true,
+    "media": [
+      {
+        "id": "med-002-1",
+        "kind": "image",
+        "url": "/artists/dj.png",
+        "thumbnailUrl": null,
+        "caption": "DJ Krish live",
+        "displayOrder": 0
+      },
+      {
+        "id": "med-002-2",
+        "kind": "image",
+        "url": "/artists/magician.png",
+        "thumbnailUrl": null,
+        "caption": null,
+        "displayOrder": 1
+      },
+      {
+        "id": "med-002-3",
+        "kind": "image",
+        "url": "/artists/singer.png",
+        "thumbnailUrl": null,
+        "caption": null,
+        "displayOrder": 2
+      },
+      {
+        "id": "med-002-4",
+        "kind": "image",
+        "url": "/artists/comedian.png",
+        "thumbnailUrl": null,
+        "caption": null,
+        "displayOrder": 3
+      }
+    ],
+    "contactPhone": "9820011002",
+    "whatsappNumber": "9820011002"
+  },
+  {
+    "artistId": "art-003",
+    "name": "Priya Sharma",
+    "slug": "priya-sharma-singer",
+    "artistType": "singer",
+    "profileImageUrl": "/artists/singer.png",
+    "bio": "Classically trained vocalist performing Bollywood, ghazals, and sufi music. Perfect for mehendi, sangeet & receptions.",
+    "locationCity": "Mumbai",
+    "locationArea": "Juhu",
+    "perEventRateMin": 10000,
+    "perEventRateMax": 20000,
+    "averageRating": 4.8,
+    "totalReviews": 156,
+    "isVerified": true,
+    "isFeatured": false,
+    "subscriptionTier": "pro",
+    "instagramHandle": "priyasharmamusic",
+    "youtubeChannel": "PriyaSharmaLive",
+    "experienceYears": 6,
+    "eventTypesSupported": [
+      "wedding",
+      "pre_wedding",
+      "anniversary",
+      "birthday"
+    ],
+    "languagesSpoken": [
+      "Hindi",
+      "English",
+      "Marathi"
+    ],
+    "readyToTravel": false,
+    "media": [
+      {
+        "id": "med-003-1",
+        "kind": "image",
+        "url": "/artists/singer.png",
+        "thumbnailUrl": null,
+        "caption": "Priya Sharma live",
+        "displayOrder": 0
+      },
+      {
+        "id": "med-003-2",
+        "kind": "image",
+        "url": "/artists/magician.png",
+        "thumbnailUrl": null,
+        "caption": null,
+        "displayOrder": 1
+      },
+      {
+        "id": "med-003-3",
+        "kind": "image",
+        "url": "/artists/dj.png",
+        "thumbnailUrl": null,
+        "caption": null,
+        "displayOrder": 2
+      },
+      {
+        "id": "med-003-4",
+        "kind": "image",
+        "url": "/artists/comedian.png",
+        "thumbnailUrl": null,
+        "caption": null,
+        "displayOrder": 3
+      }
+    ],
+    "contactPhone": "9820011003",
+    "whatsappNumber": null
+  },
+  {
+    "artistId": "art-004",
+    "name": "Rohan Desai",
+    "slug": "rohan-desai-comedy",
+    "artistType": "comedian",
+    "profileImageUrl": "/artists/comedian.png",
+    "bio": "Stand-up comedian & improv artist. Featured on Amazon Prime. Clean comedy for corporate events, house parties & college fests.",
+    "locationCity": "Mumbai",
+    "locationArea": "Powai",
+    "perEventRateMin": 25000,
+    "perEventRateMax": 50000,
+    "averageRating": 4.6,
+    "totalReviews": 72,
+    "isVerified": true,
+    "isFeatured": false,
+    "subscriptionTier": "premium",
+    "instagramHandle": "rohandesaicomedy",
+    "youtubeChannel": "RohanDesaiComedy",
+    "experienceYears": 5,
+    "eventTypesSupported": [
+      "corporate",
+      "house_party",
+      "birthday",
+      "other"
+    ],
+    "languagesSpoken": [
+      "Hindi",
+      "English",
+      "Marathi"
+    ],
+    "readyToTravel": true,
+    "media": [
+      {
+        "id": "med-004-1",
+        "kind": "image",
+        "url": "/artists/comedian.png",
+        "thumbnailUrl": null,
+        "caption": "Rohan Desai live",
+        "displayOrder": 0
+      },
+      {
+        "id": "med-004-2",
+        "kind": "image",
+        "url": "/artists/magician.png",
+        "thumbnailUrl": null,
+        "caption": null,
+        "displayOrder": 1
+      },
+      {
+        "id": "med-004-3",
+        "kind": "image",
+        "url": "/artists/dj.png",
+        "thumbnailUrl": null,
+        "caption": null,
+        "displayOrder": 2
+      },
+      {
+        "id": "med-004-4",
+        "kind": "image",
+        "url": "/artists/singer.png",
+        "thumbnailUrl": null,
+        "caption": null,
+        "displayOrder": 3
+      }
+    ],
+    "contactPhone": "9820011004",
+    "whatsappNumber": "9820011004"
+  },
+  {
+    "artistId": "art-005",
+    "name": "The Raaga Collective",
+    "slug": "the-raaga-collective",
+    "artistType": "band",
+    "profileImageUrl": "/artists/band.png",
+    "bio": "5-piece fusion band blending Indian classical with rock. Perfect for weddings, sangeets, corporate galas & concert nights.",
+    "locationCity": "Mumbai",
+    "locationArea": "Lower Parel",
+    "perEventRateMin": 30000,
+    "perEventRateMax": 60000,
+    "averageRating": 4.9,
+    "totalReviews": 64,
+    "isVerified": true,
+    "isFeatured": true,
+    "subscriptionTier": "premium",
+    "instagramHandle": "theraagacollective",
+    "youtubeChannel": "TheRaagaCollective",
+    "experienceYears": 7,
+    "eventTypesSupported": [
+      "wedding",
+      "corporate",
+      "anniversary",
+      "other"
+    ],
+    "languagesSpoken": [
+      "Hindi",
+      "English",
+      "Tamil"
+    ],
+    "readyToTravel": true,
+    "media": [
+      {
+        "id": "med-005-1",
+        "kind": "image",
+        "url": "/artists/band.png",
+        "thumbnailUrl": null,
+        "caption": "The Raaga Collective live",
+        "displayOrder": 0
+      },
+      {
+        "id": "med-005-2",
+        "kind": "image",
+        "url": "/artists/magician.png",
+        "thumbnailUrl": null,
+        "caption": null,
+        "displayOrder": 1
+      },
+      {
+        "id": "med-005-3",
+        "kind": "image",
+        "url": "/artists/dj.png",
+        "thumbnailUrl": null,
+        "caption": null,
+        "displayOrder": 2
+      },
+      {
+        "id": "med-005-4",
+        "kind": "image",
+        "url": "/artists/singer.png",
+        "thumbnailUrl": null,
+        "caption": null,
+        "displayOrder": 3
+      }
+    ],
+    "contactPhone": "9820011005",
+    "whatsappNumber": "9820011005"
+  },
+  {
+    "artistId": "art-006",
+    "name": "Meera Kapoor",
+    "slug": "meera-kapoor-anchor",
+    "artistType": "anchor",
+    "profileImageUrl": "/artists/anchor.png",
+    "bio": "Bilingual event host (Hindi/English). Weddings, corporate events, award nights. Energetic, witty, and always on cue.",
+    "locationCity": "Mumbai",
+    "locationArea": "Dadar",
+    "perEventRateMin": 8000,
+    "perEventRateMax": 15000,
+    "averageRating": 4.5,
+    "totalReviews": 93,
+    "isVerified": false,
+    "isFeatured": false,
+    "subscriptionTier": "basic",
+    "instagramHandle": "meerakapoor_mc",
+    "experienceYears": 4,
+    "eventTypesSupported": [
+      "wedding",
+      "corporate",
+      "anniversary",
+      "birthday"
+    ],
+    "languagesSpoken": [
+      "Hindi",
+      "English"
+    ],
+    "readyToTravel": false,
+    "youtubeChannel": null,
+    "media": [
+      {
+        "id": "med-006-1",
+        "kind": "image",
+        "url": "/artists/anchor.png",
+        "thumbnailUrl": null,
+        "caption": "Meera Kapoor live",
+        "displayOrder": 0
+      },
+      {
+        "id": "med-006-2",
+        "kind": "image",
+        "url": "/artists/magician.png",
+        "thumbnailUrl": null,
+        "caption": null,
+        "displayOrder": 1
+      },
+      {
+        "id": "med-006-3",
+        "kind": "image",
+        "url": "/artists/dj.png",
+        "thumbnailUrl": null,
+        "caption": null,
+        "displayOrder": 2
+      },
+      {
+        "id": "med-006-4",
+        "kind": "image",
+        "url": "/artists/singer.png",
+        "thumbnailUrl": null,
+        "caption": null,
+        "displayOrder": 3
+      }
+    ],
+    "contactPhone": "9820011006",
+    "whatsappNumber": null
+  },
+  {
+    "artistId": "art-007",
+    "name": "Vikram Bubbles",
+    "slug": "vikram-bubbles",
+    "artistType": "bubble_artist",
+    "profileImageUrl": "/artists/magician.png",
+    "bio": "India's premier bubble artist! Giant bubbles, bubble-in-bubble tricks, and UV glow bubble shows for kids parties & events.",
+    "locationCity": "Mumbai",
+    "locationArea": "Goregaon",
+    "perEventRateMin": 5000,
+    "perEventRateMax": 10000,
+    "averageRating": 4.8,
+    "totalReviews": 211,
+    "isVerified": true,
+    "isFeatured": false,
+    "subscriptionTier": "pro",
+    "instagramHandle": "vikrambubbles",
+    "youtubeChannel": "VikramBubbleShow",
+    "experienceYears": 9,
+    "eventTypesSupported": [
+      "birthday",
+      "house_party",
+      "corporate",
+      "wedding"
+    ],
+    "languagesSpoken": [
+      "Hindi",
+      "English",
+      "Marathi",
+      "Gujarati"
+    ],
+    "readyToTravel": true,
+    "media": [
+      {
+        "id": "med-007-1",
+        "kind": "image",
+        "url": "/artists/magician.png",
+        "thumbnailUrl": null,
+        "caption": "Vikram Bubbles live",
+        "displayOrder": 0
+      },
+      {
+        "id": "med-007-2",
+        "kind": "image",
+        "url": "/artists/dj.png",
+        "thumbnailUrl": null,
+        "caption": null,
+        "displayOrder": 1
+      },
+      {
+        "id": "med-007-3",
+        "kind": "image",
+        "url": "/artists/singer.png",
+        "thumbnailUrl": null,
+        "caption": null,
+        "displayOrder": 2
+      },
+      {
+        "id": "med-007-4",
+        "kind": "image",
+        "url": "/artists/comedian.png",
+        "thumbnailUrl": null,
+        "caption": null,
+        "displayOrder": 3
+      }
+    ],
+    "contactPhone": "9820011007",
+    "whatsappNumber": "9820011007"
+  },
+  {
+    "artistId": "art-008",
+    "name": "Aditya Naik",
+    "slug": "aditya-naik-singer",
+    "artistType": "singer",
+    "profileImageUrl": "/artists/comedian.png",
+    "bio": "Sufi & Bollywood playback singer. Performed at 200+ live events. Soulful voice for intimate gatherings & grand celebrations.",
+    "locationCity": "Mumbai",
+    "locationArea": "Malad",
+    "perEventRateMin": 15000,
+    "perEventRateMax": 30000,
+    "averageRating": 4.7,
+    "totalReviews": 45,
+    "isVerified": false,
+    "isFeatured": false,
+    "subscriptionTier": "basic",
+    "instagramHandle": "adityanaik_music",
+    "experienceYears": 3,
+    "eventTypesSupported": [
+      "wedding",
+      "anniversary",
+      "birthday",
+      "house_party"
+    ],
+    "languagesSpoken": [
+      "Hindi",
+      "Marathi",
+      "Kannada"
+    ],
+    "readyToTravel": false,
+    "youtubeChannel": null,
+    "media": [
+      {
+        "id": "med-008-1",
+        "kind": "image",
+        "url": "/artists/comedian.png",
+        "thumbnailUrl": null,
+        "caption": "Aditya Naik live",
+        "displayOrder": 0
+      },
+      {
+        "id": "med-008-2",
+        "kind": "image",
+        "url": "/artists/magician.png",
+        "thumbnailUrl": null,
+        "caption": null,
+        "displayOrder": 1
+      },
+      {
+        "id": "med-008-3",
+        "kind": "image",
+        "url": "/artists/dj.png",
+        "thumbnailUrl": null,
+        "caption": null,
+        "displayOrder": 2
+      },
+      {
+        "id": "med-008-4",
+        "kind": "image",
+        "url": "/artists/singer.png",
+        "thumbnailUrl": null,
+        "caption": null,
+        "displayOrder": 3
+      }
+    ],
+    "contactPhone": "9820011008",
+    "whatsappNumber": "9820011008"
+  },
+  {
+    "artistId": "art-009",
+    "name": "DJ Nikhil",
+    "slug": "dj-nikhil-pune",
+    "artistType": "dj",
+    "profileImageUrl": "/artists/dj.png",
+    "bio": "Punjabi, Bollywood and house sets for college fests, sangeets and rooftop parties across Pune.",
+    "locationCity": "Pune",
+    "locationArea": "Koregaon Park",
+    "perEventRateMin": 12000,
+    "perEventRateMax": 22000,
+    "averageRating": 4.6,
+    "totalReviews": 38,
+    "isVerified": true,
+    "isFeatured": false,
+    "subscriptionTier": "basic",
+    "instagramHandle": "djnikhilpune",
+    "experienceYears": 5,
+    "eventTypesSupported": [
+      "pre_wedding",
+      "house_party",
+      "birthday",
+      "corporate"
+    ],
+    "languagesSpoken": [
+      "Hindi",
+      "English",
+      "Punjabi",
+      "Marathi"
+    ],
+    "readyToTravel": true,
+    "youtubeChannel": null,
+    "media": [
+      {
+        "id": "med-009-1",
+        "kind": "image",
+        "url": "/artists/dj.png",
+        "thumbnailUrl": null,
+        "caption": "DJ Nikhil live",
+        "displayOrder": 0
+      },
+      {
+        "id": "med-009-2",
+        "kind": "image",
+        "url": "/artists/magician.png",
+        "thumbnailUrl": null,
+        "caption": null,
+        "displayOrder": 1
+      },
+      {
+        "id": "med-009-3",
+        "kind": "image",
+        "url": "/artists/singer.png",
+        "thumbnailUrl": null,
+        "caption": null,
+        "displayOrder": 2
+      },
+      {
+        "id": "med-009-4",
+        "kind": "image",
+        "url": "/artists/comedian.png",
+        "thumbnailUrl": null,
+        "caption": null,
+        "displayOrder": 3
+      }
+    ],
+    "contactPhone": "9820011009",
+    "whatsappNumber": null
+  },
+  {
+    "artistId": "art-010",
+    "name": "Sana Qureshi",
+    "slug": "sana-qureshi-live",
+    "artistType": "singer",
+    "profileImageUrl": "/artists/singer.png",
+    "bio": "Ghazal, qawwali and retro Bollywood vocalist with a 4-piece acoustic ensemble. Mehendi and reception specialist.",
+    "locationCity": "Delhi",
+    "locationArea": "Hauz Khas",
+    "perEventRateMin": 18000,
+    "perEventRateMax": 35000,
+    "averageRating": 4.8,
+    "totalReviews": 51,
+    "isVerified": true,
+    "isFeatured": true,
+    "subscriptionTier": "pro",
+    "instagramHandle": "sanaqureshilive",
+    "youtubeChannel": "SanaQureshiLive",
+    "experienceYears": 7,
+    "eventTypesSupported": [
+      "wedding",
+      "pre_wedding",
+      "anniversary",
+      "corporate"
+    ],
+    "languagesSpoken": [
+      "Hindi",
+      "English",
+      "Punjabi"
+    ],
+    "readyToTravel": true,
+    "media": [
+      {
+        "id": "med-010-1",
+        "kind": "image",
+        "url": "/artists/singer.png",
+        "thumbnailUrl": null,
+        "caption": "Sana Qureshi live",
+        "displayOrder": 0
+      },
+      {
+        "id": "med-010-2",
+        "kind": "image",
+        "url": "/artists/magician.png",
+        "thumbnailUrl": null,
+        "caption": null,
+        "displayOrder": 1
+      },
+      {
+        "id": "med-010-3",
+        "kind": "image",
+        "url": "/artists/dj.png",
+        "thumbnailUrl": null,
+        "caption": null,
+        "displayOrder": 2
+      },
+      {
+        "id": "med-010-4",
+        "kind": "image",
+        "url": "/artists/comedian.png",
+        "thumbnailUrl": null,
+        "caption": null,
+        "displayOrder": 3
+      }
+    ],
+    "contactPhone": "9820011010",
+    "whatsappNumber": "9820011010"
+  },
+  {
+    "artistId": "art-011",
+    "name": "Kabir the Mentalist",
+    "slug": "kabir-mentalist",
+    "artistType": "magician",
+    "profileImageUrl": "/artists/magician.png",
+    "bio": "Mind-reading and interactive mentalism for corporate offsites and intimate house parties.",
+    "locationCity": "Bengaluru",
+    "locationArea": "Indiranagar",
+    "perEventRateMin": 10000,
+    "perEventRateMax": 20000,
+    "averageRating": 4.4,
+    "totalReviews": 22,
+    "isVerified": false,
+    "isFeatured": false,
+    "subscriptionTier": "free",
+    "instagramHandle": "kabirmentalist",
+    "experienceYears": 3,
+    "eventTypesSupported": [
+      "corporate",
+      "house_party",
+      "birthday"
+    ],
+    "languagesSpoken": [
+      "English",
+      "Hindi",
+      "Kannada"
+    ],
+    "readyToTravel": false,
+    "youtubeChannel": null,
+    "media": [
+      {
+        "id": "med-011-1",
+        "kind": "image",
+        "url": "/artists/magician.png",
+        "thumbnailUrl": null,
+        "caption": "Kabir the Mentalist live",
+        "displayOrder": 0
+      },
+      {
+        "id": "med-011-2",
+        "kind": "image",
+        "url": "/artists/dj.png",
+        "thumbnailUrl": null,
+        "caption": null,
+        "displayOrder": 1
+      },
+      {
+        "id": "med-011-3",
+        "kind": "image",
+        "url": "/artists/singer.png",
+        "thumbnailUrl": null,
+        "caption": null,
+        "displayOrder": 2
+      },
+      {
+        "id": "med-011-4",
+        "kind": "image",
+        "url": "/artists/comedian.png",
+        "thumbnailUrl": null,
+        "caption": null,
+        "displayOrder": 3
+      }
+    ],
+    "contactPhone": "9820011011",
+    "whatsappNumber": "9820011011"
+  },
+  {
+    "artistId": "art-012",
+    "name": "Ravi Laugh Riot",
+    "slug": "ravi-laugh-riot",
+    "artistType": "comedian",
+    "profileImageUrl": "/artists/comedian.png",
+    "bio": "Marathi and Hindi stand-up. Clean, family-friendly sets for society events and birthday parties.",
+    "locationCity": "Pune",
+    "locationArea": "Viman Nagar",
+    "perEventRateMin": 8000,
+    "perEventRateMax": 15000,
+    "averageRating": 4.3,
+    "totalReviews": 17,
+    "isVerified": false,
+    "isFeatured": false,
+    "subscriptionTier": "free",
+    "experienceYears": 2,
+    "eventTypesSupported": [
+      "birthday",
+      "house_party",
+      "other"
+    ],
+    "languagesSpoken": [
+      "Marathi",
+      "Hindi"
+    ],
+    "readyToTravel": false,
+    "instagramHandle": null,
+    "youtubeChannel": null,
+    "media": [
+      {
+        "id": "med-012-1",
+        "kind": "image",
+        "url": "/artists/comedian.png",
+        "thumbnailUrl": null,
+        "caption": "Ravi Laugh Riot live",
+        "displayOrder": 0
+      },
+      {
+        "id": "med-012-2",
+        "kind": "image",
+        "url": "/artists/magician.png",
+        "thumbnailUrl": null,
+        "caption": null,
+        "displayOrder": 1
+      },
+      {
+        "id": "med-012-3",
+        "kind": "image",
+        "url": "/artists/dj.png",
+        "thumbnailUrl": null,
+        "caption": null,
+        "displayOrder": 2
+      },
+      {
+        "id": "med-012-4",
+        "kind": "image",
+        "url": "/artists/singer.png",
+        "thumbnailUrl": null,
+        "caption": null,
+        "displayOrder": 3
+      }
+    ],
+    "contactPhone": "9820011012",
+    "whatsappNumber": null
+  }
+]
