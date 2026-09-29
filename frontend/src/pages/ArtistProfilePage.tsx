@@ -3,24 +3,23 @@ import { useParams, Link } from 'react-router-dom';
 import {
   ArrowLeft, MapPin, Star, BadgeCheck, Crown, AtSign,
   PlayCircle, Share2, Phone, MessageCircle,
-  ChevronRight, X, CheckCircle, Plane, Globe, CalendarDays,
+  ChevronRight, CheckCircle, Plane, Globe, CalendarDays,
 } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { mockArtists } from '../data/mockArtists';
+import ContactModal from '../components/ContactModal';
+import QueryState from '../components/QueryState';
+import FullPageSpinner from '../components/FullPageSpinner';
+import NotFoundPage from './NotFoundPage';
+import { ApiError } from '../api/client';
+import { useArtist, useArtistReviews, useSimilarArtists } from '../api/queries';
+import { formatPrice, imageOr } from '../api/format';
+import type { ArtistDetail } from '../api/types';
 import { ARTIST_TYPE_LABELS, ARTIST_TYPE_COLORS, EVENT_TYPE_LABELS } from '../types/artist';
 import './ArtistProfilePage.css';
 
-const MOCK_REVIEWS = [
-  { id: 1, name: 'Rahul Mehta', rating: 5, date: 'Dec 2025', event: 'Wedding', text: 'Absolutely phenomenal! The crowd went wild. Best decision we made for our wedding.' },
-  { id: 2, name: 'Sneha Patel', rating: 5, date: 'Nov 2025', event: 'Corporate Event', text: 'Very professional, arrived early, took briefing seriously. Our team loved every moment.' },
-  { id: 3, name: 'Ankit Sharma', rating: 4, date: 'Oct 2025', event: 'Birthday Party', text: 'Great performer! Kept the energy up the entire evening. Will book again for sure.' },
-];
-
-const SIMILAR_ARTISTS_IDS = ['art-002', 'art-003', 'art-005'];
-
-const EVENT_TYPES = ['Birthday', 'Wedding', 'Pre-Wedding', 'Anniversary', 'Corporate', 'House Party', 'Other'];
-const BUDGET_RANGES = ['₹5K–10K', '₹10K–15K', '₹15K–25K', '₹25K–50K', '₹50K+'];
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const formatMonth = (ym: string) => { const [y, m] = ym.split('-').map(Number); return `${MONTHS[m - 1]} ${y}`; };
 
 function Stars({ rating }: { rating: number }) {
   return (
@@ -38,37 +37,29 @@ function Stars({ rating }: { rating: number }) {
 }
 
 export default function ArtistProfilePage() {
-  const { slug } = useParams<{ slug: string }>();
-  const artist = mockArtists.find((a) => a.slug === slug) ?? mockArtists[0];
-  const similar = mockArtists.filter((a) => SIMILAR_ARTISTS_IDS.includes(a.artistId) && a.artistId !== artist.artistId).slice(0, 3);
+  const { slug = '' } = useParams<{ slug: string }>();
+  const artist = useArtist(slug);
+  if (artist.isPending) return <><Navbar /><FullPageSpinner /></>;
+  if (artist.error instanceof ApiError && artist.error.status === 404) {
+    return <NotFoundPage title="Artist not found" message="This profile link doesn't match any artist on Prasang." />;
+  }
+  return (
+    <QueryState query={artist} loading={<FullPageSpinner />}>
+      {(data) => <ArtistProfile key={data.slug} artist={data} />}
+    </QueryState>
+  );
+}
 
-
+function ArtistProfile({ artist }: { artist: ArtistDetail }) {
+  const reviews = useArtistReviews(artist.slug);
+  const similarQuery = useSimilarArtists(artist.slug);
+  const similar = (similarQuery.data?.items ?? []).filter((a) => a.artistId !== artist.artistId).slice(0, 3);
   const [contactOpen, setContactOpen] = useState(false);
-  const [contactStep, setContactStep] = useState<'form' | 'revealed'>('form');
-  const [form, setForm] = useState({ name: '', phone: '', email: '', eventType: 'Birthday', eventDate: '', budget: '₹10K–15K', notes: '' });
-  const [submitting, setSubmitting] = useState(false);
   const [activeTab, setActiveTab] = useState<'media' | 'reviews'>('media');
-
-  function openContact() {
-    setContactOpen(true);
-    setContactStep('form');
-    document.body.style.overflow = 'hidden';
-  }
-
-  function closeContact() {
-    setContactOpen(false);
-    setContactStep('form');
-    document.body.style.overflow = '';
-  }
-
-  async function handleContactSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!form.name.trim() || !form.phone.trim()) return;
-    setSubmitting(true);
-    await new Promise((r) => setTimeout(r, 1000)); // simulate API call
-    setSubmitting(false);
-    setContactStep('revealed');
-  }
+  const media = artist.media.length > 0
+    ? artist.media
+    : [{ id: 'profile', kind: 'image' as const, url: imageOr(artist.profileImageUrl), thumbnailUrl: null, caption: null, displayOrder: 0 }];
+  const openContact = () => setContactOpen(true);
 
   return (
     <>
@@ -92,7 +83,7 @@ export default function ArtistProfilePage() {
             <div className="profile-hero-card">
               <div className="profile-hero-image-wrap">
                 <img
-                  src={artist.profileImageUrl}
+                  src={imageOr(artist.profileImageUrl)}
                   alt={artist.name}
                   className="profile-hero-image"
                 />
@@ -222,7 +213,7 @@ export default function ArtistProfilePage() {
                   onClick={() => setActiveTab(tab)}
                 >
                   {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                  {tab === 'reviews' && <span className="profile-tab-badge">{MOCK_REVIEWS.length}</span>}
+                  {tab === 'reviews' && <span className="profile-tab-badge">{reviews.data?.total ?? artist.totalReviews}</span>}
                 </button>
               ))}
             </div>
@@ -287,14 +278,16 @@ export default function ArtistProfilePage() {
             {activeTab === 'media' && (
               <div className="profile-tab-content" role="tabpanel">
                 <div className="profile-media-grid">
-                  {[1, 2, 3, 4, 5, 6].map((i) => (
-                    <div key={i} className="profile-media-item">
-                      <img
-                        src={artist.profileImageUrl}
-                        alt={`${artist.name} performance ${i}`}
-                        className="profile-media-img"
-                        loading="lazy"
-                      />
+                  {media.map((m) => (
+                    <div key={m.id} className="profile-media-item">
+                      {m.kind === 'image' ? (
+                        <img src={m.url} alt={m.caption ?? `${artist.name} performance`} className="profile-media-img" loading="lazy" />
+                      ) : (
+                        <a href={m.url} target="_blank" rel="noopener noreferrer" className="profile-media-embed">
+                          <img src={imageOr(m.thumbnailUrl ?? artist.profileImageUrl)} alt={m.caption ?? `${artist.name} video`} className="profile-media-img" loading="lazy" />
+                          <PlayCircle size={40} className="profile-media-play" />
+                        </a>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -312,21 +305,29 @@ export default function ArtistProfilePage() {
                   </div>
                 </div>
 
-                <div className="reviews-list">
-                  {MOCK_REVIEWS.map((r) => (
-                    <div key={r.id} className="review-card">
-                      <div className="review-card-header">
-                        <div className="review-avatar">{r.name[0]}</div>
-                        <div>
-                          <div className="review-name">{r.name}</div>
-                          <div className="review-meta">{r.event} · {r.date}</div>
+                <QueryState
+                  query={reviews}
+                  isEmpty={(d) => d.items.length === 0}
+                  empty={<p className="review-text">No reviews yet. Be the first to book {artist.name}!</p>}
+                >
+                  {(data) => (
+                    <div className="reviews-list">
+                      {data.items.map((r) => (
+                        <div key={r.id} className="review-card">
+                          <div className="review-card-header">
+                            <div className="review-avatar">{r.reviewerName[0]}</div>
+                            <div>
+                              <div className="review-name">{r.reviewerName}</div>
+                              <div className="review-meta">{EVENT_TYPE_LABELS[r.eventType]} · {formatMonth(r.eventMonth)}</div>
+                            </div>
+                            <Stars rating={r.rating} />
+                          </div>
+                          <p className="review-text">{r.text}</p>
                         </div>
-                        <Stars rating={r.rating} />
-                      </div>
-                      <p className="review-text">{r.text}</p>
+                      ))}
                     </div>
-                  ))}
-                </div>
+                  )}
+                </QueryState>
               </div>
             )}
 
@@ -340,7 +341,7 @@ export default function ArtistProfilePage() {
                 <div className="profile-similar-grid">
                   {similar.map((a) => (
                     <Link to={`/profile/${a.slug}`} key={a.artistId} className="similar-card">
-                      <img src={a.profileImageUrl} alt={a.name} className="similar-card-img" loading="lazy" />
+                      <img src={imageOr(a.profileImageUrl)} alt={a.name} className="similar-card-img" loading="lazy" />
                       <div className="similar-card-body">
                         <div className="similar-card-name">{a.name}</div>
                         <div className="similar-card-type" style={{ color: ARTIST_TYPE_COLORS[a.artistType] }}>
@@ -363,7 +364,7 @@ export default function ArtistProfilePage() {
               <div className="booking-price-row">
                 <div>
                   <div className="booking-price">
-                    ₹{(artist.perEventRateMin / 1000).toFixed(0)}K – ₹{(artist.perEventRateMax / 1000).toFixed(0)}K
+                    {formatPrice(artist.perEventRateMin)} – {formatPrice(artist.perEventRateMax)}
                   </div>
                   <div className="booking-price-label">per event</div>
                 </div>
@@ -378,14 +379,9 @@ export default function ArtistProfilePage() {
                 <Phone size={18} /> Get Contact Info
               </button>
 
-              <a
-                href={`https://wa.me/919876543210`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="booking-whatsapp-btn"
-              >
+              <button type="button" className="booking-whatsapp-btn" onClick={openContact}>
                 <MessageCircle size={18} /> WhatsApp
-              </a>
+              </button>
 
               <div className="booking-note">
                 <CheckCircle size={14} />
@@ -404,144 +400,7 @@ export default function ArtistProfilePage() {
         </div>
       </div>
 
-      {/* ---- Contact Modal ---- */}
-      {contactOpen && (
-        <div className="contact-modal-overlay" onClick={(e) => e.target === e.currentTarget && closeContact()}>
-          <div className="contact-modal" role="dialog" aria-modal="true" aria-label="Get contact info">
-            <button className="contact-modal-close" onClick={closeContact} aria-label="Close">
-              <X size={20} />
-            </button>
-
-            {contactStep === 'form' ? (
-              <>
-                <div className="contact-modal-header">
-                  <img src={artist.profileImageUrl} alt={artist.name} className="contact-modal-artist-img" />
-                  <div>
-                    <h2 className="contact-modal-title">Get {artist.name}'s Contact Details</h2>
-                    <p className="contact-modal-sub">Share your event details so {artist.name} can prepare for you.</p>
-                  </div>
-                </div>
-
-                <form onSubmit={handleContactSubmit} className="contact-form">
-                  <div className="contact-form-row">
-                    <div className="contact-form-group">
-                      <label className="contact-form-label">Your Name *</label>
-                      <input
-                        type="text"
-                        className="contact-form-input"
-                        placeholder="Rahul Sharma"
-                        value={form.name}
-                        onChange={(e) => setForm({ ...form, name: e.target.value })}
-                        required
-                      />
-                    </div>
-                    <div className="contact-form-group">
-                      <label className="contact-form-label">Phone Number *</label>
-                      <div className="contact-form-phone">
-                        <span className="phone-prefix">+91</span>
-                        <input
-                          type="tel"
-                          className="contact-form-input phone-input"
-                          placeholder="9876543210"
-                          value={form.phone}
-                          onChange={(e) => setForm({ ...form, phone: e.target.value.replace(/\D/g, '').slice(0, 10) })}
-                          maxLength={10}
-                          required
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="contact-form-row">
-                    <div className="contact-form-group">
-                      <label className="contact-form-label">Event Type</label>
-                      <select
-                        className="contact-form-select"
-                        value={form.eventType}
-                        onChange={(e) => setForm({ ...form, eventType: e.target.value })}
-                      >
-                        {EVENT_TYPES.map((t) => <option key={t}>{t}</option>)}
-                      </select>
-                    </div>
-                    <div className="contact-form-group">
-                      <label className="contact-form-label">Event Date</label>
-                      <input
-                        type="date"
-                        className="contact-form-input"
-                        value={form.eventDate}
-                        onChange={(e) => setForm({ ...form, eventDate: e.target.value })}
-                        min={new Date().toISOString().split('T')[0]}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="contact-form-group">
-                    <label className="contact-form-label">Your Budget</label>
-                    <div className="budget-chips">
-                      {BUDGET_RANGES.map((b) => (
-                        <button
-                          type="button"
-                          key={b}
-                          className={`budget-chip${form.budget === b ? ' active' : ''}`}
-                          onClick={() => setForm({ ...form, budget: b })}
-                        >
-                          {b}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="contact-form-group">
-                    <label className="contact-form-label">Special Requirements (optional)</label>
-                    <textarea
-                      className="contact-form-textarea"
-                      placeholder="E.g. outdoor venue, 200 guests, Bollywood theme..."
-                      value={form.notes}
-                      onChange={(e) => setForm({ ...form, notes: e.target.value })}
-                      rows={3}
-                    />
-                  </div>
-
-                  <button type="submit" className="contact-form-submit" disabled={submitting}>
-                    {submitting ? 'Processing...' : 'View Contact Info'}
-                  </button>
-                </form>
-              </>
-            ) : (
-              <div className="contact-revealed">
-                <div className="contact-revealed-icon">
-                  <CheckCircle size={40} />
-                </div>
-                <h2 className="contact-revealed-title">{artist.name}'s Contact Details</h2>
-                <p className="contact-revealed-sub">We've notified {artist.name} about your interest. They'll reach out soon!</p>
-
-                <div className="contact-revealed-info">
-                  <div className="contact-info-item">
-                    <span className="contact-info-label">Phone</span>
-                    <span className="contact-info-value">+91 98765 43210</span>
-                  </div>
-                  {artist.instagramHandle && (
-                    <div className="contact-info-item">
-                      <span className="contact-info-label">Instagram</span>
-                      <span className="contact-info-value">@{artist.instagramHandle}</span>
-                    </div>
-                  )}
-                </div>
-
-                <div className="contact-revealed-actions">
-                  <a href="tel:+919876543210" className="contact-call-btn">
-                    <Phone size={18} /> Call Now
-                  </a>
-                  <a href="https://wa.me/919876543210" target="_blank" rel="noopener noreferrer" className="contact-whatsapp-btn">
-                    <MessageCircle size={18} /> WhatsApp
-                  </a>
-                </div>
-                <button className="contact-close-btn" onClick={closeContact}>Close</button>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
+      {contactOpen && <ContactModal artist={artist} source="profile" onClose={() => setContactOpen(false)} />}
 
       <Footer />
     </>

@@ -817,3 +817,24 @@
     aspect-ratio: 1 / 1;
   }
 }
+
+.results-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 32px 0 8px;
+}
+
+.results-page-btn {
+  padding: 8px 18px;
+  border-radius: 999px;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-card);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.results-page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.results-page-info { font-size: 14px; color: var(--color-text-secondary); }

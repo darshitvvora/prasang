@@ -1,13 +1,8 @@
 // Standard loading / error / empty rendering for a TanStack query result.
 import type { ReactNode } from 'react';
 import type { UseQueryResult } from '@tanstack/react-query';
-import { ApiError } from '../api/client';
+import { errorMessage } from '../api/errors';
 import './QueryState.css';
-
-export function errorMessage(error: unknown): string {
-  if (error instanceof ApiError) return error.message;
-  return 'Something went wrong. Please try again.';
-}
 
 export function InlineError({ error }: { error: unknown }) {
   if (!error) return null;

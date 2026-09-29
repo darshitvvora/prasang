@@ -28,3 +28,6 @@ export function relativeTime(iso: string, now: Date = new Date()): string {
   }
   return 'just now';
 }
+
+export const PLACEHOLDER_IMAGE = '/artists/placeholder.svg';
+export const imageOr = (url: string | null | undefined): string => url || PLACEHOLDER_IMAGE;
