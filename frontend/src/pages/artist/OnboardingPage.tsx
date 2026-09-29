@@ -1,73 +1,145 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Check, Upload, AtSign, PlayCircle, ChevronRight, Plane, Globe, CalendarDays } from 'lucide-react';
 import type { ArtistType, EventType } from '../../types/artist';
 import { ARTIST_TYPE_LABELS, EVENT_TYPE_LABELS, LANGUAGES } from '../../types/artist';
+import { ApiError } from '../../api/client';
+import { requestUploadUrl, setAvatar, uploadToUrl } from '../../api/endpoints';
+import { useCreateArtist, useLocations, useMyArtist, useMySubscription, useStartTrial, useUpdateMyArtist } from '../../api/queries';
+import { imageOr } from '../../api/format';
+import { useAuth } from '../../auth/AuthProvider';
+import FullPageSpinner from '../../components/FullPageSpinner';
+import MediaUploader from '../../components/MediaUploader';
+import { InlineError } from '../../components/QueryState';
+import {
+  emptyProfileForm, errorsFromApi, formFromProfile, toProfileInput, validateProfileForm,
+  type ProfileFormErrors, type ProfileFormState,
+} from './profileForm';
 import './ArtistPages.css';
 
 const STEPS = ['Profile Setup', 'Social & Media', 'Choose Plan'];
+type PaidTier = 'basic' | 'pro' | 'premium';
 
-const CITIES = ['Mumbai', 'Delhi', 'Bengaluru', 'Pune', 'Hyderabad', 'Chennai', 'Kolkata', 'Ahmedabad'];
-
-type FormState = {
-  name: string;
-  artistType: ArtistType | '';
-  city: string;
-  area: string;
-  bio: string;
-  experienceYears: string;
-  rateMin: string;
-  rateMax: string;
-  instagram: string;
-  youtube: string;
-  selectedPlan: 'basic' | 'pro' | 'premium';
-  eventTypes: EventType[];
-  languages: string[];
-  readyToTravel: boolean;
-};
+const ARTIST_TYPES: ArtistType[] = ['magician', 'dj', 'singer', 'comedian', 'band', 'bubble_artist', 'anchor', 'other'];
 
 export default function OnboardingPage() {
+  const myArtist = useMyArtist();
+  const { user } = useAuth();
+  if (myArtist.isPending) return <FullPageSpinner />;
+  const notFound = myArtist.error instanceof ApiError && myArtist.error.status === 404;
+  if (myArtist.isError && !notFound) {
+    return <div className="onboarding-page"><div className="onboarding-body"><InlineError error={myArtist.error} /></div></div>;
+  }
+  const initial = myArtist.data ? formFromProfile(myArtist.data) : { ...emptyProfileForm(), name: user?.fullName ?? '' };
+  return (
+    <OnboardingWizard
+      initial={initial}
+      exists={!!myArtist.data}
+      published={myArtist.data?.isPublished ?? false}
+      avatarUrl={myArtist.data?.profileImageUrl ?? null}
+    />
+  );
+}
+
+function OnboardingWizard({ initial, exists, published, avatarUrl }: { initial: ProfileFormState; exists: boolean; published: boolean; avatarUrl: string | null }) {
   const navigate = useNavigate();
+  const locations = useLocations();
+  const subscription = useMySubscription();
+  const createArtist = useCreateArtist();
+  const updateArtist = useUpdateMyArtist();
+  const startTrial = useStartTrial();
+  const avatarInput = useRef<HTMLInputElement>(null);
+
   const [step, setStep] = useState(0);
-  const [form, setForm] = useState<FormState>({
-    name: '', artistType: '', city: '', area: '', bio: '',
-    experienceYears: '', rateMin: '', rateMax: '',
-    instagram: '', youtube: '', selectedPlan: 'pro',
-    eventTypes: [], languages: [], readyToTravel: false,
-  });
+  const [form, setForm] = useState<ProfileFormState>(initial);
+  const [errors, setErrors] = useState<ProfileFormErrors>({});
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<unknown>(null);
+  const [selectedPlan, setSelectedPlan] = useState<PaidTier>('pro');
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(avatarUrl);
 
-  function toggleEventType(t: EventType) {
-    setForm((f) => ({
-      ...f,
-      eventTypes: f.eventTypes.includes(t)
-        ? f.eventTypes.filter((e) => e !== t)
-        : [...f.eventTypes, t],
-    }));
-  }
+  useEffect(() => () => { if (avatarPreview?.startsWith('blob:')) URL.revokeObjectURL(avatarPreview); }, [avatarPreview]);
 
-  function toggleLanguage(lang: string) {
-    setForm((f) => ({
-      ...f,
-      languages: f.languages.includes(lang)
-        ? f.languages.filter((l) => l !== lang)
-        : [...f.languages, lang],
-    }));
-  }
+  const cities = locations.data?.cities ?? [];
+  const areas = cities.find((c) => c.name === form.city)?.areas ?? [];
+  const trialAvailable = subscription.data?.plan.trialAvailable ?? false;
 
-  function set(key: keyof FormState, val: string) {
+  function set<K extends keyof ProfileFormState>(key: K, val: ProfileFormState[K]) {
     setForm((f) => ({ ...f, [key]: val }));
+    setErrors((e) => ({ ...e, [key]: undefined }));
+  }
+  const toggle = <T,>(list: T[], item: T) => (list.includes(item) ? list.filter((x) => x !== item) : [...list, item]);
+  const toggleEventType = (t: EventType) => set('eventTypes', toggle(form.eventTypes, t));
+  const toggleLanguage = (lang: string) => set('languages', toggle(form.languages, lang));
+
+  function pickAvatar(file: File | undefined) {
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) { setError(new Error('Profile photo must be under 5 MB')); return; }
+    setAvatarFile(file);
+    setAvatarPreview(URL.createObjectURL(file));
   }
 
-  function nextStep() { setStep((s) => Math.min(s + 1, 2)); }
-  function prevStep() { setStep((s) => Math.max(s - 1, 0)); }
-
-  function handleFinish() {
-    navigate('/artist/dashboard');
+  async function save(task: () => Promise<void>) {
+    setSaving(true);
+    setError(null);
+    try {
+      await task();
+      return true;
+    } catch (e) {
+      if (e instanceof ApiError && e.code === 'validation_error') {
+        setErrors(errorsFromApi((e.details?.fields ?? {}) as Record<string, string>));
+      }
+      setError(e);
+      return false;
+    } finally {
+      setSaving(false);
+    }
   }
 
-  const ARTIST_TYPES: ArtistType[] = [
-    'magician', 'dj', 'singer', 'comedian', 'band', 'bubble_artist', 'anchor', 'other'
-  ];
+  async function saveProfileStep() {
+    const found = validateProfileForm(form);
+    setErrors(found);
+    if (Object.keys(found).length > 0) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+    const ok = await save(async () => {
+      const input = toProfileInput(form);
+      if (exists || createArtist.isSuccess) await updateArtist.mutateAsync(input);
+      else await createArtist.mutateAsync(input);
+      if (avatarFile) {
+        const target = await requestUploadUrl({ kind: 'avatar', contentType: avatarFile.type || 'image/jpeg', sizeBytes: avatarFile.size });
+        await uploadToUrl(target, avatarFile);
+        await setAvatar(target.storageKey);
+        setAvatarFile(null);
+      }
+    });
+    if (ok) setStep(1);
+  }
+
+  async function saveSocialStep() {
+    const input = toProfileInput(form);
+    const ok = await save(async () => {
+      await updateArtist.mutateAsync({ instagramHandle: input.instagramHandle, youtubeChannel: input.youtubeChannel });
+    });
+    if (ok) setStep(2);
+  }
+
+  async function handleFinish() {
+    const ok = await save(async () => {
+      if (!published) await updateArtist.mutateAsync({ isPublished: true });
+      if (trialAvailable) {
+        await startTrial.mutateAsync({ tier: selectedPlan }).catch((e) => {
+          if (!(e instanceof ApiError && e.code === 'trial_used')) throw e;
+        });
+      }
+    });
+    if (ok) navigate('/artist/dashboard');
+  }
+
+  const fieldError = (k: keyof ProfileFormState) => errors[k] && <span className="ob-field-error">{errors[k]}</span>;
+  const prevStep = () => setStep((s) => Math.max(s - 1, 0));
 
   return (
     <div className="onboarding-page">
@@ -95,101 +167,86 @@ export default function OnboardingPage() {
 
       {/* Step content */}
       <div className="onboarding-body">
+        <InlineError error={error} />
+
         {/* Step 0 — Profile */}
         {step === 0 && (
           <div className="onboarding-form">
-            <h2 className="onboarding-title">Set up your artist profile</h2>
+            <h2 className="onboarding-title">{exists ? 'Edit your artist profile' : 'Set up your artist profile'}</h2>
             <p className="onboarding-sub">This is what event planners will see when they search for artists.</p>
 
             <div className="ob-field">
-              <label>Full name / Stage name</label>
-              <input
-                className="ob-input"
-                placeholder="e.g. Arjun the Magician"
-                value={form.name}
-                onChange={(e) => set('name', e.target.value)}
-              />
+              <label htmlFor="ob-name">Full name / Stage name</label>
+              <input id="ob-name" className="ob-input" placeholder="e.g. Arjun the Magician" value={form.name} onChange={(e) => set('name', e.target.value)} />
+              {fieldError('name')}
             </div>
 
             <div className="ob-field">
               <label>Artist type</label>
               <div className="ob-type-grid">
                 {ARTIST_TYPES.map((t) => (
-                  <button
-                    key={t}
-                    type="button"
-                    className={`ob-type-btn${form.artistType === t ? ' selected' : ''}`}
-                    onClick={() => set('artistType', t)}
-                  >
+                  <button key={t} type="button" className={`ob-type-btn${form.artistType === t ? ' selected' : ''}`} onClick={() => set('artistType', t)}>
                     {ARTIST_TYPE_LABELS[t]}
                   </button>
                 ))}
               </div>
+              {fieldError('artistType')}
             </div>
 
             <div className="ob-row">
               <div className="ob-field">
-                <label>City</label>
-                <select className="ob-input" value={form.city} onChange={(e) => set('city', e.target.value)}>
+                <label htmlFor="ob-city">City</label>
+                <select id="ob-city" className="ob-input" value={form.city} onChange={(e) => { set('city', e.target.value); set('area', ''); }}>
                   <option value="">Select city</option>
-                  {CITIES.map((c) => <option key={c} value={c}>{c}</option>)}
+                  {cities.map((c) => <option key={c.name} value={c.name}>{c.name}</option>)}
                 </select>
+                {fieldError('city')}
               </div>
               <div className="ob-field">
-                <label>Area / Locality</label>
-                <input
-                  className="ob-input"
-                  placeholder="e.g. Bandra West"
-                  value={form.area}
-                  onChange={(e) => set('area', e.target.value)}
-                />
+                <label htmlFor="ob-area">Area / Locality</label>
+                <input id="ob-area" className="ob-input" placeholder="e.g. Bandra West" value={form.area} list="ob-area-options" onChange={(e) => set('area', e.target.value)} />
+                <datalist id="ob-area-options">{areas.map((a) => <option key={a} value={a} />)}</datalist>
+                {fieldError('area')}
+              </div>
+            </div>
+
+            <div className="ob-row">
+              <div className="ob-field">
+                <label htmlFor="ob-phone">Contact phone (shown to planners who enquire)</label>
+                <input id="ob-phone" className="ob-input" type="tel" inputMode="numeric" placeholder="9876543210" maxLength={10}
+                  value={form.contactPhone} onChange={(e) => set('contactPhone', e.target.value.replace(/\D/g, '').slice(0, 10))} />
+                {fieldError('contactPhone')}
+              </div>
+              <div className="ob-field">
+                <label htmlFor="ob-whatsapp">WhatsApp number (optional)</label>
+                <input id="ob-whatsapp" className="ob-input" type="tel" inputMode="numeric" placeholder="Same as phone if empty" maxLength={10}
+                  value={form.whatsappNumber} onChange={(e) => set('whatsappNumber', e.target.value.replace(/\D/g, '').slice(0, 10))} />
+                {fieldError('whatsappNumber')}
               </div>
             </div>
 
             <div className="ob-field">
-              <label>Bio (tell buyers about yourself)</label>
-              <textarea
-                className="ob-input ob-textarea"
-                placeholder="I am a professional magician with 8+ years of experience performing at weddings, corporate events, and private parties across Mumbai..."
-                value={form.bio}
-                onChange={(e) => set('bio', e.target.value)}
-                rows={4}
-              />
+              <label htmlFor="ob-bio">Bio (tell buyers about yourself)</label>
+              <textarea id="ob-bio" className="ob-input ob-textarea" rows={4} maxLength={2000} value={form.bio} onChange={(e) => set('bio', e.target.value)}
+                placeholder="I am a professional magician with 8+ years of experience performing at weddings, corporate events, and private parties across Mumbai..." />
               <span className="ob-hint">{form.bio.length}/300 characters recommended</span>
+              {fieldError('bio')}
             </div>
 
             <div className="ob-row">
               <div className="ob-field">
-                <label>Years of experience</label>
-                <input
-                  className="ob-input"
-                  type="number"
-                  min="0"
-                  max="50"
-                  placeholder="8"
-                  value={form.experienceYears}
-                  onChange={(e) => set('experienceYears', e.target.value)}
-                />
+                <label htmlFor="ob-exp">Years of experience</label>
+                <input id="ob-exp" className="ob-input" type="number" min="0" max="50" placeholder="8" value={form.experienceYears} onChange={(e) => set('experienceYears', e.target.value)} />
+                {fieldError('experienceYears')}
               </div>
               <div className="ob-field">
                 <label>Rate range (₹ per event)</label>
                 <div className="ob-rate-row">
-                  <input
-                    className="ob-input"
-                    type="number"
-                    placeholder="15000"
-                    value={form.rateMin}
-                    onChange={(e) => set('rateMin', e.target.value)}
-                  />
+                  <input className="ob-input" type="number" min="0" placeholder="15000" aria-label="Minimum rate" value={form.rateMin} onChange={(e) => set('rateMin', e.target.value)} />
                   <span className="ob-rate-sep">to</span>
-                  <input
-                    className="ob-input"
-                    type="number"
-                    placeholder="50000"
-                    value={form.rateMax}
-                    onChange={(e) => set('rateMax', e.target.value)}
-                  />
+                  <input className="ob-input" type="number" min="0" placeholder="50000" aria-label="Maximum rate" value={form.rateMax} onChange={(e) => set('rateMax', e.target.value)} />
                 </div>
+                {fieldError('rateMin') ?? fieldError('rateMax')}
               </div>
             </div>
 
@@ -236,7 +293,7 @@ export default function OnboardingPage() {
                   <input
                     type="checkbox"
                     checked={form.readyToTravel}
-                    onChange={(e) => setForm((f) => ({ ...f, readyToTravel: e.target.checked }))}
+                    onChange={(e) => set('readyToTravel', e.target.checked)}
                   />
                   <span className="ob-toggle-track" />
                 </label>
@@ -246,13 +303,16 @@ export default function OnboardingPage() {
               </span>
             </div>
 
+            {fieldError('eventTypes')}
+
             <div className="ob-field">
               <label>Profile photo</label>
-              <div className="ob-upload-box">
-                <Upload size={24} />
-                <span>Click to upload or drag & drop</span>
+              <button type="button" className="ob-upload-box" onClick={() => avatarInput.current?.click()}>
+                {avatarPreview ? <img src={imageOr(avatarPreview)} alt="Profile preview" className="ob-avatar-preview" /> : <Upload size={24} />}
+                <span>{avatarPreview ? 'Change photo' : 'Click to upload'}</span>
                 <span className="ob-hint">JPG, PNG · Max 5MB</span>
-              </div>
+              </button>
+              <input ref={avatarInput} type="file" accept="image/jpeg,image/png,image/webp" hidden onChange={(e) => pickAvatar(e.target.files?.[0])} />
             </div>
           </div>
         )}
@@ -267,12 +327,7 @@ export default function OnboardingPage() {
               <label><AtSign size={15} /> Instagram handle</label>
               <div className="ob-social-input">
                 <span className="ob-social-prefix">@</span>
-                <input
-                  className="ob-input ob-social-field"
-                  placeholder="arjunmagician"
-                  value={form.instagram}
-                  onChange={(e) => set('instagram', e.target.value)}
-                />
+                <input className="ob-input ob-social-field" placeholder="arjunmagician" value={form.instagram} onChange={(e) => set('instagram', e.target.value)} />
               </div>
             </div>
 
@@ -280,23 +335,11 @@ export default function OnboardingPage() {
               <label><PlayCircle size={15} /> YouTube channel</label>
               <div className="ob-social-input">
                 <span className="ob-social-prefix">youtube.com/</span>
-                <input
-                  className="ob-input ob-social-field"
-                  placeholder="@arjunmagic"
-                  value={form.youtube}
-                  onChange={(e) => set('youtube', e.target.value)}
-                />
+                <input className="ob-input ob-social-field" placeholder="@arjunmagic" value={form.youtube} onChange={(e) => set('youtube', e.target.value)} />
               </div>
             </div>
 
-            <div className="ob-field">
-              <label>Upload portfolio media</label>
-              <div className="ob-upload-box tall">
-                <Upload size={28} />
-                <span>Upload photos & videos of your performances</span>
-                <span className="ob-hint">Up to 20 photos + 3 videos on Basic plan</span>
-              </div>
-            </div>
+            <MediaUploader />
 
             <div className="ob-info-card">
               <div className="ob-info-icon">💡</div>
@@ -322,14 +365,14 @@ export default function OnboardingPage() {
                 <button
                   key={plan.id}
                   type="button"
-                  className={`ob-plan-card${form.selectedPlan === plan.id ? ' selected' : ''}`}
-                  onClick={() => set('selectedPlan', plan.id)}
+                  className={`ob-plan-card${selectedPlan === plan.id ? ' selected' : ''}`}
+                  onClick={() => setSelectedPlan(plan.id)}
                 >
                   {'popular' in plan && plan.popular && <div className="ob-plan-popular">Recommended</div>}
                   <div className="ob-plan-name" style={{ color: plan.color }}>{plan.name}</div>
                   <div className="ob-plan-price">₹{plan.price}<span>/mo</span></div>
                   <div className="ob-plan-leads">{plan.leads}</div>
-                  {form.selectedPlan === plan.id && <Check size={18} className="ob-plan-check" />}
+                  {selectedPlan === plan.id && <Check size={18} className="ob-plan-check" />}
                 </button>
               ))}
             </div>
@@ -339,7 +382,9 @@ export default function OnboardingPage() {
             </Link>
 
             <div className="ob-trial-note">
-              🎉 7-day free trial on all paid plans. No credit card required to start.
+              {trialAvailable
+                ? '🎉 7-day free trial on all paid plans. No credit card required to start.'
+                : 'Your free trial has been used. You can upgrade any time from the Pricing page.'}
             </div>
           </div>
         )}
@@ -347,15 +392,21 @@ export default function OnboardingPage() {
         {/* Navigation buttons */}
         <div className="onboarding-footer">
           {step > 0 && (
-            <button className="ob-back-btn" onClick={prevStep}>← Back</button>
+            <button className="ob-back-btn" onClick={prevStep} disabled={saving}>← Back</button>
           )}
-          {step < 2 ? (
-            <button className="ob-next-btn" onClick={nextStep}>
-              Next <ChevronRight size={16} />
+          {step === 0 && (
+            <button className="ob-next-btn" onClick={saveProfileStep} disabled={saving}>
+              {saving ? 'Saving…' : <>Next <ChevronRight size={16} /></>}
             </button>
-          ) : (
-            <button className="ob-next-btn" onClick={handleFinish}>
-              Launch Profile 🚀
+          )}
+          {step === 1 && (
+            <button className="ob-next-btn" onClick={saveSocialStep} disabled={saving}>
+              {saving ? 'Saving…' : <>Next <ChevronRight size={16} /></>}
+            </button>
+          )}
+          {step === 2 && (
+            <button className="ob-next-btn" onClick={handleFinish} disabled={saving}>
+              {saving ? 'Launching…' : published ? 'Save & go to dashboard' : trialAvailable ? `Start ${selectedPlan} trial & launch 🚀` : 'Launch Profile 🚀'}
             </button>
           )}
         </div>
