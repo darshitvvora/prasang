@@ -46,11 +46,36 @@ describe('guardDecision', () => {
   it('redirects signed-out users to login with next', () =>
     expect(guardDecision('signedOut', null, 'artist', at)).toEqual({ type: 'redirect', to: '/login?next=%2Fartist%2Fleads' }));
   it('sends users without a profile to finish signup', () =>
-    expect(guardDecision('needsProfile', null, 'artist', at)).toEqual({ type: 'redirect', to: '/signup?step=profile' }));
+    expect(guardDecision('needsProfile', null, 'artist', at)).toEqual({ type: 'redirect', to: '/signup?step=profile&next=%2Fartist%2Fleads' }));
   it('bounces the wrong role to its own home', () =>
     expect(guardDecision('signedIn', user({ role: 'planner' }), 'artist', at)).toEqual({ type: 'redirect', to: '/planner/dashboard' }));
   it('allows the right role', () =>
     expect(guardDecision('signedIn', user({ role: 'artist', artistSlug: 'a' }), 'artist', at)).toEqual({ type: 'allow' }));
   it('allows admins everywhere', () =>
     expect(guardDecision('signedIn', user({ role: 'admin' }), 'planner', '/planner/dashboard')).toEqual({ type: 'allow' }));
+});
+
+import { deriveAuthStatus } from './paths';
+
+describe('deriveAuthStatus (review fix: outages are not sign-outs)', () => {
+  it('no token → signedOut', () => expect(deriveAuthStatus({ hasToken: false, isPending: false, errorCode: null, hasUser: false })).toBe('signedOut'));
+  it('fetching → loading', () => expect(deriveAuthStatus({ hasToken: true, isPending: true, errorCode: null, hasUser: false })).toBe('loading'));
+  it('401 unauthenticated → signedOut', () => expect(deriveAuthStatus({ hasToken: true, isPending: false, errorCode: 'unauthenticated', hasUser: false })).toBe('signedOut'));
+  it('5xx / network error → error, not signedOut', () => {
+    expect(deriveAuthStatus({ hasToken: true, isPending: false, errorCode: 'http_502', hasUser: false })).toBe('error');
+    expect(deriveAuthStatus({ hasToken: true, isPending: false, errorCode: 'network_error', hasUser: false })).toBe('error');
+  });
+  it('no profile → needsProfile', () => expect(deriveAuthStatus({ hasToken: true, isPending: false, errorCode: null, hasUser: false })).toBe('needsProfile'));
+  it('user → signedIn', () => expect(deriveAuthStatus({ hasToken: true, isPending: false, errorCode: null, hasUser: true })).toBe('signedIn'));
+});
+
+describe('guardDecision (review fixes)', () => {
+  it('shows an error state instead of redirecting when /me failed', () =>
+    expect(guardDecision('error', null, 'artist', '/artist/leads')).toEqual({ type: 'error' }));
+  it('sends an artist without a profile to onboarding from other artist pages', () =>
+    expect(guardDecision('signedIn', user({ role: 'artist', artistSlug: null }), 'artist', '/artist/dashboard')).toEqual({ type: 'redirect', to: '/artist/onboarding' }));
+  it('lets an artist without a profile use onboarding', () =>
+    expect(guardDecision('signedIn', user({ role: 'artist', artistSlug: null }), 'artist', '/artist/onboarding')).toEqual({ type: 'allow' }));
+  it('keeps next when sending users to finish their profile', () =>
+    expect(guardDecision('needsProfile', null, 'planner', '/planner/inquiries')).toEqual({ type: 'redirect', to: '/signup?step=profile&next=%2Fplanner%2Finquiries' }));
 });

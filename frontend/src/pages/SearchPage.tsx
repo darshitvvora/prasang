@@ -13,7 +13,7 @@ import { formatPrice, imageOr } from '../api/format';
 import type { SearchParams, SortOption } from '../api/types';
 import type { ArtistType, EventType } from '../types/artist';
 import { ARTIST_TYPE_LABELS, ARTIST_TYPE_COLORS, EVENT_TYPE_LABELS, LANGUAGES } from '../types/artist';
-import { MAX_PRICE, activeFilterCount, parseSearch, toSearchString } from './search/searchUrl';
+import { MAX_PRICE, activeFilterCount, mergeSearch, parseSearch, toSearchString } from './search/searchUrl';
 import './SearchPage.css';
 
 const SORT_OPTIONS: { value: SortOption; label: string }[] = [
@@ -47,8 +47,8 @@ export default function SearchPage() {
 
   /** Merge changes into the URL; any filter change goes back to page 1. */
   function update(changes: Partial<SearchParams>) {
-    const next = { ...parseSearch(searchParams), page: 1, ...changes };
-    setSearchParams(toSearchString(next), { replace: true });
+    // Functional update: a debounced call must merge onto the newest URL, not a stale render's.
+    setSearchParams((latest) => mergeSearch(latest, changes), { replace: true });
   }
 
   const city = params.city ?? 'Mumbai';

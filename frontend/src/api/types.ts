@@ -42,7 +42,7 @@ export interface PlanUsage {
 export interface Metric { value: number; changePct: number | null }
 export interface LeadSourceStat { source: LeadSource; label: string; pct: number }
 export interface ArtistDashboard {
-  greetingName: string; plan: PlanUsage;
+  greetingName: string; isPublished: boolean; plan: PlanUsage;
   metrics: { profileViews: Metric; contactClicks: Metric; leadsThisMonth: Metric; averageRating: { value: number; totalReviews: number } };
   recentLeads: ArtistLead[]; leadSources: LeadSourceStat[]; completeness: ProfileCompleteness;
 }

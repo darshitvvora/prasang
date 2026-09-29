@@ -24,6 +24,11 @@ const KNOWN_SLUGS = '^(' + JSON.parse(readFileSync(new URL('./data/artists.json'
   .map((a) => a.slug.replace(/[-]/g, '\\-')).join('|') + ')$';
 
 const unauth = { status: 401, rules: [NO_AUTH], body: err('unauthenticated', 'Please sign in to continue') };
+// mock-new before POST /artists: artist-scoped reads 404 like the real backend will.
+const noProfileBody = err('artist_profile_not_found', 'Create your artist profile to continue');
+const NO_PROFILE_404 = { status: 404, rules: [NEW, { target: 'global_var', modifier: 'newSlug', value: '^$', operator: 'regex' }], body: noProfileBody };
+const NO_PROFILE_404_UNSET = { status: 404, rules: [NEW, { target: 'global_var', modifier: 'newSlug', value: '', operator: 'null' }], body: noProfileBody };
+
 const forbidden = (rules) => ({ status: 403, rules, rulesOperator: 'OR', body: err('forbidden', 'This action is not available for your account') });
 
 
@@ -56,7 +61,8 @@ export const routes = [
     { status: 200, rules: [NEW, gvar('newRole', '^(artist|planner)$'), gvar('newSlug', '.+')], body: newUserMe.replace('ARTIST_SLUG', `"{{getGlobalVar 'newSlug'}}"`) },
     { status: 200, rules: [NEW, gvar('newRole', '^(artist|planner)$')], body: newUserMe.replace('ARTIST_SLUG', 'null') },
     { status: 404, rules: [NEW], body: err('profile_required', 'Complete your profile to continue') },
-    { status: 200, file: 'me/get.response.json' },
+    { status: 200, rules: [ARTIST], file: 'me/get.response.json' },
+    { status: 401, body: err('unauthenticated', 'Your session has expired. Please sign in again.') },
   ] },
   { method: 'post', path: 'me', responses: [
     unauth,
@@ -101,8 +107,8 @@ export const routes = [
     { status: 409, body: err('artist_exists', 'You already have an artist profile') },
   ] },
   { method: 'patch', path: 'artists/me', responses: [unauth, forbidden([PLANNER]), { status: 200, body: `{{{stringify (dataRaw 'artist-profile')}}}` }] },
-  { method: 'get', path: 'artists/me/dashboard', responses: [unauth, forbidden([PLANNER]), { status: 200, file: 'artists/dashboard.response.json' }] },
-  { method: 'get', path: 'artists/me/media', responses: [unauth, { status: 200, file: 'media/list.response.json' }] },
+  { method: 'get', path: 'artists/me/dashboard', responses: [unauth, forbidden([PLANNER]), NO_PROFILE_404, NO_PROFILE_404_UNSET, { status: 200, file: 'artists/dashboard.response.json' }] },
+  { method: 'get', path: 'artists/me/media', responses: [unauth, NO_PROFILE_404, NO_PROFILE_404_UNSET, { status: 200, file: 'media/list.response.json' }] },
   { method: 'post', path: 'artists/me/media/upload-url', responses: [unauth, { status: 200, body:
     `{{setVar 'k' (concat 'artists/art-001/' (faker 'string.alphanumeric' 8))}}` +
     `{"uploadUrl": "http://localhost:3001/api/v1/_mock/upload/{{urlEncode @k}}", "storageKey": "{{@k}}", ` +
@@ -140,7 +146,7 @@ export const routes = [
       `"whatsappNumber": {{#if @c.whatsappNumber}}"{{@c.whatsappNumber}}"{{else}}null{{/if}}, ` +
       `"instagramHandle": {{#if @c.instagramHandle}}"{{@c.instagramHandle}}"{{else}}null{{/if}} } }` },
   ] },
-  { method: 'get', path: 'leads/artist', responses: [unauth, forbidden([PLANNER]), { status: 200, body:
+  { method: 'get', path: 'leads/artist', responses: [unauth, forbidden([PLANNER]), NO_PROFILE_404, NO_PROFILE_404_UNSET, { status: 200, body:
     `{{setVar 'list' (dataRaw 'artist-leads' 'items')}}${filterBy('status', 'status')}` +
     pageOf(`, "counts": {{{stringify (dataRaw 'artist-leads' 'counts')}}} , "plan": {{{stringify (dataRaw 'artist-leads' 'plan')}}} `) }] },
   { method: 'patch', path: 'leads/:id', responses: [unauth, { status: 200, body:

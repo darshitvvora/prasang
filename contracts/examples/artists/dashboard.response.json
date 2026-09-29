@@ -1,5 +1,6 @@
 {
   "greetingName": "Arjun",
+  "isPublished": true,
   "plan": {
     "tier": "basic",
     "name": "Basic",

@@ -58,9 +58,11 @@ export function useUpdateLead() {
   });
 }
 
+/** What changes when the artist creates/updates their profile: profile, /me (artistSlug) and plan/trial state. */
+export const ARTIST_SELF_KEYS: readonly (readonly string[])[] = [['artists', 'me'], keys.me, keys.mySubscription];
+
 function invalidateArtistSelf(qc: ReturnType<typeof useQueryClient>) {
-  qc.invalidateQueries({ queryKey: ['artists', 'me'] });
-  qc.invalidateQueries({ queryKey: keys.me });
+  for (const queryKey of ARTIST_SELF_KEYS) qc.invalidateQueries({ queryKey });
 }
 
 export function useCreateArtist() {

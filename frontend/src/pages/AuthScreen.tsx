@@ -105,6 +105,7 @@ export default function AuthScreen({ mode }: { mode: Mode }) {
         </div>
 
         {!role && <p className="auth-role-select-hint">Select your role to continue</p>}
+        {status === 'error' && <p className="auth-role-select-hint">We couldn't reach Prasang. Check your connection and try again.</p>}
         <InlineError error={error} />
 
         {profileStep ? (
