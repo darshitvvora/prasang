@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import {
   ArrowLeft, MapPin, Star, BadgeCheck, Crown, AtSign,
-  PlayCircle, Share2, Phone, MessageCircle, Calendar,
-  Clock, ChevronRight, X, CheckCircle, Plane, Globe, CalendarDays,
+  PlayCircle, Share2, Phone, MessageCircle,
+  ChevronRight, X, CheckCircle, Plane, Globe, CalendarDays,
 } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';

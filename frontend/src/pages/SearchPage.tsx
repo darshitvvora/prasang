@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import {
   Search, SlidersHorizontal, X, ChevronDown, MapPin,
-  Star, Crown, BadgeCheck, MessageCircle, AtSign,
+  Star, Crown, BadgeCheck, AtSign,
   PlayCircle, ArrowLeft, LayoutGrid, List, Plane,
 } from 'lucide-react';
 import Navbar from '../components/Navbar';
@@ -21,8 +21,6 @@ const AREAS: Record<string, string[]> = {
   Hyderabad: ['Banjara Hills', 'Jubilee Hills', 'Gachibowli'],
   Chennai: ['T. Nagar', 'Adyar', 'Anna Nagar'],
 };
-
-const EVENT_TYPES = ['Birthday', 'Wedding', 'Pre-Wedding', 'Anniversary', 'Corporate', 'House Party'];
 
 const SORT_OPTIONS = [
   { value: 'relevance', label: 'Most Relevant' },

@@ -95,3 +95,10 @@ export const ARTIST_TYPE_COLORS: Record<ArtistType, string> = {
   anchor: '#10b981',
   other: '#6b7280',
 };
+
+export type BudgetRange = '5k_10k' | '10k_15k' | '15k_25k' | '25k_50k' | '50k_plus';
+export const BUDGET_RANGE_LABELS: Record<BudgetRange, string> = {
+  '5k_10k': '₹5K–10K', '10k_15k': '₹10K–15K', '15k_25k': '₹15K–25K', '25k_50k': '₹25K–50K', '50k_plus': '₹50K+',
+};
+export type LeadStatus = 'new' | 'contacted' | 'converted' | 'declined' | 'expired';
+export type InquiryStatus = 'pending' | 'responded' | 'confirmed' | 'declined';
