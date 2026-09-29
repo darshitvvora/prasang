@@ -7,20 +7,13 @@ import {
   AtSign,
   PlayCircle,
 } from 'lucide-react';
-import type { Artist } from '../types/artist';
+import type { ArtistCard as ArtistCardData } from '../api/types';
 import { ARTIST_TYPE_LABELS, ARTIST_TYPE_COLORS } from '../types/artist';
+import { formatPrice, imageOr } from '../api/format';
 import './ArtistCard.css';
 
 interface ArtistCardProps {
-  artist: Artist;
-}
-
-function formatPrice(amount: number): string {
-  if (amount >= 1000) {
-    const k = amount / 1000;
-    return `₹${k % 1 === 0 ? k : k.toFixed(1)}K`;
-  }
-  return `₹${amount}`;
+  artist: ArtistCardData;
 }
 
 export default function ArtistCard({ artist }: ArtistCardProps) {
@@ -47,7 +40,7 @@ export default function ArtistCard({ artist }: ArtistCardProps) {
       {/* Image */}
       <div className="artist-card-image-wrapper">
         <img
-          src={artist.profileImageUrl}
+          src={imageOr(artist.profileImageUrl)}
           alt={`${artist.name} — ${ARTIST_TYPE_LABELS[artist.artistType]}`}
           className="artist-card-image"
           loading="lazy"
