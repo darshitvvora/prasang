@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.artists.models import ArtistProfile
 from app.artists.service import get_own, usage_for
-from app.artists.stats import IST
+from app.artists.stats import IST, today_ist
 from app.auth.models import User
 from app.contract import (
     BillingHistoryResponse,
@@ -23,6 +23,7 @@ from app.contract import (
 )
 from app.errors import AppError, conflict, not_found
 from app.leads.service import unlock_month
+from app.notifications.queue import queue_message
 from app.outbox.emit import artist_changed
 from app.subscriptions.gateway import PaymentGateway, get_gateway
 from app.subscriptions.models import Subscription, SubscriptionPlan
@@ -89,7 +90,11 @@ async def apply_tier(session: AsyncSession, artist: ArtistProfile, tier: str, so
 
 
 async def downgrade_to_free(session: AsyncSession, artist: ArtistProfile) -> None:
+    previous, source = artist.subscription_tier, artist.tier_source
     await apply_tier(session, artist, "free", "free")
+    if previous != "free":
+        plan = await session.get(SubscriptionPlan, previous)
+        await queue_message(session, artist.user_id, "plan_ended", f"{source}-{today_ist().isoformat()}", {"plan": plan.name})
 
 
 async def start_trial(session: AsyncSession, user: User, tier: str):
@@ -264,6 +269,12 @@ async def _paid(session: AsyncSession, sub: Subscription, period_end: date) -> N
         log.exception("could not cancel %s", sub.gateway_subscription_id)
 
 
+async def _queue_payment_failed(session: AsyncSession, sub: Subscription, period_key: str) -> None:
+    artist = await session.get(ArtistProfile, sub.artist_id)
+    plan = await session.get(SubscriptionPlan, sub.tier)
+    await queue_message(session, artist.user_id, "payment_failed", period_key, {"plan": plan.name})
+
+
 async def handle_webhook(session: AsyncSession, event: str, entity: dict, payment: dict | None = None) -> None:
     gateway_id = entity.get("id") or (payment or {}).get("subscription_id") or ""
     sub = await _by_gateway_id(session, gateway_id)
@@ -273,6 +284,7 @@ async def handle_webhook(session: AsyncSession, event: str, entity: dict, paymen
     if event == "payment.failed":
         if payment:
             await record_payment(session, sub, payment, get_gateway())
+            await _queue_payment_failed(session, sub, payment.get("id") or "unknown")
             await session.commit()
         return
     current_end = entity.get("current_end")
@@ -285,6 +297,7 @@ async def handle_webhook(session: AsyncSession, event: str, entity: dict, paymen
     elif event == "subscription.halted":
         if sub.status == "active":
             sub.status = "halted"
+            await _queue_payment_failed(session, sub, f"halted-{sub.current_period_end}")
             await session.commit()
     elif event in ("subscription.cancelled", "subscription.completed"):
         if sub.status not in TERMINAL:

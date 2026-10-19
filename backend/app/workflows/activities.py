@@ -85,3 +85,18 @@ class SubscriptionActivities:
 
     def all(self) -> list:
         return [self.expire_unpaid_subscription, self.lapse_subscription, self.end_trial]
+
+
+class MessageActivities:
+    def __init__(self, sessions: async_sessionmaker[AsyncSession], notifier: Notifier):
+        self.sessions, self.notifier = sessions, notifier
+
+    @activity.defn(name="deliver_message")
+    async def deliver_message(self, message_id: str) -> str:
+        from app.notifications.queue import deliver
+
+        async with self.sessions() as s:
+            return await deliver(s, self.notifier, message_id)
+
+    def all(self) -> list:
+        return [self.deliver_message]

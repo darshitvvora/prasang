@@ -12,6 +12,7 @@ from app.config import get_settings
 from app.contract import AuthProvidersResponse, CreateMeRequest, Me, UpdateMeRequest
 from app.db import get_session
 from app.errors import conflict, validation
+from app.notifications.queue import queue_message
 
 router = APIRouter()
 
@@ -55,6 +56,8 @@ async def create_me(body: CreateMeRequest, identity: AuthIdentity = Depends(curr
     email, login_phone = await _login_contact(identity)
     user = User(id=identity.user_id, role=body.role, full_name=body.full_name.strip(), email=email, phone=body.phone or login_phone)
     db.add(user)
+    await db.flush()
+    await queue_message(db, user.id, "welcome_artist" if body.role == "artist" else "welcome_planner", "once")
     await db.commit()
     return await to_me(db, user)
 

@@ -53,3 +53,13 @@ class TemporalStarter:
                                         task_queue=get_settings().temporal_task_queue)
         except WorkflowAlreadyStartedError:
             pass
+
+    async def start_message(self, message_id: str) -> None:
+        from app.workflows.message import DeliverMessageWorkflow
+
+        client = await asyncio.wait_for(get_temporal_client(), timeout=5)
+        try:
+            await client.start_workflow(DeliverMessageWorkflow.run, message_id, id=f"msg-{message_id}",
+                                        task_queue=get_settings().temporal_task_queue)
+        except WorkflowAlreadyStartedError:
+            pass

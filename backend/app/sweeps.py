@@ -12,6 +12,7 @@ from app.artists.models import ArtistProfile
 from app.artists.stats import today_ist
 from app.leads.models import Lead
 from app.leads.service import expire_leads
+from app.notifications.queue import queue_due_reminders, retry_pending_messages
 from app.subscriptions.models import Subscription
 from app.workflows.starter import WorkflowStarter
 
@@ -79,6 +80,8 @@ async def run_sweeps(session: AsyncSession, starter: WorkflowStarter) -> dict[st
         "grants_ended": await end_overdue_grants(session),
         "subscriptions_lapsed": await lapse_overdue_subscriptions(session),
         "leads_expired": await expire_leads(session),
+        "reminders_queued": await queue_due_reminders(session),
+        "messages_restarted": await retry_pending_messages(session, starter),
     }
     if any(result.values()):
         log.info("sweep: %s", result)
