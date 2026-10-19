@@ -27,6 +27,9 @@ expect() {
   echo "OK   $code $*" | cut -c1-110
 }
 
+# json <url> <python-expr on d> [curl args] — extract a value from a JSON response (ids differ between mock and real API)
+json() { local url=$1 expr=$2; shift 2; curl -s "$@" "$url" | python3 -c "import json,sys; d=json.load(sys.stdin); print($expr)"; }
+
 curl -s -X POST "$BASE/_mock/reset" >/dev/null
 
 # --- me ---
@@ -55,35 +58,48 @@ expect 204 - -X POST "$BASE/artists/dj-krish/contact-click"
 expect 200 '"tier": *"premium"' "$BASE/subscriptions/plans"
 # --- leads ---
 expect 401 '"unauthenticated"' -X POST -H "$J" -d @contracts/examples/leads/post.request.json "$BASE/leads"
-expect 201 '"contactPhone": *"9820011002"' -X POST -H "$P" -H "$J" -d '{"artistId":"art-002","plannerName":"Neha","plannerPhone":"9920012345","plannerEmail":null,"eventType":"wedding","eventDate":null,"eventCity":"Mumbai","budgetRange":"15k_25k","notes":null,"source":"profile"}' "$BASE/leads"
+expect 200 '"total": *2' -H "$P" "$BASE/leads/planner?status=pending"
+DJ_ID=$(json "$BASE/artists/dj-krish" "d['artistId']")
+expect 201 '"contactPhone": *"9820011002"' -X POST -H "$P" -H "$J" -d "{\"artistId\":\"$DJ_ID\",\"plannerName\":\"Neha\",\"plannerPhone\":\"9920012345\",\"plannerEmail\":null,\"eventType\":\"wedding\",\"eventDate\":null,\"eventCity\":\"Mumbai\",\"budgetRange\":\"15k_25k\",\"notes\":null,\"source\":\"profile\"}" "$BASE/leads"
 expect 200 '"isLocked": *true' -H "$A" "$BASE/leads/artist"
 expect 200 '"total": *3' -H "$A" "$BASE/leads/artist?status=new"
-expect 200 '"status": *"converted"' -X PATCH -H "$A" -H "$J" -d '{"status":"converted"}' "$BASE/leads/lead-015"
+LEAD_ID=$(json "$BASE/leads/artist?status=new" "next(l['id'] for l in d['items'] if not l['isLocked'])" -H "$A")
+expect 200 '"status": *"converted"' -X PATCH -H "$A" -H "$J" -d '{"status":"converted"}' "$BASE/leads/$LEAD_ID"
 expect 200 '"upcoming"' -H "$P" "$BASE/leads/planner"
-expect 200 '"total": *2' -H "$P" "$BASE/leads/planner?status=pending"
 # --- artist self ---
 expect 200 '"contactPhone"' -H "$A" "$BASE/artists/me"
 expect 200 '"greetingName"' -H "$A" "$BASE/artists/me/dashboard"
 expect 200 '"quota"' -H "$A" "$BASE/artists/me/media"
-expect 200 '"uploadUrl"' -X POST -H "$A" -H "$J" -d @contracts/examples/media/upload-url.request.json "$BASE/artists/me/media/upload-url"
-expect 200 - -X PUT --data-binary 'fake-bytes' "$BASE/_mock/upload/abc123"
-expect 201 '"kind": *"image"' -X POST -H "$A" -H "$J" -d @contracts/examples/media/create.request.json "$BASE/artists/me/media"
-expect 200 '"profileImageUrl"' -X POST -H "$A" -H "$J" -d @contracts/examples/media/avatar.request.json "$BASE/artists/me/avatar"
-expect 204 - -X DELETE -H "$A" "$BASE/artists/me/media/med-001-2"
-expect 200 '"items"' -X PUT -H "$A" -H "$J" -d @contracts/examples/media/order.request.json "$BASE/artists/me/media/order"
+# Uploads need S3 on the real API; without a bucket it answers 503 storage_not_configured and those steps are skipped.
+UP=$(curl -s -w '\n%{http_code}' -X POST -H "$A" -H "$J" -d @contracts/examples/media/upload-url.request.json "$BASE/artists/me/media/upload-url")
+if [ "${UP##*$'\n'}" = "503" ]; then
+  echo "SKIP uploads (storage_not_configured)"
+else
+  UP_BODY=${UP%$'\n'*}
+  UP_URL=$(python3 -c "import json,sys; print(json.loads(sys.argv[1])['uploadUrl'])" "$UP_BODY")
+  UP_KEY=$(python3 -c "import json,sys; print(json.loads(sys.argv[1])['storageKey'])" "$UP_BODY")
+  expect 200 - -X PUT -H 'Content-Type: image/jpeg' --data-binary 'fake-bytes' "$UP_URL"
+  expect 201 '"kind": *"image"' -X POST -H "$A" -H "$J" -d "{\"kind\":\"image\",\"storageKey\":\"$UP_KEY\"}" "$BASE/artists/me/media"
+fi
+expect 201 '"embedUrl": *"https://www.youtube-nocookie.com/embed/aqz-KE-bpKQ"' -X POST -H "$A" -H "$J" -d @contracts/examples/media/create-youtube.request.json "$BASE/artists/me/media"
+MEDIA_ID=$(json "$BASE/artists/me/media" "d['items'][-1]['id']" -H "$A")
+expect 204 - -X DELETE -H "$A" "$BASE/artists/me/media/$MEDIA_ID"
+ORDER=$(json "$BASE/artists/me/media" "json.dumps({'ids': [m['id'] for m in reversed(d['items'])]})" -H "$A")
+expect 200 '"items"' -X PUT -H "$A" -H "$J" -d "$ORDER" "$BASE/artists/me/media/order"
 expect 200 '"plan"' -H "$A" "$BASE/subscriptions/me"
-expect 201 '"razorpaySubscriptionId"' -X POST -H "$A" -H "$J" -d '{"tier":"pro","billingCycle":"monthly"}' "$BASE/subscriptions"
-expect 200 '"status": *"active"' -X POST -H "$A" -H "$J" -d @contracts/examples/subscriptions/verify.request.json "$BASE/subscriptions/verify"
+GW_SUB=$(json "$BASE/subscriptions" "d['checkout']['razorpaySubscriptionId']" -X POST -H "$A" -H "$J" -d '{"tier":"pro","billingCycle":"monthly"}')
+expect 200 '"status": *"active"' -X POST -H "$A" -H "$J" -d "{\"razorpayPaymentId\":\"pay_smoke\",\"razorpaySubscriptionId\":\"$GW_SUB\",\"razorpaySignature\":\"mock-signature\"}" "$BASE/subscriptions/verify"
 expect 200 '"cancelAtPeriodEnd": *true' -X POST -H "$A" "$BASE/subscriptions/cancel"
 # --- new-user journey (stateful via Mockoon global vars) ---
+expect 404 '"profile_required"' -H "$N" "$BASE/artists/me"
+expect 201 '"role": *"artist"' -X POST -H "$N" -H "$J" -d '{"role":"artist","fullName":"Tanvi Rao"}' "$BASE/me"
 expect 404 '"artist_profile_not_found"' -H "$N" "$BASE/artists/me"
 expect 404 '"artist_profile_not_found"' -H "$N" "$BASE/artists/me/dashboard"
 expect 404 '"artist_profile_not_found"' -H "$N" "$BASE/leads/artist"
-expect 201 '"role": *"artist"' -X POST -H "$N" -H "$J" -d '{"role":"artist","fullName":"Tanvi Rao"}' "$BASE/me"
 expect 200 '"artistSlug": *null' -H "$N" "$BASE/me"
 expect 200 '"trialAvailable": *true' -H "$N" "$BASE/subscriptions/me"
 expect 201 '"contactPhone"' -X POST -H "$N" -H "$J" -d @contracts/examples/artists/post.request.json "$BASE/artists"
-expect 200 '"artistSlug": *"arjun-malhotra-magic"' -H "$N" "$BASE/me"
+expect 200 '"artistSlug": *"[a-z]' -H "$N" "$BASE/me"
 expect 200 '"contactPhone"' -H "$N" "$BASE/artists/me"
 expect 200 '"greetingName"' -H "$N" "$BASE/artists/me/dashboard"
 expect 200 '"status": *"trial"' -X POST -H "$N" -H "$J" -d '{"tier":"pro"}' "$BASE/subscriptions/trial"

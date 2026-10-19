@@ -2,6 +2,41 @@
 # Ports are bound to localhost only.
 name: prasang
 
+x-backend: &backend
+  build: ./backend
+  image: prasang-backend:local
+  environment:
+    ENV: local
+    DATABASE_URL: postgresql+asyncpg://prasang:prasang@postgres:5432/prasang
+    ELASTICSEARCH_URL: http://elasticsearch:9200
+    TEMPORAL_ADDRESS: temporal:7233
+    SUPERTOKENS_URI: http://supertokens:3567
+    SUPERTOKENS_API_KEY: local-supertokens-key
+    # The browser talks to the API through the Vite dev server (same origin), so both domains are the web origin.
+    API_DOMAIN: http://localhost:5173
+    WEBSITE_DOMAIN: http://localhost:5173
+    CORS_ORIGINS: '["http://localhost:5173"]'
+    DEV_AUTH_HEADER: "true"
+    SEED_ROOT: /seed
+    # Optional integrations — set in a root .env file (see .env.example)
+    GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+    GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+    YOUTUBE_API_KEY: ${YOUTUBE_API_KEY:-}
+    S3_BUCKET: ${S3_BUCKET:-}
+    PUBLIC_MEDIA_BASE_URL: ${PUBLIC_MEDIA_BASE_URL:-}
+    AWS_REGION: ${AWS_REGION:-ap-south-1}
+    AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-}
+    AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-}
+    PAYMENT_GATEWAY: ${PAYMENT_GATEWAY:-fake}
+    RAZORPAY_KEY_ID: ${RAZORPAY_KEY_ID:-}
+    RAZORPAY_KEY_SECRET: ${RAZORPAY_KEY_SECRET:-}
+    RAZORPAY_WEBHOOK_SECRET: ${RAZORPAY_WEBHOOK_SECRET:-}
+  volumes:
+    - ./backend/app:/app/app
+    - ./backend/alembic:/app/alembic
+    - ./contracts:/seed/contracts:ro
+    - ./mockoon/data:/seed/mockoon/data:ro
+
 x-temporal-db: &temporal-db
   DB: postgres12
   DB_PORT: "5432"
@@ -100,6 +135,61 @@ services:
       timeout: 5s
       retries: 40
 
+  # ---------- application ----------
+  migrate:
+    <<: *backend
+    command: ["sh", "-c", "alembic upgrade head && python -m app.cli seed --demo && python -m app.cli reindex"]
+    depends_on:
+      postgres: { condition: service_healthy }
+      elasticsearch: { condition: service_healthy }
+    restart: on-failure:3
+
+  api:
+    <<: *backend
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload", "--reload-dir", "app"]
+    ports: ["127.0.0.1:8000:8000"]
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+      supertokens: { condition: service_healthy }
+      temporal-namespace: { condition: service_completed_successfully }
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/healthz')"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+
+  worker:
+    <<: *backend
+    command: ["python", "-m", "app.workflows.worker"]
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+      temporal-namespace: { condition: service_completed_successfully }
+    restart: unless-stopped
+
+  projector:
+    <<: *backend
+    command: ["python", "-m", "app.cli", "project"]
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+    restart: unless-stopped
+
+  web:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    image: prasang-web:local
+    environment:
+      VITE_AUTH_MODE: supertokens
+      VITE_API_BASE_URL: /api/v1
+      VITE_API_PROXY_TARGET: http://api:8000
+    ports: ["127.0.0.1:5173:5173"]
+    volumes:
+      - ./frontend:/app
+      - web_node_modules:/app/node_modules
+    depends_on:
+      api: { condition: service_healthy }
+
 volumes:
   pgdata:
   esdata:
+  web_node_modules:

@@ -11,6 +11,7 @@ from app.artists.router import router as artists_router
 from app.auth.router import router as auth_router
 from app.auth.supertokens_setup import init_supertokens
 from app.config import Settings, get_settings
+from app.dev import router as dev_router
 from app.errors import install_error_handlers
 from app.health import router as health_router
 from app.leads.router import router as leads_router
@@ -39,7 +40,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     install_error_handlers(app)
     app.include_router(health_router)
     routers = (auth_router, locations_router, reviews_router, media_router, search_router, artists_router, leads_router,
-               subscriptions_router)
+               subscriptions_router, dev_router)
     for router in routers:
         app.include_router(router, prefix=API_PREFIX)
     app.add_middleware(get_middleware())  # SuperTokens routes under /api/v1/auth + session handling

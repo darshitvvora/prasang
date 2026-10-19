@@ -26,6 +26,10 @@ const KNOWN_SLUGS = '^(' + JSON.parse(readFileSync(new URL('./data/artists.json'
 const unauth = { status: 401, rules: [NO_AUTH], body: err('unauthenticated', 'Please sign in to continue') };
 // mock-new before POST /artists: artist-scoped reads 404 like the real backend will.
 const noProfileBody = err('artist_profile_not_found', 'Create your artist profile to continue');
+// Before POST /me there is no Prasang user at all → profile_required (contract), then artist_profile_not_found until POST /artists.
+const profileRequiredBody = err('profile_required', 'Complete your profile to continue');
+const NO_USER_404 = { status: 404, rules: [NEW, { target: 'global_var', modifier: 'newRole', value: '^$', operator: 'regex' }], body: profileRequiredBody };
+const NO_USER_404_UNSET = { status: 404, rules: [NEW, { target: 'global_var', modifier: 'newRole', value: '', operator: 'null' }], body: profileRequiredBody };
 const NO_PROFILE_404 = { status: 404, rules: [NEW, { target: 'global_var', modifier: 'newSlug', value: '^$', operator: 'regex' }], body: noProfileBody };
 const NO_PROFILE_404_UNSET = { status: 404, rules: [NEW, { target: 'global_var', modifier: 'newSlug', value: '', operator: 'null' }], body: noProfileBody };
 
@@ -100,6 +104,7 @@ export const routes = [
     unauth,
     forbidden([PLANNER]),
     { status: 200, rules: [NEW, gvar('newSlug', '.+')], body: `{{{stringify (dataRaw 'artist-profile')}}}` },
+    NO_USER_404, NO_USER_404_UNSET,
     { status: 404, rules: [NEW], body: err('artist_profile_not_found', 'Create your artist profile to continue') },
     { status: 200, body: `{{{stringify (dataRaw 'artist-profile')}}}` },
   ] },
@@ -110,15 +115,17 @@ export const routes = [
     { status: 409, body: err('artist_exists', 'You already have an artist profile') },
   ] },
   { method: 'patch', path: 'artists/me', responses: [unauth, forbidden([PLANNER]), { status: 200, body: `{{{stringify (dataRaw 'artist-profile')}}}` }] },
-  { method: 'get', path: 'artists/me/dashboard', responses: [unauth, forbidden([PLANNER]), NO_PROFILE_404, NO_PROFILE_404_UNSET, { status: 200, file: 'artists/dashboard.response.json' }] },
-  { method: 'get', path: 'artists/me/media', responses: [unauth, NO_PROFILE_404, NO_PROFILE_404_UNSET, { status: 200, file: 'media/list.response.json' }] },
+  { method: 'get', path: 'artists/me/dashboard', responses: [unauth, forbidden([PLANNER]), NO_USER_404, NO_USER_404_UNSET, NO_PROFILE_404, NO_PROFILE_404_UNSET, { status: 200, file: 'artists/dashboard.response.json' }] },
+  { method: 'get', path: 'artists/me/media', responses: [unauth, NO_USER_404, NO_USER_404_UNSET, NO_PROFILE_404, NO_PROFILE_404_UNSET, { status: 200, file: 'media/list.response.json' }] },
   { method: 'post', path: 'artists/me/media/upload-url', responses: [unauth, { status: 200, body:
-    `{{setVar 'k' (concat 'artists/art-001/' (faker 'string.alphanumeric' 8))}}` +
-    `{"uploadUrl": "http://localhost:3001/api/v1/_mock/upload/{{urlEncode @k}}", "storageKey": "{{@k}}", ` +
+    `{{setVar 'id' (faker 'string.alphanumeric' 12)}}` +
+    `{"uploadUrl": "http://localhost:3001/api/v1/_mock/upload/{{@id}}", "storageKey": "artists/art-001/{{@id}}.jpg", ` +
     `"expiresAt": "{{dateTimeShift date=(now) minutes=5 format="yyyy-MM-dd'T'HH:mm:ss'Z'"}}", "headers": {"Content-Type": "{{body 'contentType'}}"} }` }] },
-  { method: 'post', path: 'artists/me/media', responses: [unauth, { status: 201, body:
+  { method: 'post', path: 'artists/me/media', responses: [unauth,
+    { status: 201, rules: [{ target: 'body', modifier: 'kind', value: 'youtube' }], file: 'media/create-youtube.response.json' },
+    { status: 201, body:
     `{"id": "med-{{faker 'string.alphanumeric' 6}}", "kind": "{{body 'kind'}}", ` +
-    `"url": "{{#if (eq (body 'url' '') '')}}/artists/magician.png{{else}}{{body 'url'}}{{/if}}", "thumbnailUrl": null, ` +
+    `"url": "{{#if (eq (body 'url' '') '')}}/artists/magician.png{{else}}{{body 'url'}}{{/if}}", "embedUrl": null, "thumbnailUrl": null, ` +
     `"caption": {{#if (eq (body 'caption' '') '')}}null{{else}}"{{body 'caption'}}"{{/if}}, "displayOrder": 9}` }] },
   { method: 'post', path: 'artists/me/avatar', responses: [unauth, { status: 200, body: '{"profileImageUrl": "/artists/magician.png"}' }] },
   { method: 'delete', path: 'artists/me/media/:id', responses: [unauth, { status: 204, body: '' }] },
@@ -149,7 +156,7 @@ export const routes = [
       `"whatsappNumber": {{#if @c.whatsappNumber}}"{{@c.whatsappNumber}}"{{else}}null{{/if}}, ` +
       `"instagramHandle": {{#if @c.instagramHandle}}"{{@c.instagramHandle}}"{{else}}null{{/if}} } }` },
   ] },
-  { method: 'get', path: 'leads/artist', responses: [unauth, forbidden([PLANNER]), NO_PROFILE_404, NO_PROFILE_404_UNSET, { status: 200, body:
+  { method: 'get', path: 'leads/artist', responses: [unauth, forbidden([PLANNER]), NO_USER_404, NO_USER_404_UNSET, NO_PROFILE_404, NO_PROFILE_404_UNSET, { status: 200, body:
     `{{setVar 'list' (dataRaw 'artist-leads' 'items')}}${filterBy('status', 'status')}` +
     pageOf(`, "counts": {{{stringify (dataRaw 'artist-leads' 'counts')}}} , "plan": {{{stringify (dataRaw 'artist-leads' 'plan')}}} `) }] },
   { method: 'patch', path: 'leads/:id', responses: [unauth, { status: 200, body:

@@ -7,12 +7,18 @@
 import { readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { dirname, join, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { randomUUID } from 'node:crypto';
+import { createHash } from 'node:crypto';
 import { routes } from './routes.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const root = join(here, '..');
 const read = (p) => readFileSync(join(root, p), 'utf8');
+
+// Deterministic UUIDs so rebuilding prasang.json only changes what actually changed.
+const uuidFor = (name) => {
+  const h = createHash('sha1').update(name).digest('hex');
+  return `${h.slice(0, 8)}-${h.slice(8, 12)}-5${h.slice(13, 16)}-a${h.slice(17, 20)}-${h.slice(20, 32)}`;
+};
 
 // ---- data buckets ----
 const buckets = {};
@@ -31,13 +37,13 @@ buckets['artist-profile'] = JSON.parse(read('contracts/examples/artists/me.respo
 buckets['me-planner'] = JSON.parse(read('contracts/examples/me/post.response.json'));
 
 const data = Object.entries(buckets).map(([id, value]) => ({
-  uuid: randomUUID(), id, name: id, documentation: '', value: JSON.stringify(value),
+  uuid: uuidFor(`bucket:${id}`), id, name: id, documentation: '', value: JSON.stringify(value),
 }));
 
 // ---- routes ----
 const JSON_HEADERS = [{ key: 'Content-Type', value: 'application/json' }];
-const toResponse = (r, i) => ({
-  uuid: randomUUID(),
+const toResponse = (r, i, routeKey) => ({
+  uuid: uuidFor(`response:${routeKey}:${i}`),
   label: r.label ?? '',
   statusCode: r.status,
   body: r.file ? read(`contracts/examples/${r.file}`) : (r.body ?? ''),
@@ -51,13 +57,13 @@ const toResponse = (r, i) => ({
 });
 
 const mockRoutes = routes.map((route) => ({
-  uuid: randomUUID(),
+  uuid: uuidFor(`route:${route.method} ${route.path}`),
   type: 'http',
   documentation: route.doc ?? '',
   method: route.method,
   endpoint: route.path,
   // Last response is the default (no rules); earlier ones are matched by rules in order.
-  responses: route.responses.map((r, i) => toResponse({ ...r, _count: route.responses.length }, i)),
+  responses: route.responses.map((r, i) => toResponse({ ...r, _count: route.responses.length }, i, `${route.method} ${route.path}`)),
   responseMode: null,
 }));
 

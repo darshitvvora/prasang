@@ -141,3 +141,12 @@ async def test_plan_change_cancels_previous_subscription_at_gateway(client, monk
     first = await buy("pro")
     await buy("premium")
     assert (first, False) in gateway.cancelled
+
+
+async def test_subscription_status_before_artist_profile_is_free_with_trial(client):
+    """Contract: before POST /artists, /subscriptions/me returns the Free plan with trialAvailable true."""
+    await seed_demo()
+    await client.post("/api/v1/me", headers=NEW, json={"role": "artist", "fullName": "Brand New"})
+    res = await client.get("/api/v1/subscriptions/me", headers=NEW)
+    assert res.status_code == 200, res.text
+    assert res.json()["plan"]["tier"] == "free" and res.json()["plan"]["trialAvailable"] is True and res.json()["subscription"] is None
