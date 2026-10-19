@@ -59,11 +59,13 @@
 - [ ] C5 Store builds via EAS, internal testing tracks
 
 ## ED — Deploy on AWS `[ ]`
-- [ ] D1 Choose topology (single EC2/Lightsail running compose vs RDS + OpenSearch + ECS) with cost estimate 🔑 AWS account
-- [ ] D2 Infrastructure as code, TLS for `api.prasang.in`, S3 media bucket + CloudFront, SES/MSG91
-- [ ] D3 CI/CD (GitHub Actions build/test/deploy, migrations), nightly Postgres backups to S3
-- [ ] D4 Web app hosting (S3 + CloudFront or Cloudflare Pages), DNS for `prasang.in`
-- [ ] D5 Go-live checklist: Razorpay live + webhook URL 🔑, MSG91 DLT 🔑, Google OAuth production consent 🔑
+**Target topology (decided 2026-10-19):** one VPC · **2 public subnets** (nginx reverse proxy/TLS, NAT) · **2 private backend subnets** (EC2: FastAPI api, Temporal worker, outbox projector) · **2 private data subnets** (RDS PostgreSQL; EC2 for Temporal server, SuperTokens core, Elasticsearch) · **S3** for media · **NAT gateway** for outbound · **SSM Session Manager** for login (no SSH, no bastion) · goal: **lowest monthly cost**.
+- [ ] D1 Cost estimate of the topology + cheaper variants to decide on: NAT gateway (~$32/mo/AZ + data) vs NAT instance (fck-nat t4g.nano); S3 gateway endpoint (free); single-AZ compute at launch; Graviton (t4g) sizes; RDS t4g.micro vs Postgres on EC2; public IPv4 charges 🔑 AWS account
+- [ ] D2 Infrastructure as code (VPC, subnets, route tables, security groups, NAT, nginx EC2, private EC2s, RDS, S3 + CloudFront, IAM roles for SSM/S3)
+- [ ] D3 Service install on EC2 (docker compose per host: data host = Temporal + SuperTokens + Elasticsearch; app host = api + worker + projector), TLS for `api.prasang.in` on nginx
+- [ ] D4 CI/CD (GitHub Actions build/test → images → deploy via SSM Run Command), Alembic migrations on deploy, nightly RDS snapshots + SuperTokens/ES backups
+- [ ] D5 Web app hosting (S3 + CloudFront or nginx) and DNS for `prasang.in`
+- [ ] D6 Go-live checklist: Razorpay live + webhook URL 🔑, MSG91 DLT 🔑, Google OAuth production consent 🔑, SES/Resend domain 🔑
 
 ## Post-launch
 Review submission, favourites, referrals, AI bio + semantic search, Instagram/Facebook/YouTube feed auto-import (Graph/Data APIs; 🔑 Meta app review), admin UI, analytics.
