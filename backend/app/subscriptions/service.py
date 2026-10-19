@@ -5,6 +5,7 @@ from datetime import UTC, date, datetime, timedelta
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.admin.models import AdminAction
 from app.artists.models import ArtistProfile
 from app.artists.service import get_own, usage_for
 from app.artists.stats import IST, today_ist
@@ -248,8 +249,32 @@ LIVE = ("active", "halted")
 TERMINAL = ("cancelled", "expired", "completed")
 
 
+async def cancel_or_flag(session: AsyncSession, sub: Subscription, why: str) -> bool:
+    """Stop billing now. If the gateway refuses, keep the real status and flag it for `admin reports` (never hide it)."""
+    try:
+        await get_gateway().cancel_subscription(sub.gateway_subscription_id, at_cycle_end=False)
+    except Exception:
+        log.exception("could not cancel %s at the gateway (%s) — flagged for manual cancellation", sub.gateway_subscription_id, why)
+        session.add(AdminAction(actor="system", action="manual_cancel_needed", target_type="subscription",
+                                target_id=sub.gateway_subscription_id or str(sub.id), reason=why))
+        return False
+    sub.status = "cancelled"
+    return True
+
+
+async def _owner_removed(session: AsyncSession, sub: Subscription) -> bool:
+    artist = await session.get(ArtistProfile, sub.artist_id)
+    owner = await session.get(User, artist.user_id) if artist else None
+    return owner is None or owner.deleted_at is not None or owner.blocked_at is not None
+
+
 async def _paid(session: AsyncSession, sub: Subscription, period_end: date) -> None:
     """A payment arrived for `sub` (activated/charged). Every state must end with the artist on what they paid for."""
+    if await _owner_removed(session, sub):  # deleted or blocked account: never restore a plan, stop the billing
+        log.error("payment on %s for a deleted/blocked account — cancelling; refund manually", sub.gateway_subscription_id)
+        await cancel_or_flag(session, sub, "payment received for a deleted or blocked account — refund manually")
+        await session.commit()
+        return
     if sub.status == "active":
         await record_charge(session, sub, period_end)
         return
@@ -269,10 +294,13 @@ async def _paid(session: AsyncSession, sub: Subscription, period_end: date) -> N
         log.exception("could not cancel %s", sub.gateway_subscription_id)
 
 
-async def _queue_payment_failed(session: AsyncSession, sub: Subscription, period_key: str) -> None:
+async def _queue_payment_failed(session: AsyncSession, sub: Subscription) -> None:
+    """Once per billing period, and never during first checkout (the artist is right there retrying their card)."""
+    if sub.status == "created":
+        return
     artist = await session.get(ArtistProfile, sub.artist_id)
     plan = await session.get(SubscriptionPlan, sub.tier)
-    await queue_message(session, artist.user_id, "payment_failed", period_key, {"plan": plan.name})
+    await queue_message(session, artist.user_id, "payment_failed", f"{sub.id}-{sub.current_period_end}", {"plan": plan.name})
 
 
 async def handle_webhook(session: AsyncSession, event: str, entity: dict, payment: dict | None = None) -> None:
@@ -284,7 +312,7 @@ async def handle_webhook(session: AsyncSession, event: str, entity: dict, paymen
     if event == "payment.failed":
         if payment:
             await record_payment(session, sub, payment, get_gateway())
-            await _queue_payment_failed(session, sub, payment.get("id") or "unknown")
+            await _queue_payment_failed(session, sub)
             await session.commit()
         return
     current_end = entity.get("current_end")
@@ -297,7 +325,7 @@ async def handle_webhook(session: AsyncSession, event: str, entity: dict, paymen
     elif event == "subscription.halted":
         if sub.status == "active":
             sub.status = "halted"
-            await _queue_payment_failed(session, sub, f"halted-{sub.current_period_end}")
+            await _queue_payment_failed(session, sub)
             await session.commit()
     elif event in ("subscription.cancelled", "subscription.completed"):
         if sub.status not in TERMINAL:

@@ -148,10 +148,12 @@ async def block_user(session: AsyncSession, user_ref: str, *, actor: str, reason
         _suspend(artist, reason)
         artist_changed(session, artist.id)
         for sub in (await session.execute(select(Subscription).where(
-                Subscription.artist_id == artist.id, Subscription.status.in_(subs.LIVE)))).scalars().all():
-            await subs.get_gateway().cancel_subscription(sub.gateway_subscription_id, at_cycle_end=False)
-            cancelled.append(sub.gateway_subscription_id)
-            await subs.end(session, sub, "cancelled", commit=False)
+                Subscription.artist_id == artist.id, Subscription.status.in_((*subs.LIVE, "created"))))).scalars().all():
+            was_live = sub.status in subs.LIVE
+            if await subs.cancel_or_flag(session, sub, f"user blocked: {reason}"):
+                cancelled.append(sub.gateway_subscription_id)
+                if was_live:
+                    await subs.end(session, sub, "cancelled", commit=False)
     _log(session, actor, "block_user", "user", user.id, reason, cancelled=cancelled)
     await session.commit()
     if artist is not None:
@@ -211,7 +213,10 @@ async def open_reports(session: AsyncSession) -> dict:
     reports = (await session.execute(select(ReviewReport, Review).join(Review, Review.id == ReviewReport.review_id)
                                      .where(ReviewReport.status == "open").order_by(ReviewReport.created_at))).all()
     messages = (await session.execute(select(ContactMessage).order_by(ContactMessage.created_at.desc()).limit(20))).scalars().all()
+    flagged = (await session.execute(select(AdminAction).where(AdminAction.action == "manual_cancel_needed")
+                                     .order_by(AdminAction.created_at.desc()).limit(50))).scalars().all()
     return {
+        "billing": [{"gateway_subscription_id": a.target_id, "why": a.reason, "at": a.created_at.isoformat()} for a in flagged],
         "reviews": [{"review_id": str(r.id), "rating": r.rating, "text": r.text[:120], "reason": rep.reason,
                      "reported_at": rep.created_at.isoformat()} for rep, r in reports],
         "contact": [{"at": m.created_at.isoformat(), "from": f"{m.name} <{m.contact}>", "topic": m.topic, "message": m.message[:160]}

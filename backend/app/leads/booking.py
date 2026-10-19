@@ -7,6 +7,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.artists.models import ArtistProfile
+from app.artists.visibility import is_public
 from app.auth.models import User
 from app.labels import EVENT_TYPE_LABELS
 from app.leads.models import Lead
@@ -43,8 +44,9 @@ async def booking_state(session: AsyncSession, lead_id: str) -> str:
     if lead is None:
         return "settled"
     planner = await session.get(User, lead.planner_id)
-    if is_settled(lead) or planner is None or planner.deleted_at is not None:
-        return "settled"
+    artist = await session.get(ArtistProfile, lead.artist_id)
+    if is_settled(lead) or planner is None or planner.deleted_at is not None or artist is None or not is_public(artist):
+        return "settled"  # nothing to ask: answered, or one side has left (suspended/unpublished/deleted artist)
     return "deciding" if lead.planner_answer == "deciding" else "open"
 
 

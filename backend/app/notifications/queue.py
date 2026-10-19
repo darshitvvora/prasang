@@ -15,13 +15,14 @@ from app.artists.stats import IST
 from app.auth.models import User
 from app.config import get_settings
 from app.notifications.models import QueuedMessage
-from app.notifications.notifier import Notifier
+from app.notifications.notifier import NotificationRejected, Notifier
 from app.notifications.templates import MessageKind, render
 from app.subscriptions.models import Subscription, SubscriptionPlan
 from app.workflows.starter import WorkflowStarter, get_starter
 
 log = logging.getLogger(__name__)
 START_GRACE = timedelta(minutes=2)  # leave the request path time to start it first
+MAX_ATTEMPTS = 3  # then the message is marked failed and never swept again
 _PENDING_KEY = "queued_messages"
 _tasks: set[asyncio.Task] = set()
 
@@ -71,7 +72,8 @@ async def _phone(session: AsyncSession, user: User) -> str | None:
 
 
 async def deliver(session: AsyncSession, notifier: Notifier, message_id: str) -> str:
-    """Send one queued message. Returns 'sent' or 'skipped'; raises if every channel failed (so Temporal retries)."""
+    """Send one queued message. Returns 'sent', 'skipped' or 'failed' (given up); raises on a transient failure of every
+    channel so Temporal retries — up to MAX_ATTEMPTS deliveries in total."""
     msg = await session.get(QueuedMessage, uuid.UUID(message_id), with_for_update=True)
     if msg is None or msg.status != "pending":
         await session.rollback()
@@ -83,7 +85,7 @@ async def deliver(session: AsyncSession, notifier: Notifier, message_id: str) ->
         return "skipped"
     rendered = render(msg.kind, user, msg.context, get_settings().public_web_url)
     msg.attempts += 1
-    phone, sent, errors = await _phone(session, user), 0, []
+    phone, sent, errors, rejected = await _phone(session, user), 0, [], 0
     channels = []
     if phone:
         channels.append(("sms", lambda: notifier.send_sms(phone, rendered.sms)))
@@ -93,9 +95,17 @@ async def deliver(session: AsyncSession, notifier: Notifier, message_id: str) ->
         try:
             await send()
             sent += 1
+        except NotificationRejected as exc:  # bad number/address: retrying won't help
+            rejected += 1
+            errors.append(f"{channel}: {exc}")
         except Exception as exc:  # one channel failing must not stop the other
             errors.append(f"{channel}: {exc}")
     if sent == 0 and errors:
+        if rejected == len(errors) or msg.attempts >= MAX_ATTEMPTS:
+            msg.status = "failed"
+            await session.commit()
+            log.warning("message %s given up after %d attempts: %s", message_id, msg.attempts, "; ".join(errors))
+            return "failed"
         await session.commit()  # keep the attempt count
         raise RuntimeError(f"message {message_id} not delivered: {'; '.join(errors)}")
     msg.status, msg.sent_at = "sent", datetime.now(UTC)

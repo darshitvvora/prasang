@@ -17,16 +17,23 @@ from app.workflows.activities import (
     SubscriptionActivities,
 )
 from app.workflows.booking_followup import BookingFollowUpWorkflow
-from app.workflows.client import get_temporal_client
+from app.workflows.client import TemporalStarter, get_temporal_client
 from app.workflows.lead_notification import LeadNotificationWorkflow
 from app.workflows.media_cleanup import DeleteMediaWorkflow
 from app.workflows.message import DeliverMessageWorkflow
+from app.workflows.starter import set_starter
 from app.workflows.subscription import SubscriptionWorkflow, TrialWorkflow
 
 log = logging.getLogger(__name__)
 
 
+def configure_process() -> None:
+    """Activities queue messages and signal workflows too, so this process needs the real starter."""
+    set_starter(TemporalStarter())
+
+
 async def main() -> None:
+    configure_process()
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s %(message)s")
     settings = get_settings()
     client = await get_temporal_client()

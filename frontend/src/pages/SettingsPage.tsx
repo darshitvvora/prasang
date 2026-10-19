@@ -4,7 +4,7 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { useAuth } from '../auth/AuthProvider';
 import { deleteMe } from '../api/endpoints';
-import { CONFIRM_DELETE_KEY, reauthStep, type ReauthStep } from './settings';
+import { CONFIRM_DELETE_KEY, reauthStep, sameAccount, type ReauthStep } from './settings';
 import './legal/LegalPages.css';
 import './site.css';
 
@@ -22,6 +22,13 @@ export default function SettingsPage() {
   const attemptDelete = async () => {
     setPhase('working');
     setError(null);
+    const expected = sessionStorage.getItem(CONFIRM_DELETE_KEY);
+    if (expected && user && !sameAccount(expected, user)) {
+      sessionStorage.removeItem(CONFIRM_DELETE_KEY);
+      setError(`You confirmed with a different Google account (${user.email ?? 'unknown'}). Nothing was deleted — sign in with the account you want to delete.`);
+      setPhase('idle');
+      return;
+    }
     try {
       await deleteMe();
       sessionStorage.removeItem(CONFIRM_DELETE_KEY);
@@ -34,7 +41,7 @@ export default function SettingsPage() {
         await sendOtp(next.phone);
         setPhase('otp');
       } else if (next.kind === 'google' && user) {
-        sessionStorage.setItem(CONFIRM_DELETE_KEY, '1');
+        sessionStorage.setItem(CONFIRM_DELETE_KEY, next.email ?? '');
         await signInWithGoogle(user.role === 'artist' ? 'artist' : 'planner');
       } else {
         setError(next.kind === 'error' ? next.message : 'Something went wrong. Please try again.');

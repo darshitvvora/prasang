@@ -54,8 +54,10 @@ async def _expire_leads() -> None:
 async def _sweep(loop_seconds: int | None) -> None:
     from app.sweeps import run_sweeps
     from app.workflows.client import TemporalStarter
+    from app.workflows.starter import set_starter
 
     starter = TemporalStarter()
+    set_starter(starter)  # messages queued by the sweep start delivery on commit
     while True:
         try:
             async with get_sessionmaker()() as session:

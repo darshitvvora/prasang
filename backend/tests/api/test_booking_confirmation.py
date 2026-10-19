@@ -139,3 +139,20 @@ async def test_locked_lead_can_be_confirmed(client, starter):
     lid = await _lead("new", locked=True)
     body = (await _answer(client, lid, "booked")).json()
     assert body["bookingConfirmed"] is True
+
+
+async def test_checkins_stop_when_artist_is_gone(client, starter):
+    """Final review M1 (regraded): no "Did you book …?" texts about suspended or deleted artists."""
+    from app.leads.booking import booking_state
+
+    await seed_demo()
+    lid = await _lead("contacted")
+    async with get_sessionmaker()() as s:
+        assert await booking_state(s, lid) == "open"
+        artist = (await s.execute(select(ArtistProfile).where(ArtistProfile.slug == ARJUN))).scalar_one()
+        artist.suspended_at = datetime.now(UTC)
+        await s.commit()
+        assert await booking_state(s, lid) == "settled"
+        artist.suspended_at, artist.is_published = None, False  # deleted artists are unpublished
+        await s.commit()
+        assert await booking_state(s, lid) == "settled"

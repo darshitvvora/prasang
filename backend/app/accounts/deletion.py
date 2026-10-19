@@ -30,12 +30,7 @@ DELETED_USER = "Deleted user"
 async def _delete_artist(session: AsyncSession, artist: ArtistProfile, now: datetime) -> list[str]:
     for sub in (await session.execute(select(Subscription).where(
             Subscription.artist_id == artist.id, Subscription.status.in_((*subs.LIVE, "created"))))).scalars().all():
-        try:
-            await subs.get_gateway().cancel_subscription(sub.gateway_subscription_id, at_cycle_end=False)
-        except Exception:
-            log.exception("could not cancel %s at the gateway during account deletion — cancel it manually",
-                          sub.gateway_subscription_id)
-        sub.status = "cancelled"
+        await subs.cancel_or_flag(session, sub, "account deleted — billing must stop")
     media = (await session.execute(select(ArtistMedia).where(ArtistMedia.artist_id == artist.id))).scalars().all()
     keys = [m.storage_key for m in media if m.storage_key]
     for m in media:

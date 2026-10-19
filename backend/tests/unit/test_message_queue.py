@@ -122,7 +122,8 @@ async def test_halted_webhook_queues_payment_failed():
                            gateway_subscription_id="sub_h", current_period_end=date(2026, 11, 1)))
         await s.commit()
         await handle_webhook(s, "subscription.halted", {"id": "sub_h"})
-    assert await _kinds() == [("payment_failed", "halted-2026-11-01")]
+        sub_id = (await s.execute(select(Subscription.id).where(Subscription.gateway_subscription_id == "sub_h"))).scalar_one()
+    assert await _kinds() == [("payment_failed", f"{sub_id}-2026-11-01")]
 
 
 async def test_due_reminders_trial_48h_and_annual_7d_only():
@@ -154,3 +155,60 @@ async def test_sweeper_restarts_pending_messages():
         assert await retry_pending_messages(s, starter) == 0  # too fresh: the request path starts it
         assert await retry_pending_messages(s, starter, now=datetime.now(UTC) + timedelta(minutes=5)) == 1
     assert starter.started == [str(mid)]
+
+
+class Rejecting(Spy):
+    async def send_sms(self, phone, text):
+        from app.notifications.notifier import NotificationRejected
+
+        raise NotificationRejected("bad number")
+
+
+class Flaky(Spy):
+    async def send_sms(self, phone, text):
+        raise RuntimeError("provider down")
+
+
+async def test_rejected_by_provider_fails_permanently():
+    """Final review I2: a number the provider rejects must not be retried forever."""
+    async with get_sessionmaker()() as s:
+        await _user(s, email=None)
+        mid = await queue_message(s, "u1", "welcome_planner", "once")
+        await s.commit()
+        assert await deliver(s, Rejecting(), str(mid)) == "failed"
+        assert (await s.get(QueuedMessage, mid)).status == "failed"
+
+
+async def test_transient_failures_give_up_after_max_attempts():
+    import pytest
+
+    async with get_sessionmaker()() as s:
+        await _user(s, email=None)
+        mid = await queue_message(s, "u1", "welcome_planner", "once")
+        await s.commit()
+        for _ in range(2):
+            with pytest.raises(RuntimeError):
+                await deliver(s, Flaky(), str(mid))  # Temporal retries these
+        assert await deliver(s, Flaky(), str(mid)) == "failed"
+        msg = await s.get(QueuedMessage, mid)
+        assert (msg.status, msg.attempts) == ("failed", 3)
+        assert await retry_pending_messages(s, RecordingStarter(), now=datetime.now(UTC) + timedelta(hours=1)) == 0
+
+
+async def test_payment_failed_sent_once_per_period_and_not_during_checkout():
+    """Final review I4: Razorpay retries and declined checkout cards must not each send an SMS."""
+    from app.subscriptions.service import handle_webhook
+
+    await seed_demo()
+    async with get_sessionmaker()() as s:
+        artist = (await s.execute(select(ArtistProfile).where(ArtistProfile.slug == "arjun-malhotra-magic"))).scalar_one()
+        s.add(Subscription(artist_id=artist.id, tier="basic", billing_cycle="monthly", status="created", gateway_subscription_id="sub_c"))
+        s.add(Subscription(artist_id=artist.id, tier="basic", billing_cycle="monthly", status="active",
+                           gateway_subscription_id="sub_r", current_period_end=date(2026, 11, 1)))
+        await s.commit()
+        await handle_webhook(s, "payment.failed", {}, {"id": "pay_c1", "status": "failed", "subscription_id": "sub_c"})
+        for pid in ("pay_r1", "pay_r2", "pay_r3"):
+            await handle_webhook(s, "payment.failed", {}, {"id": pid, "status": "failed", "subscription_id": "sub_r"})
+        await handle_webhook(s, "subscription.halted", {"id": "sub_r"})
+    kinds = await _kinds()
+    assert [k for k, _ in kinds] == ["payment_failed"]
