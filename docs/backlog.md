@@ -47,6 +47,14 @@
 **S7 Monetisation**
 - [x] B11 Plans, 7-day trial (`TrialWorkflow`), subscriptions (`SubscriptionWorkflow`), fake gateway locally (🔑 Razorpay test/live keys later), webhooks
 
+**S8 Hardening from review** ✅
+- [x] Razorpay webhook state machine + retry-safe processing; plan change cancels the old subscription at the gateway
+- [x] Locked leads unlock up to the new plan's limit on any upgrade/trial
+- [x] `scheduler` service sweeps missed lead notifications, overdue trials/subscriptions, expired leads
+- [x] Upload size/type/kind enforced (signed size + confirm checks)
+- [x] OTP SMS rate limits (5/phone/h, 20/IP/h)
+- [x] Fail closed on public domains without `ENV=production`; configurable API/session domain for split deploys
+
 **S8 Web app on the real backend**
 - [x] B12 React: SuperTokens auth mode (OTP + Google callback), Facebook embeds, iframes on profile
 - [x] B13 Everything in `docker compose` (api, worker, projector, migrate+seed, web); Plan A smoke passes against the real API; runbook
@@ -66,6 +74,14 @@
 - [ ] D4 CI/CD (GitHub Actions build/test → images → deploy via SSM Run Command), Alembic migrations on deploy, nightly RDS snapshots + SuperTokens/ES backups
 - [ ] D5 Web app hosting (S3 + CloudFront or nginx) and DNS for `prasang.in`
 - [ ] D6 Go-live checklist: Razorpay live + webhook URL 🔑, MSG91 DLT 🔑, Google OAuth production consent 🔑, SES/Resend domain 🔑
+
+## EF — Follow-ups from review (before go-live)
+- [ ] F1 Search: map ES timeouts/missing index to 503 `search_unavailable`
+- [ ] F2 Store canonical social link URLs; unique `storage_key`
+- [ ] F3 Projector: external versioning for >1 instance; isolate poison events
+- [ ] F4 Lock artist row in trial end vs activation; IST date in verify; gateway errors → 502/503 on cancel
+- [ ] F5 Planner daily limit serialised; production build defaults to SuperTokens auth; JSON logs; hide API docs in production; require MSG91 notifier in production
+- [ ] F6 Decide: proration on plan change; how Razorpay plan ids survive re-seeding
 
 ## Post-launch
 Review submission, favourites, referrals, AI bio + semantic search, Instagram/Facebook/YouTube feed auto-import (Graph/Data APIs; 🔑 Meta app review), admin UI, analytics.
