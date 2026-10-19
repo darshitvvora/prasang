@@ -11,6 +11,7 @@ import ContactModal from '../components/ContactModal';
 import QueryState from '../components/QueryState';
 import FullPageSpinner from '../components/FullPageSpinner';
 import NotFoundPage from './NotFoundPage';
+import { EMBED_ALLOW, EMBED_SANDBOX, mediaIsEmbed } from '../components/embed';
 import { ApiError } from '../api/client';
 import { useArtist, useArtistReviews, useSimilarArtists } from '../api/queries';
 import { formatPrice, imageOr } from '../api/format';
@@ -18,6 +19,7 @@ import type { ArtistDetail } from '../api/types';
 import { ARTIST_TYPE_LABELS, ARTIST_TYPE_COLORS, EVENT_TYPE_LABELS } from '../types/artist';
 import './ArtistProfilePage.css';
 
+const WIDGET_LABELS = { instagram: 'Instagram', youtube: 'YouTube', facebook: 'Facebook' } as const;
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const formatMonth = (ym: string) => { const [y, m] = ym.split('-').map(Number); return `${MONTHS[m - 1]} ${y}`; };
 
@@ -282,6 +284,11 @@ function ArtistProfile({ artist }: { artist: ArtistDetail }) {
                     <div key={m.id} className="profile-media-item">
                       {m.kind === 'image' ? (
                         <img src={m.url} alt={m.caption ?? `${artist.name} performance`} className="profile-media-img" loading="lazy" />
+                      ) : mediaIsEmbed(m) ? (
+                        <iframe src={m.embedUrl ?? undefined} title={m.caption ?? `${artist.name} on ${m.kind}`} className="profile-media-iframe"
+                          sandbox={EMBED_SANDBOX} allow={EMBED_ALLOW} allowFullScreen loading="lazy" />
+                      ) : m.kind === 'video' ? (
+                        <video src={m.url} className="profile-media-img" controls preload="metadata" />
                       ) : (
                         <a href={m.url} target="_blank" rel="noopener noreferrer" className="profile-media-embed">
                           <img src={imageOr(m.thumbnailUrl ?? artist.profileImageUrl)} alt={m.caption ?? `${artist.name} video`} className="profile-media-img" loading="lazy" />
@@ -292,6 +299,26 @@ function ArtistProfile({ artist }: { artist: ArtistDetail }) {
                   ))}
                 </div>
               </div>
+            )}
+
+            {/* Social widgets: Instagram profile, YouTube channel, Facebook page */}
+            {activeTab === 'media' && artist.socialWidgets.length > 0 && (
+              <section className="profile-section profile-widgets">
+                <h2 className="profile-section-title">On social media</h2>
+                <div className="profile-widgets-grid">
+                  {artist.socialWidgets.map((w) => (
+                    <div key={w.platform} className={`profile-widget ${w.platform}`}>
+                      <a href={w.profileUrl} target="_blank" rel="noopener noreferrer" className="profile-widget-link">
+                        {WIDGET_LABELS[w.platform]} ↗
+                      </a>
+                      {w.embedUrl && (
+                        <iframe src={w.embedUrl} title={`${artist.name} on ${WIDGET_LABELS[w.platform]}`} className="profile-widget-frame"
+                          sandbox={EMBED_SANDBOX} allow={EMBED_ALLOW} allowFullScreen loading="lazy" />
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </section>
             )}
 
             {/* Tab: Reviews */}

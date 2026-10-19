@@ -1,10 +1,12 @@
 // Shared sign-in / sign-up screen. Login and Signup differ only in copy and in
 // whether Google sign-in creates a new account. After Google, users without a
 // Prasang profile finish a one-step profile (name + role), then land on their home.
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom';
-import { Phone } from 'lucide-react';
+import { ArrowLeft, Phone, RefreshCw } from 'lucide-react';
 import { useAuth } from '../auth/AuthProvider';
+import { MOCK_OTP } from '../auth/mode';
+import { useAuthProviders } from '../api/queries';
 import { homePathFor } from '../auth/paths';
 import { InlineError } from '../components/QueryState';
 import './AuthPages.css';
@@ -33,13 +35,28 @@ function GoogleIcon() {
 
 export default function AuthScreen({ mode }: { mode: Mode }) {
   const copy = COPY[mode];
+  const modeIsSignup = mode === 'signup';
   const navigate = useNavigate();
   const [params] = useSearchParams();
   const next = params.get('next');
-  const { status, user, signInWithGoogle, completeProfile } = useAuth();
+  const { mode: authMode, status, user, signInWithGoogle, sendOtp, verifyOtp, completeProfile, intendedRole } = useAuth();
+  const providers = useAuthProviders();
+  const googleAvailable = authMode === 'mock' || providers.data?.google === true;
 
   const initialRole = params.get('role');
-  const [role, setRole] = useState<Role | null>(initialRole === 'artist' || initialRole === 'planner' ? initialRole : null);
+  const [role, setRole] = useState<Role | null>(
+    initialRole === 'artist' || initialRole === 'planner' ? initialRole : intendedRole());
+  const [otpStep, setOtpStep] = useState<'phone' | 'code'>('phone');
+  const [otpPhone, setOtpPhone] = useState('');
+  const [otpCode, setOtpCode] = useState('');
+  const [otpMessage, setOtpMessage] = useState<string | null>(null);
+  const [countdown, setCountdown] = useState(0);
+
+  useEffect(() => {
+    if (countdown <= 0) return;
+    const t = setTimeout(() => setCountdown((c) => c - 1), 1000);
+    return () => clearTimeout(t);
+  }, [countdown]);
   const [tab, setTab] = useState<'google' | 'otp'>('google');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<unknown>(null);
@@ -58,6 +75,42 @@ export default function AuthScreen({ mode }: { mode: Mode }) {
       if (result.status === 'signedIn') navigate(next ?? homePathFor(result.user), { replace: true });
     } catch (e) {
       setError(e);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleSendOtp(e?: React.FormEvent) {
+    e?.preventDefault();
+    if (!role || !/^[6-9]\d{9}$/.test(otpPhone)) return;
+    setLoading(true);
+    setError(null);
+    setOtpMessage(null);
+    try {
+      await sendOtp(otpPhone);
+      setOtpStep('code');
+      setCountdown(30);
+      if (authMode === 'mock') setOtpMessage(`Mock mode: use code ${MOCK_OTP}`);
+    } catch (err) {
+      setError(err);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleVerifyOtp(e: React.FormEvent) {
+    e.preventDefault();
+    if (!role || otpCode.length !== 6) return;
+    setLoading(true);
+    setError(null);
+    try {
+      const result = await verifyOtp(otpCode, role, { newAccount: modeIsSignup });
+      if (result.status === 'signedIn') navigate(next ?? homePathFor(result.user), { replace: true });
+      else if (result.status === 'incorrect') setOtpMessage('That code is not right. Check the SMS and try again.');
+      else if (result.status === 'expired') setOtpMessage('That code has expired. Tap resend for a new one.');
+      else if (result.status === 'restart') { setOtpStep('phone'); setOtpCode(''); setOtpMessage('Please request a new code.'); }
+    } catch (err) {
+      setError(err);
     } finally {
       setLoading(false);
     }
@@ -141,16 +194,53 @@ export default function AuthScreen({ mode }: { mode: Mode }) {
 
             {tab === 'google' ? (
               <div className="auth-google-section">
-                <button className="auth-google-btn" onClick={handleGoogle} disabled={loading || !role}>
+                <button className="auth-google-btn" onClick={handleGoogle} disabled={loading || !role || !googleAvailable}>
                   <GoogleIcon />
                   {loading ? copy.busy : copy.google}
                 </button>
-                <p className="auth-google-note">{copy.note}</p>
+                <p className="auth-google-note">
+                  {googleAvailable ? copy.note : "Google sign-in isn't set up on this server yet — use Mobile OTP."}
+                </p>
               </div>
+            ) : otpStep === 'phone' ? (
+              <form onSubmit={handleSendOtp} className="auth-form">
+                <div className="auth-form-group">
+                  <label className="auth-label" htmlFor="otp-phone">Mobile Number</label>
+                  <div className="auth-phone-input">
+                    <span className="auth-phone-code">+91</span>
+                    <input id="otp-phone" type="tel" className="auth-input phone-field" placeholder="9876543210" value={otpPhone}
+                      onChange={(e) => setOtpPhone(e.target.value.replace(/\D/g, '').slice(0, 10))} maxLength={10} autoFocus />
+                  </div>
+                  <p className="auth-field-hint">We'll send a 6-digit OTP to this number</p>
+                </div>
+                <button type="submit" className="auth-submit-btn" disabled={loading || !role || !/^[6-9]\d{9}$/.test(otpPhone)}>
+                  {loading ? 'Sending...' : 'Send OTP'}
+                </button>
+              </form>
             ) : (
-              <div className="auth-google-section">
-                <p className="auth-google-note">Mobile OTP sign-in is coming soon. Please continue with Google for now.</p>
-              </div>
+              <form onSubmit={handleVerifyOtp} className="auth-form">
+                <div className="auth-otp-back">
+                  <button type="button" className="auth-otp-back-btn" onClick={() => { setOtpStep('phone'); setOtpCode(''); setOtpMessage(null); }}>
+                    <ArrowLeft size={16} /> +91 {otpPhone}
+                  </button>
+                </div>
+                <div className="auth-form-group">
+                  <label className="auth-label" htmlFor="otp-code">Enter OTP</label>
+                  <input id="otp-code" type="text" inputMode="numeric" autoComplete="one-time-code" className="auth-input otp-input"
+                    placeholder="000000" value={otpCode} onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                    maxLength={6} autoFocus />
+                  {otpMessage && <p className="auth-field-hint">{otpMessage}</p>}
+                  <div className="auth-otp-actions">
+                    <button type="button" className="auth-resend-btn" disabled={countdown > 0 || loading} onClick={() => handleSendOtp()}>
+                      <RefreshCw size={14} />
+                      {countdown > 0 ? `Resend in ${countdown}s` : 'Resend OTP'}
+                    </button>
+                  </div>
+                </div>
+                <button type="submit" className="auth-submit-btn" disabled={loading || otpCode.length !== 6}>
+                  {loading ? 'Verifying...' : 'Verify & Continue'}
+                </button>
+              </form>
             )}
 
             <div className="auth-divider"><span>{copy.switchText}</span></div>

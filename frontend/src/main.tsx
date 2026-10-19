@@ -4,6 +4,9 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import './index.css'
 import App from './App.tsx'
 import { ApiError } from './api/client'
+import { initSupertokens } from './auth/supertokens'
+
+if (import.meta.env.VITE_AUTH_MODE === 'supertokens') initSupertokens()
 
 const queryClient = new QueryClient({
   defaultOptions: {
