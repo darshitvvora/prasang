@@ -70,7 +70,18 @@
 - [ ] F6 Decide: proration on plan change; how Razorpay plan ids survive re-seeding
 
 ## EL — Web launch readiness (feature-complete web) `[~]` ← next, before deployment
-**Decided 2026-10-19:** finish these on the web before any deploy work. Design in progress.
+**Decided 2026-10-19:** finish these on the web before any deploy work. Design: [web launch readiness](superpowers/specs/2026-10-19-web-launch-readiness-design.md).
+
+**Decisions log (change here; the design follows):**
+- Not GST-registered → Razorpay's standard invoice is the receipt; enable Razorpay GST invoices after registration
+- Reviews only for confirmed bookings; **either** artist ("booked") **or** planner ("Yes, I booked") confirms; planner's yes counts even if the artist declined or the inquiry expired
+- Booking check-ins: 3 days after inquiry, then the day after the event if still unmarked (14 days after inquiry if no date); max 4 messages; SMS + email (WhatsApp with the copilot, EH)
+- Google reviews shown separately with attribution; Prasang rating counts only verified reviews
+- Admin at launch is CLI only; admin UI post-launch
+- Grant-plan refused while a paid plan is live; replaces a running trial
+- **Suspend** leaves billing running (temporary; refunds manually in Razorpay); **block** = suspend + cancel billing at Razorpay immediately *(recommended default — confirm)*
+- Account deletion immediate after OTP re-confirm; payment records kept without contact details
+- Production nginx/web image stay in ED/EG
 - [ ] L1 Admin at launch = **CLI commands, no UI** (run on the server via SSM): verify/unverify, feature/unfeature, suspend/restore artist, grant plan for N days, hide/restore review, block user, sync subscription from Razorpay; each updates search via the outbox and writes an `admin_actions` log row
 - [ ] L2 Link previews for shared profiles (Open Graph/Twitter tags: photo, name, type, city) for Instagram/WhatsApp
 - [ ] L3 Reviews: only for confirmed bookings (artist marks booked **or** planner says yes); planner nudged 3 days after inquiry and again the day after the event if still unmarked (Temporal); review form opens after the event; artist reply + report; Google reviews shown separately with attribution (🔑 Google Places API key)
