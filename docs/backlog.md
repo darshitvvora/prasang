@@ -34,7 +34,7 @@
 - [x] B5 SuperTokens: phone OTP (code in API logs locally) + Google (🔑 Google OAuth client), cookie + header sessions (web + mobile), `/me`
 
 **S4 Artists & media**
-- [ ] B6 Artist profile CRUD, public profile, Instagram/YouTube/Facebook URL embeds, daily stats, dashboard
+- [x] B6 Artist profile CRUD, public profile, Instagram/YouTube/Facebook post embeds + profile widgets (Facebook page timeline, Instagram profile, YouTube channel), daily stats, dashboard (🔑 optional YouTube Data API key for @handle channels)
 - [ ] B7 Media uploads to S3 (🔑 AWS dev bucket + credentials for uploads; embeds work without), quotas
 
 **S5 Search (Elasticsearch read side)**

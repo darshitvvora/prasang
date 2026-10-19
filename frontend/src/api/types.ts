@@ -23,7 +23,9 @@ export interface ArtistCard {
 export type MediaKind = 'image' | 'video' | 'youtube' | 'instagram' | 'facebook';
 /** `url`: public file URL (image/video) or the original social link. `embedUrl`: iframe src for social kinds, else null. */
 export interface Media { id: string; kind: MediaKind; url: string; embedUrl: string | null; thumbnailUrl: string | null; caption: string | null; displayOrder: number }
-export interface ArtistDetail extends ArtistCard { media: Media[] }
+/** Profile-level widget built from the artist's social links. `embedUrl` null = show as a link only. */
+export interface SocialWidget { platform: 'instagram' | 'youtube' | 'facebook'; profileUrl: string; embedUrl: string | null }
+export interface ArtistDetail extends ArtistCard { media: Media[]; socialWidgets: SocialWidget[] }
 export interface Review { id: string; reviewerName: string; rating: number; eventType: EventType; eventMonth: string; text: string; createdAt: string }
 
 export interface ArtistProfileInput {

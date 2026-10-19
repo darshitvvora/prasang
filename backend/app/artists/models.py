@@ -27,6 +27,7 @@ class ArtistProfile(Timestamps, Base):
     ready_to_travel: Mapped[bool] = mapped_column(default=False)
     instagram_handle: Mapped[str | None] = mapped_column(String(60))
     youtube_channel: Mapped[str | None] = mapped_column(String(200))
+    youtube_channel_id: Mapped[str | None] = mapped_column(String(30))  # UC… id when known → channel widget
     facebook_url: Mapped[str | None] = mapped_column(String(300))
     profile_image_url: Mapped[str | None] = mapped_column(String(500))
     contact_phone: Mapped[str] = mapped_column(String(10))

@@ -47,8 +47,15 @@ class ArtistCardList(ContractModel):
     items: list[ArtistCard]
 
 
+class SocialWidget(ContractModel):
+    platform: Literal["instagram", "youtube", "facebook"]
+    profile_url: str
+    embed_url: str | None
+
+
 class ArtistDetail(ArtistCard):
     media: list[Media]
+    social_widgets: list[SocialWidget]
 
 
 class CompletenessItem(ContractModel):

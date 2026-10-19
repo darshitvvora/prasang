@@ -17,7 +17,7 @@
     "subscriptionTier": "basic",
     "instagramHandle": "arjunmagic",
     "youtubeChannel": "ArjunMalhotraMagic",
-    "facebookUrl": null,
+    "facebookUrl": "https://www.facebook.com/arjunmagic",
     "experienceYears": 8,
     "eventTypesSupported": [
       "birthday",
@@ -70,7 +70,24 @@
       }
     ],
     "contactPhone": "9820011001",
-    "whatsappNumber": "9820011001"
+    "whatsappNumber": "9820011001",
+    "socialWidgets": [
+      {
+        "platform": "instagram",
+        "profileUrl": "https://www.instagram.com/arjunmagic/",
+        "embedUrl": "https://www.instagram.com/arjunmagic/embed"
+      },
+      {
+        "platform": "youtube",
+        "profileUrl": "https://www.youtube.com/@ArjunMalhotraMagic",
+        "embedUrl": null
+      },
+      {
+        "platform": "facebook",
+        "profileUrl": "https://www.facebook.com/arjunmagic",
+        "embedUrl": "https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Farjunmagic&tabs=timeline&width=500&height=600&small_header=true&adapt_container_width=true"
+      }
+    ]
   },
   {
     "artistId": "art-002",
@@ -144,7 +161,19 @@
       }
     ],
     "contactPhone": "9820011002",
-    "whatsappNumber": "9820011002"
+    "whatsappNumber": "9820011002",
+    "socialWidgets": [
+      {
+        "platform": "instagram",
+        "profileUrl": "https://www.instagram.com/djkrish_official/",
+        "embedUrl": "https://www.instagram.com/djkrish_official/embed"
+      },
+      {
+        "platform": "youtube",
+        "profileUrl": "https://www.youtube.com/@DJKrishOfficial",
+        "embedUrl": null
+      }
+    ]
   },
   {
     "artistId": "art-003",
@@ -217,7 +246,19 @@
       }
     ],
     "contactPhone": "9820011003",
-    "whatsappNumber": null
+    "whatsappNumber": null,
+    "socialWidgets": [
+      {
+        "platform": "instagram",
+        "profileUrl": "https://www.instagram.com/priyasharmamusic/",
+        "embedUrl": "https://www.instagram.com/priyasharmamusic/embed"
+      },
+      {
+        "platform": "youtube",
+        "profileUrl": "https://www.youtube.com/@PriyaSharmaLive",
+        "embedUrl": null
+      }
+    ]
   },
   {
     "artistId": "art-004",
@@ -290,7 +331,19 @@
       }
     ],
     "contactPhone": "9820011004",
-    "whatsappNumber": "9820011004"
+    "whatsappNumber": "9820011004",
+    "socialWidgets": [
+      {
+        "platform": "instagram",
+        "profileUrl": "https://www.instagram.com/rohandesaicomedy/",
+        "embedUrl": "https://www.instagram.com/rohandesaicomedy/embed"
+      },
+      {
+        "platform": "youtube",
+        "profileUrl": "https://www.youtube.com/@RohanDesaiComedy",
+        "embedUrl": null
+      }
+    ]
   },
   {
     "artistId": "art-005",
@@ -363,7 +416,19 @@
       }
     ],
     "contactPhone": "9820011005",
-    "whatsappNumber": "9820011005"
+    "whatsappNumber": "9820011005",
+    "socialWidgets": [
+      {
+        "platform": "instagram",
+        "profileUrl": "https://www.instagram.com/theraagacollective/",
+        "embedUrl": "https://www.instagram.com/theraagacollective/embed"
+      },
+      {
+        "platform": "youtube",
+        "profileUrl": "https://www.youtube.com/@TheRaagaCollective",
+        "embedUrl": null
+      }
+    ]
   },
   {
     "artistId": "art-006",
@@ -435,7 +500,14 @@
       }
     ],
     "contactPhone": "9820011006",
-    "whatsappNumber": null
+    "whatsappNumber": null,
+    "socialWidgets": [
+      {
+        "platform": "instagram",
+        "profileUrl": "https://www.instagram.com/meerakapoor_mc/",
+        "embedUrl": "https://www.instagram.com/meerakapoor_mc/embed"
+      }
+    ]
   },
   {
     "artistId": "art-007",
@@ -509,7 +581,19 @@
       }
     ],
     "contactPhone": "9820011007",
-    "whatsappNumber": "9820011007"
+    "whatsappNumber": "9820011007",
+    "socialWidgets": [
+      {
+        "platform": "instagram",
+        "profileUrl": "https://www.instagram.com/vikrambubbles/",
+        "embedUrl": "https://www.instagram.com/vikrambubbles/embed"
+      },
+      {
+        "platform": "youtube",
+        "profileUrl": "https://www.youtube.com/@VikramBubbleShow",
+        "embedUrl": null
+      }
+    ]
   },
   {
     "artistId": "art-008",
@@ -582,7 +666,14 @@
       }
     ],
     "contactPhone": "9820011008",
-    "whatsappNumber": "9820011008"
+    "whatsappNumber": "9820011008",
+    "socialWidgets": [
+      {
+        "platform": "instagram",
+        "profileUrl": "https://www.instagram.com/adityanaik_music/",
+        "embedUrl": "https://www.instagram.com/adityanaik_music/embed"
+      }
+    ]
   },
   {
     "artistId": "art-009",
@@ -656,7 +747,14 @@
       }
     ],
     "contactPhone": "9820011009",
-    "whatsappNumber": null
+    "whatsappNumber": null,
+    "socialWidgets": [
+      {
+        "platform": "instagram",
+        "profileUrl": "https://www.instagram.com/djnikhilpune/",
+        "embedUrl": "https://www.instagram.com/djnikhilpune/embed"
+      }
+    ]
   },
   {
     "artistId": "art-010",
@@ -729,7 +827,19 @@
       }
     ],
     "contactPhone": "9820011010",
-    "whatsappNumber": "9820011010"
+    "whatsappNumber": "9820011010",
+    "socialWidgets": [
+      {
+        "platform": "instagram",
+        "profileUrl": "https://www.instagram.com/sanaqureshilive/",
+        "embedUrl": "https://www.instagram.com/sanaqureshilive/embed"
+      },
+      {
+        "platform": "youtube",
+        "profileUrl": "https://www.youtube.com/@SanaQureshiLive",
+        "embedUrl": null
+      }
+    ]
   },
   {
     "artistId": "art-011",
@@ -801,7 +911,14 @@
       }
     ],
     "contactPhone": "9820011011",
-    "whatsappNumber": "9820011011"
+    "whatsappNumber": "9820011011",
+    "socialWidgets": [
+      {
+        "platform": "instagram",
+        "profileUrl": "https://www.instagram.com/kabirmentalist/",
+        "embedUrl": "https://www.instagram.com/kabirmentalist/embed"
+      }
+    ]
   },
   {
     "artistId": "art-012",
@@ -872,6 +989,7 @@
       }
     ],
     "contactPhone": "9820011012",
-    "whatsappNumber": null
+    "whatsappNumber": null,
+    "socialWidgets": []
   }
 ]
