@@ -1,5 +1,6 @@
 """Application settings from environment variables (see .env.example)."""
 from functools import lru_cache
+from pathlib import Path
 from typing import Literal
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -44,6 +45,8 @@ class Settings(BaseSettings):
     resend_api_key: str | None = None
 
     cors_origins: list[str] = ["http://localhost:5173"]
+    # Repo root containing contracts/ and mockoon/data (seed datasets). Docker mounts them at /seed.
+    seed_root: str = str(Path(__file__).resolve().parents[2])
 
     def validate_for_env(self) -> None:
         if self.env == "production" and self.dev_auth_header:

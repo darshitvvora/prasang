@@ -28,7 +28,7 @@
 **S2 API foundation**
 - [x] B2 FastAPI scaffold: config, async SQLAlchemy, error contract (incl. 422 → `details.fields`), `/healthz` `/readyz`, pytest harness
 - [x] B3 Pydantic contract models + contract tests; contract additions: Facebook embeds, `Media.embedUrl`, `facebookUrl`, `GET /auth/providers`
-- [ ] B4 Schema migration + seed (localities, plans, 12 demo artists, demo leads)
+- [x] B4 Schema migration + seed (localities, plans, 12 demo artists, demo leads)
 
 **S3 Identity**
 - [ ] B5 SuperTokens: phone OTP (code in API logs locally) + Google (🔑 Google OAuth client), cookie + header sessions (web + mobile), `/me`
