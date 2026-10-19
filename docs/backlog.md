@@ -94,4 +94,12 @@
 - [ ] C5 Store builds via EAS, internal testing tracks
 
 ## Post-launch
-Review submission, favourites, referrals, AI bio + semantic search, Instagram/Facebook/YouTube feed auto-import (Graph/Data APIs; 🔑 Meta app review), admin UI, analytics.
+Favourites/shortlist, compare, recently viewed; locality pages, trending/new/top-rated, map/nearby; referrals; AI bio + semantic search; Instagram/Facebook/YouTube feed auto-import (Graph/Data APIs; 🔑 Meta app review); full analytics page; blog; Spotify embeds; ticketing (tixcraft/Insider).
+
+## EH — AI event-planning copilot (post-launch, direction of the product) `[ ]`
+**Vision (2026-10-19):** Prasang grows from a directory into a **personal agent for event booking** — an AI copilot that helps a planner plan and run an event end to end, available **on WhatsApp and in our app** (web + React Native).
+- [ ] H1 Discovery: conversations the copilot must handle (brief → shortlist → contact → follow-up → booking → day-of checklist); success measures
+- [ ] H2 WhatsApp channel 🔑 WhatsApp Business API (Meta) via MSG91/Gupshup/Meta Cloud API; in-app chat
+- [ ] H3 Agent core: tools over existing APIs (search, artist detail, create lead, inquiries, reviews), durable conversations/reminders on Temporal
+- [ ] H4 Semantic artist matching (embeddings) feeding the copilot's shortlist
+- [ ] H5 Guardrails: no contact sharing without the planner's consent, human handoff, cost caps per conversation
