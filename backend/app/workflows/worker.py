@@ -8,9 +8,11 @@ import app.models  # noqa: F401
 from app.config import get_settings
 from app.db import get_sessionmaker
 from app.notifications.notifier import get_notifier
-from app.workflows.activities import LeadActivities
+from app.subscriptions.gateway import get_gateway
+from app.workflows.activities import LeadActivities, SubscriptionActivities
 from app.workflows.client import get_temporal_client
 from app.workflows.lead_notification import LeadNotificationWorkflow
+from app.workflows.subscription import SubscriptionWorkflow, TrialWorkflow
 
 log = logging.getLogger(__name__)
 
@@ -19,8 +21,10 @@ async def main() -> None:
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s %(message)s")
     settings = get_settings()
     client = await get_temporal_client()
-    activities = LeadActivities(get_sessionmaker(), get_notifier(settings))
-    worker = Worker(client, task_queue=settings.temporal_task_queue, workflows=[LeadNotificationWorkflow], activities=activities.all())
+    sessions = get_sessionmaker()
+    activities = LeadActivities(sessions, get_notifier(settings)).all() + SubscriptionActivities(sessions, get_gateway()).all()
+    worker = Worker(client, task_queue=settings.temporal_task_queue,
+                    workflows=[LeadNotificationWorkflow, SubscriptionWorkflow, TrialWorkflow], activities=activities)
     log.info("worker polling task queue %s", settings.temporal_task_queue)
     await worker.run()
 
