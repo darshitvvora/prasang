@@ -4,7 +4,9 @@
 
 **Source of truth:** spec [backend design v2](superpowers/specs/2026-09-29-backend-mvp-design.md) · API [contract](../contracts/README.md) · plans [A](superpowers/plans/2026-09-29-plan-a-api-contract-mock-ui.md), [B](superpowers/plans/2026-10-19-plan-b-backend.md)
 
-**Stack (locked 2026-10-19):** React web + React Native (Android/iOS) clients · FastAPI · PostgreSQL 16 (writes) · **Elasticsearch 8 for all UI search/listing reads** (CQRS via outbox projector) · SuperTokens self-hosted (Google + phone OTP) · Temporal self-hosted on Postgres · Amazon S3 · Razorpay · MSG91 / Resend · deploy on **AWS**.
+**Stack (locked 2026-10-19):** React web + React Native (Android/iOS) clients · FastAPI · PostgreSQL 16 (writes) · **Elasticsearch 8 for all UI search/listing reads** (CQRS via outbox projector) · SuperTokens self-hosted (Google + phone OTP) · Temporal self-hosted on Postgres · Amazon S3 · Razorpay · MSG91 / Resend · deploy on **AWS**, rehearsed first on **LocalStack** (Docker).
+
+**Release order (decided 2026-10-19): web first.** EF follow-ups → EG LocalStack AWS simulation → ED AWS deploy → web go-live. React Native (EC) starts after the web release.
 
 ---
 
@@ -59,29 +61,37 @@
 - [x] B12 React: SuperTokens auth mode (OTP + Google callback), Facebook embeds, iframes on profile
 - [x] B13 Everything in `docker compose` (api, worker, projector, migrate+seed, web); Plan A smoke passes against the real API; runbook
 
-## EC — React Native apps (Android + iOS) `[ ]`
-- [ ] C1 Expo/React Native project sharing `frontend/src/api/types.ts` (move to a shared `packages/contract`)
-- [ ] C2 Auth with `supertokens-react-native` (header-token sessions), phone OTP + Google
-- [ ] C3 Planner flows: search, profile with embeds, contact artist, inquiries
-- [ ] C4 Artist flows: onboarding, media upload (presigned S3), leads, push notifications for new leads (FCM/APNs) 🔑 Apple/Google developer accounts
-- [ ] C5 Store builds via EAS, internal testing tracks
-
-## ED — Deploy on AWS `[ ]`
-**Target topology (decided 2026-10-19):** one VPC · **2 public subnets** (nginx reverse proxy/TLS, NAT) · **2 private backend subnets** (EC2: FastAPI api, Temporal worker, outbox projector) · **2 private data subnets** (RDS PostgreSQL; EC2 for Temporal server, SuperTokens core, Elasticsearch) · **S3** for media · **NAT gateway** for outbound · **SSM Session Manager** for login (no SSH, no bastion) · goal: **lowest monthly cost**.
-- [ ] D1 Cost estimate of the topology + cheaper variants to decide on: NAT gateway (~$32/mo/AZ + data) vs NAT instance (fck-nat t4g.nano); S3 gateway endpoint (free); single-AZ compute at launch; Graviton (t4g) sizes; RDS t4g.micro vs Postgres on EC2; public IPv4 charges 🔑 AWS account
-- [ ] D2 Infrastructure as code (VPC, subnets, route tables, security groups, NAT, nginx EC2, private EC2s, RDS, S3 + CloudFront, IAM roles for SSM/S3)
-- [ ] D3 Service install on EC2 (docker compose per host: data host = Temporal + SuperTokens + Elasticsearch; app host = api + worker + projector), TLS for `api.prasang.in` on nginx
-- [ ] D4 CI/CD (GitHub Actions build/test → images → deploy via SSM Run Command), Alembic migrations on deploy, nightly RDS snapshots + SuperTokens/ES backups
-- [ ] D5 Web app hosting (S3 + CloudFront or nginx) and DNS for `prasang.in`
-- [ ] D6 Go-live checklist: Razorpay live + webhook URL 🔑, MSG91 DLT 🔑, Google OAuth production consent 🔑, SES/Resend domain 🔑
-
-## EF — Follow-ups from review (before go-live)
+## EF — Follow-ups from review (before go-live) `[ ]` ← next
 - [ ] F1 Search: map ES timeouts/missing index to 503 `search_unavailable`
 - [ ] F2 Store canonical social link URLs; unique `storage_key`
 - [ ] F3 Projector: external versioning for >1 instance; isolate poison events
 - [ ] F4 Lock artist row in trial end vs activation; IST date in verify; gateway errors → 502/503 on cancel
 - [ ] F5 Planner daily limit serialised; production build defaults to SuperTokens auth; JSON logs; hide API docs in production; require MSG91 notifier in production
 - [ ] F6 Decide: proration on plan change; how Razorpay plan ids survive re-seeding
+
+## EG — AWS simulation on LocalStack (Docker) `[ ]`
+**Goal:** rehearse the AWS deploy locally — same IaC, same S3/IAM/SSM wiring — before spending on a real account. Also makes photo/video uploads work locally with no AWS credentials.
+- [ ] G1 LocalStack service in `docker compose` (S3, IAM, SSM Parameter Store, STS); confirm edition/licensing of the current LocalStack image (newer images may need a free auth token 🔑)
+- [ ] G2 S3 on LocalStack for local uploads: bucket bootstrap (init hook), `S3_ENDPOINT_URL` for API + presigned URLs reachable from the browser, CORS for direct PUT; uploads pass in `mockoon/smoke.sh`
+- [ ] G3 Secrets/config from SSM Parameter Store (`/prasang/{env}/…`) instead of `.env` in deployed envs; LocalStack locally
+- [ ] G4 IaC (from D2) applied to LocalStack: VPC, 2 public + 4 private subnets, route tables, security groups, NAT, S3 + bucket policy, IAM roles — `plan`/`apply` clean against LocalStack
+- [ ] G5 Gaps to note, not emulate: RDS and real EC2 VMs are not full emulations (Community edition runs the API, not the machines) — locally the app keeps using compose Postgres/containers; decide whether LocalStack Pro is worth it
+
+## ED — Deploy on AWS (web release) `[ ]`
+**Target topology (decided 2026-10-19):** one VPC · **2 public subnets** (nginx reverse proxy/TLS, NAT) · **2 private backend subnets** (EC2: FastAPI api, Temporal worker, outbox projector) · **2 private data subnets** (RDS PostgreSQL; EC2 for Temporal server, SuperTokens core, Elasticsearch) · **S3** for media · **NAT gateway** for outbound · **SSM Session Manager** for login (no SSH, no bastion) · goal: **lowest monthly cost**.
+- [ ] D1 Cost estimate of the topology + cheaper variants to decide on: NAT gateway (~$32/mo/AZ + data) vs NAT instance (fck-nat t4g.nano); S3 gateway endpoint (free); single-AZ compute at launch; Graviton (t4g) sizes; RDS t4g.micro vs Postgres on EC2; public IPv4 charges 🔑 AWS account
+- [ ] D2 Infrastructure as code (VPC, subnets, route tables, security groups, NAT, nginx EC2, private EC2s, RDS, S3 + CloudFront, IAM roles for SSM/S3) — validated on LocalStack first (EG4)
+- [ ] D3 Service install on EC2 (docker compose per host: data host = Temporal + SuperTokens + Elasticsearch; app host = api + worker + projector), TLS for `api.prasang.in` on nginx
+- [ ] D4 CI/CD (GitHub Actions build/test → images → deploy via SSM Run Command), Alembic migrations on deploy, nightly RDS snapshots + SuperTokens/ES backups
+- [ ] D5 Web app hosting (S3 + CloudFront or nginx), production build with `VITE_AUTH_MODE=supertokens`, DNS for `prasang.in`
+- [ ] D6 Go-live checklist: Razorpay live + webhook URL 🔑, MSG91 DLT 🔑, Google OAuth production consent 🔑, SES/Resend domain 🔑 — start Razorpay KYC and MSG91 DLT now (days–weeks)
+
+## EC — React Native apps (Android + iOS) `[ ]` — after the web release
+- [ ] C1 Expo/React Native project sharing `frontend/src/api/types.ts` (move to a shared `packages/contract`)
+- [ ] C2 Auth with `supertokens-react-native` (header-token sessions), phone OTP + Google
+- [ ] C3 Planner flows: search, profile with embeds, contact artist, inquiries
+- [ ] C4 Artist flows: onboarding, media upload (presigned S3), leads, push notifications for new leads (FCM/APNs) 🔑 Apple/Google developer accounts
+- [ ] C5 Store builds via EAS, internal testing tracks
 
 ## Post-launch
 Review submission, favourites, referrals, AI bio + semantic search, Instagram/Facebook/YouTube feed auto-import (Graph/Data APIs; 🔑 Meta app review), admin UI, analytics.
