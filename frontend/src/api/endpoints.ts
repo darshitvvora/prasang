@@ -45,6 +45,7 @@ export const getArtistReviews = (slug: string, page = 1) =>
   api<T.Page<T.Review>>(`${slugPath(slug)}/reviews`, { query: { page } });
 export const getSimilarArtists = (slug: string, size = 3) =>
   api<Items<T.ArtistCard>>(`${slugPath(slug)}/similar`, { query: { size } });
+export const getGoogleReviews = (slug: string) => api<T.GoogleReviewsResponse | undefined>(`${slugPath(slug)}/google-reviews`);
 export const trackContactClick = (slug: string) => api<void>(`${slugPath(slug)}/contact-click`, { method: 'POST' });
 
 // ---- artist self ----

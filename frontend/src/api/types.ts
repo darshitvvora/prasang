@@ -32,11 +32,11 @@ export interface ArtistProfileInput {
   name: string; artistType: ArtistType; locationCity: string; locationArea: string; bio: string; experienceYears: number;
   perEventRateMin: number; perEventRateMax: number; eventTypesSupported: EventType[]; languagesSpoken: string[];
   readyToTravel: boolean; instagramHandle: string | null; youtubeChannel: string | null; facebookUrl: string | null;
-  contactPhone: string; whatsappNumber: string | null;
+  contactPhone: string; whatsappNumber: string | null; googlePlaceUrl: string | null;
 }
 export interface CompletenessItem { key: 'basic_info' | 'photo' | 'bio' | 'media' | 'instagram' | 'review'; label: string; done: boolean }
 export interface ProfileCompleteness { percent: number; items: CompletenessItem[] }
-export interface ArtistProfile extends ArtistDetail { contactPhone: string; whatsappNumber: string | null; isPublished: boolean; completeness: ProfileCompleteness; suspended: boolean; suspensionReason: string | null }
+export interface ArtistProfile extends ArtistDetail { contactPhone: string; whatsappNumber: string | null; isPublished: boolean; completeness: ProfileCompleteness; suspended: boolean; suspensionReason: string | null; googlePlaceUrl: string | null }
 
 export interface PlanUsage {
   tier: SubscriptionTier; name: string; status: 'free' | 'trial' | 'active' | 'cancelling' | 'halted';
@@ -115,6 +115,8 @@ export interface CreateReviewRequest { leadId: string; rating: number; text: str
 export interface UpdateReviewRequest { rating?: number; text?: string }
 export interface ReviewReplyRequest { text: string }
 export interface ReviewReportRequest { reason: string }
+export interface GoogleReviewItem { author: string; rating: number; relativeTime: string; text: string }
+export interface GoogleReviewsResponse { rating: number | null; count: number; mapsUrl: string | null; items: GoogleReviewItem[] }
 export interface SiteInfo { supportEmail: string | null; supportPhone: string | null; businessAddress: string | null }
 export type ContactTopic = 'general' | 'artist_support' | 'payments' | 'report';
 export interface ContactRequest { name: string; contact: string; topic: ContactTopic; message: string }

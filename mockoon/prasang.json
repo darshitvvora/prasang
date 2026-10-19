@@ -83,7 +83,7 @@
       "id": "artist-profile",
       "name": "artist-profile",
       "documentation": "",
-      "value": "{\"artistId\":\"art-001\",\"name\":\"Arjun Malhotra\",\"slug\":\"arjun-malhotra-magic\",\"artistType\":\"magician\",\"profileImageUrl\":\"/artists/magician.png\",\"bio\":\"Award-winning close-up magician specializing in mentalism and card magic. 500+ shows across Mumbai.\",\"locationCity\":\"Mumbai\",\"locationArea\":\"Bandra West\",\"perEventRateMin\":15000,\"perEventRateMax\":25000,\"averageRating\":4.9,\"totalReviews\":127,\"isVerified\":true,\"isFeatured\":true,\"subscriptionTier\":\"basic\",\"instagramHandle\":\"arjunmagic\",\"youtubeChannel\":\"ArjunMalhotraMagic\",\"facebookUrl\":\"https://www.facebook.com/arjunmagic\",\"experienceYears\":8,\"eventTypesSupported\":[\"birthday\",\"wedding\",\"corporate\",\"anniversary\",\"house_party\"],\"languagesSpoken\":[\"Hindi\",\"English\"],\"readyToTravel\":true,\"media\":[{\"id\":\"med-001-1\",\"kind\":\"image\",\"url\":\"/artists/magician.png\",\"embedUrl\":null,\"thumbnailUrl\":null,\"caption\":\"Arjun Malhotra live\",\"displayOrder\":0},{\"id\":\"med-001-2\",\"kind\":\"image\",\"url\":\"/artists/dj.png\",\"embedUrl\":null,\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":1},{\"id\":\"med-001-3\",\"kind\":\"image\",\"url\":\"/artists/singer.png\",\"embedUrl\":null,\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":2},{\"id\":\"med-001-4\",\"kind\":\"image\",\"url\":\"/artists/comedian.png\",\"embedUrl\":null,\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":3}],\"socialWidgets\":[{\"platform\":\"instagram\",\"profileUrl\":\"https://www.instagram.com/arjunmagic/\",\"embedUrl\":\"https://www.instagram.com/arjunmagic/embed\"},{\"platform\":\"youtube\",\"profileUrl\":\"https://www.youtube.com/@ArjunMalhotraMagic\",\"embedUrl\":null},{\"platform\":\"facebook\",\"profileUrl\":\"https://www.facebook.com/arjunmagic\",\"embedUrl\":\"https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Farjunmagic&tabs=timeline&width=500&height=600&small_header=true&adapt_container_width=true\"}],\"contactPhone\":\"9820011001\",\"whatsappNumber\":\"9820011001\",\"isPublished\":true,\"completeness\":{\"percent\":83,\"items\":[{\"key\":\"basic_info\",\"label\":\"Basic info added\",\"done\":true},{\"key\":\"photo\",\"label\":\"Profile photo uploaded\",\"done\":true},{\"key\":\"bio\",\"label\":\"Bio written\",\"done\":true},{\"key\":\"media\",\"label\":\"Add portfolio media\",\"done\":true},{\"key\":\"instagram\",\"label\":\"Connect Instagram\",\"done\":true},{\"key\":\"review\",\"label\":\"Get your first review\",\"done\":false}]},\"suspended\":false,\"suspensionReason\":null}"
+      "value": "{\"artistId\":\"art-001\",\"name\":\"Arjun Malhotra\",\"slug\":\"arjun-malhotra-magic\",\"artistType\":\"magician\",\"profileImageUrl\":\"/artists/magician.png\",\"bio\":\"Award-winning close-up magician specializing in mentalism and card magic. 500+ shows across Mumbai.\",\"locationCity\":\"Mumbai\",\"locationArea\":\"Bandra West\",\"perEventRateMin\":15000,\"perEventRateMax\":25000,\"averageRating\":4.9,\"totalReviews\":127,\"isVerified\":true,\"isFeatured\":true,\"subscriptionTier\":\"basic\",\"instagramHandle\":\"arjunmagic\",\"youtubeChannel\":\"ArjunMalhotraMagic\",\"facebookUrl\":\"https://www.facebook.com/arjunmagic\",\"experienceYears\":8,\"eventTypesSupported\":[\"birthday\",\"wedding\",\"corporate\",\"anniversary\",\"house_party\"],\"languagesSpoken\":[\"Hindi\",\"English\"],\"readyToTravel\":true,\"media\":[{\"id\":\"med-001-1\",\"kind\":\"image\",\"url\":\"/artists/magician.png\",\"embedUrl\":null,\"thumbnailUrl\":null,\"caption\":\"Arjun Malhotra live\",\"displayOrder\":0},{\"id\":\"med-001-2\",\"kind\":\"image\",\"url\":\"/artists/dj.png\",\"embedUrl\":null,\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":1},{\"id\":\"med-001-3\",\"kind\":\"image\",\"url\":\"/artists/singer.png\",\"embedUrl\":null,\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":2},{\"id\":\"med-001-4\",\"kind\":\"image\",\"url\":\"/artists/comedian.png\",\"embedUrl\":null,\"thumbnailUrl\":null,\"caption\":null,\"displayOrder\":3}],\"socialWidgets\":[{\"platform\":\"instagram\",\"profileUrl\":\"https://www.instagram.com/arjunmagic/\",\"embedUrl\":\"https://www.instagram.com/arjunmagic/embed\"},{\"platform\":\"youtube\",\"profileUrl\":\"https://www.youtube.com/@ArjunMalhotraMagic\",\"embedUrl\":null},{\"platform\":\"facebook\",\"profileUrl\":\"https://www.facebook.com/arjunmagic\",\"embedUrl\":\"https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Farjunmagic&tabs=timeline&width=500&height=600&small_header=true&adapt_container_width=true\"}],\"contactPhone\":\"9820011001\",\"whatsappNumber\":\"9820011001\",\"isPublished\":true,\"completeness\":{\"percent\":83,\"items\":[{\"key\":\"basic_info\",\"label\":\"Basic info added\",\"done\":true},{\"key\":\"photo\",\"label\":\"Profile photo uploaded\",\"done\":true},{\"key\":\"bio\",\"label\":\"Bio written\",\"done\":true},{\"key\":\"media\",\"label\":\"Add portfolio media\",\"done\":true},{\"key\":\"instagram\",\"label\":\"Connect Instagram\",\"done\":true},{\"key\":\"review\",\"label\":\"Get your first review\",\"done\":false}]},\"suspended\":false,\"suspensionReason\":null,\"googlePlaceUrl\":null}"
     },
     {
       "uuid": "5e26a0fc-be8e-510a-a702-ab05de0f435b",
@@ -534,6 +534,55 @@
               "value": "application/json"
             }
           ],
+          "rules": [],
+          "rulesOperator": "AND",
+          "default": true,
+          "latency": 0,
+          "disableTemplating": false
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "00207d3c-e60e-5296-ac22-18e87851ea68",
+      "type": "http",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "artists/:slug/google-reviews",
+      "responses": [
+        {
+          "uuid": "d62330dd-89d9-574f-a21b-c3fcf83d7593",
+          "label": "",
+          "statusCode": 200,
+          "body": "{\n  \"rating\": 4.7,\n  \"count\": 212,\n  \"mapsUrl\": \"https://maps.google.com/?cid=1234567890\",\n  \"items\": [\n    {\n      \"author\": \"Priya S\",\n      \"rating\": 5,\n      \"relativeTime\": \"2 weeks ago\",\n      \"text\": \"Arjun was the highlight of my son's birthday!\"\n    },\n    {\n      \"author\": \"Rohan M\",\n      \"rating\": 4,\n      \"relativeTime\": \"a month ago\",\n      \"text\": \"Great tricks, kids loved it.\"\n    }\n  ]\n}\n",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [
+            {
+              "operator": "regex",
+              "invert": false,
+              "target": "params",
+              "modifier": "slug",
+              "value": "^arjun-malhotra-magic$"
+            }
+          ],
+          "rulesOperator": "AND",
+          "default": false,
+          "latency": 0,
+          "disableTemplating": false
+        },
+        {
+          "uuid": "8eaf14a1-c6a1-50ed-ab8b-dd8f8bc6e26f",
+          "label": "",
+          "statusCode": 204,
+          "body": "",
+          "bodyType": "INLINE",
+          "headers": [],
           "rules": [],
           "rulesOperator": "AND",
           "default": true,
@@ -3308,6 +3357,10 @@
     {
       "type": "route",
       "uuid": "bd624d02-dce1-5e0b-aa8f-609e7dfff16a"
+    },
+    {
+      "type": "route",
+      "uuid": "00207d3c-e60e-5296-ac22-18e87851ea68"
     },
     {
       "type": "route",

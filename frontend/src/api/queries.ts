@@ -38,6 +38,8 @@ export const useSearchArtists = (params: T.SearchParams) =>
 export const useFeaturedArtists = () => useQuery({ queryKey: keys.featured, queryFn: () => E.getFeaturedArtists() });
 export const useArtist = (slug: string) => useQuery({ queryKey: keys.artist(slug), queryFn: () => E.getArtist(slug) });
 export const useArtistReviews = (slug: string) => useQuery({ queryKey: keys.reviews(slug), queryFn: () => E.getArtistReviews(slug) });
+export const useGoogleReviews = (slug: string) =>
+  useQuery({ queryKey: ['artist', slug, 'google-reviews'], queryFn: () => E.getGoogleReviews(slug), staleTime: 60 * 60 * 1000 });
 export const useSimilarArtists = (slug: string) => useQuery({ queryKey: keys.similar(slug), queryFn: () => E.getSimilarArtists(slug) });
 
 export const useMyArtist = (enabled = true) => useQuery({ queryKey: keys.myArtist, queryFn: E.getMyArtist, enabled });

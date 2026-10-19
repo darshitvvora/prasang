@@ -86,6 +86,7 @@ export const routes = [
 
   // ---------- auth providers (which sign-in methods the UI should offer) ----------
   { method: 'get', path: 'auth/providers', responses: [{ status: 200, file: 'auth/providers.response.json' }] },
+  { method: 'get', path: 'artists/:slug/google-reviews', responses: [{ status: 200, rules: [{ target: 'params', modifier: 'slug', value: '^arjun-malhotra-magic$', operator: 'regex' }], file: 'artists/google-reviews.response.json' }, { status: 204 }] },
   { method: 'get', path: 'reviews/mine', responses: [unauth, forbidden([PLANNER]), { status: 200, file: 'reviews/mine.response.json' }] },
   { method: 'post', path: 'reviews', responses: [unauth, forbidden([ARTIST]), { status: 201, file: 'reviews/create.response.json' }] },
   { method: 'patch', path: 'reviews/:id', responses: [unauth, forbidden([ARTIST]), { status: 200, file: 'reviews/create.response.json' }] },

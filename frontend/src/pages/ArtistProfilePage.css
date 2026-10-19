@@ -975,3 +975,6 @@ button.booking-whatsapp-btn {
 .review-verified { margin-left: 0.5rem; color: #2f7a1f; font-weight: 600; }
 .review-reply { margin-top: 0.75rem; padding: 0.75rem 1rem; border-left: 3px solid var(--color-accent); background: #f7f7f2; border-radius: 6px; }
 .review-reply-label { font-size: 0.85rem; font-weight: 700; margin-bottom: 0.25rem; }
+.google-reviews { margin-top: 1.5rem; }
+.google-reviews-head { margin-bottom: 0.75rem; }
+.google-reviews-attribution { font-size: 0.85rem; color: var(--color-text-secondary); }

@@ -19,6 +19,7 @@ from app.leads.models import Lead
 from app.leads.usage import month_bounds_ist, plan_usage, previous_month_bounds_ist
 from app.leads.views import to_artist_lead
 from app.outbox.emit import artist_changed
+from app.reviews import google
 from app.reviews.models import Review
 from app.subscriptions.models import Subscription, SubscriptionPlan
 
@@ -47,6 +48,12 @@ async def _apply_socials(profile: ArtistProfile, changes: dict) -> None:
             channel_id, handle = parse_youtube_channel(raw)
             profile.youtube_channel = channel_id or handle
             profile.youtube_channel_id = channel_id or await resolve_youtube_channel_id(handle, get_settings().youtube_api_key)
+    if "google_place_url" in changes:
+        raw = (changes["google_place_url"] or "").strip()
+        if raw and not google.is_google_maps_url(raw):
+            raise validation({"googlePlaceUrl": "Paste the Google Maps link to your business listing"})
+        profile.google_place_url = raw or None
+        profile.google_place_id = await google.resolve(raw) if raw else None
 
 
 def _check_rates(profile: ArtistProfile) -> None:

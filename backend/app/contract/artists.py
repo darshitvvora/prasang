@@ -76,6 +76,7 @@ class ArtistProfile(ArtistDetail):
     completeness: ProfileCompleteness
     suspended: bool
     suspension_reason: str | None
+    google_place_url: str | None
 
 
 class ArtistProfileInput(ContractModel):
@@ -95,6 +96,7 @@ class ArtistProfileInput(ContractModel):
     facebook_url: str | None
     contact_phone: Phone
     whatsapp_number: Phone | None
+    google_place_url: str | None = Field(default=None, max_length=500)
 
 
 class ArtistProfilePatch(ContractModel):
@@ -115,6 +117,7 @@ class ArtistProfilePatch(ContractModel):
     contact_phone: Phone | None = None
     whatsapp_number: Phone | None = None
     is_published: bool | None = None
+    google_place_url: str | None = Field(default=None, max_length=500)
 
 
 class Metric(ContractModel):
@@ -182,3 +185,17 @@ class ReviewReportRequest(ContractModel):
 
 
 ReviewPage = Page[Review]
+
+
+class GoogleReviewItem(ContractModel):
+    author: str
+    rating: int
+    relative_time: str
+    text: str
+
+
+class GoogleReviewsResponse(ContractModel):
+    rating: float | None
+    count: int
+    maps_url: str | None
+    items: list[GoogleReviewItem]

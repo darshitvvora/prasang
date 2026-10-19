@@ -30,6 +30,8 @@ class ArtistProfile(Timestamps, Base):
     youtube_channel: Mapped[str | None] = mapped_column(String(200))
     youtube_channel_id: Mapped[str | None] = mapped_column(String(30))  # UC… id when known → channel widget
     facebook_url: Mapped[str | None] = mapped_column(String(300))
+    google_place_url: Mapped[str | None] = mapped_column(String(500))
+    google_place_id: Mapped[str | None] = mapped_column(String(300))  # only this is stored (Google terms)
     profile_image_url: Mapped[str | None] = mapped_column(String(500))
     contact_phone: Mapped[str] = mapped_column(String(10))
     whatsapp_number: Mapped[str | None] = mapped_column(String(10))

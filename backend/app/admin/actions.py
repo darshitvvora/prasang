@@ -196,6 +196,13 @@ async def sync_subscription(session: AsyncSession, slug: str, *, actor: str) -> 
         await subs.handle_webhook(session, event, entity)
 
 
+async def clear_google_place(session: AsyncSession, slug: str, *, actor: str) -> None:
+    artist = await _artist(session, slug)
+    _log(session, actor, "clear_google_place", "artist", artist.id, previous=artist.google_place_url)
+    artist.google_place_url, artist.google_place_id = None, None
+    await session.commit()
+
+
 async def open_reports(session: AsyncSession) -> dict:
     """Open review reports and the latest contact messages, for `admin reports`."""
     from app.reviews.models import ReviewReport

@@ -13,7 +13,7 @@ import FullPageSpinner from '../components/FullPageSpinner';
 import NotFoundPage from './NotFoundPage';
 import { EMBED_ALLOW, EMBED_SANDBOX, mediaIsEmbed } from '../components/embed';
 import { ApiError } from '../api/client';
-import { useArtist, useArtistReviews, useSimilarArtists } from '../api/queries';
+import { useArtist, useArtistReviews, useGoogleReviews, useSimilarArtists } from '../api/queries';
 import { formatPrice, imageOr } from '../api/format';
 import type { ArtistDetail } from '../api/types';
 import { ARTIST_TYPE_LABELS, ARTIST_TYPE_COLORS, EVENT_TYPE_LABELS } from '../types/artist';
@@ -54,6 +54,7 @@ export default function ArtistProfilePage() {
 
 function ArtistProfile({ artist }: { artist: ArtistDetail }) {
   const reviews = useArtistReviews(artist.slug);
+  const google = useGoogleReviews(artist.slug);
   const similarQuery = useSimilarArtists(artist.slug);
   const similar = (similarQuery.data?.items ?? []).filter((a) => a.artistId !== artist.artistId).slice(0, 3);
   const [contactOpen, setContactOpen] = useState(false);
@@ -364,6 +365,30 @@ function ArtistProfile({ artist }: { artist: ArtistDetail }) {
                     </div>
                   )}
                 </QueryState>
+                {google.data && google.data.items.length > 0 && (
+                  <div className="google-reviews">
+                    <div className="google-reviews-head">
+                      <strong>From Google</strong>
+                      {google.data.rating !== null && <span> · {google.data.rating.toFixed(1)} ★ ({google.data.count} reviews)</span>}
+                    </div>
+                    {google.data.items.map((g, i) => (
+                      <div key={i} className="review-card">
+                        <div className="review-card-header">
+                          <div className="review-avatar">{g.author[0]}</div>
+                          <div>
+                            <div className="review-name">{g.author}</div>
+                            <div className="review-meta">{g.relativeTime}</div>
+                          </div>
+                          <Stars rating={g.rating} />
+                        </div>
+                        <p className="review-text">{g.text}</p>
+                      </div>
+                    ))}
+                    <p className="google-reviews-attribution">
+                      Reviews from Google{google.data.mapsUrl && <> · <a href={google.data.mapsUrl} target="_blank" rel="noreferrer">See all on Google</a></>}
+                    </p>
+                  </div>
+                )}
               </div>
             )}
 

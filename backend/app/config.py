@@ -29,6 +29,7 @@ class Settings(BaseSettings):
     google_client_id: str | None = None
     google_client_secret: str | None = None
     dev_auth_header: bool = False
+    google_places_api_key: str | None = None  # optional: shows Google reviews from the artist's listing
     youtube_api_key: str | None = None  # optional: resolves @handles to channel ids for the YouTube widget
 
     aws_region: str = "ap-south-1"

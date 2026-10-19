@@ -50,6 +50,7 @@ This folder is the contract between the React frontend and the FastAPI backend.
 | PATCH | /reviews/{id} | planner (author) | UpdateReviewRequest | Review · 409 `review_locked` after 7 days |
 | PUT | /reviews/{id}/reply | artist (reviewed) | `{text}` | Review — one public reply, editable |
 | POST | /reviews/{id}/report | artist (reviewed) | `{reason}` | 204 — one open report per review; Prasang decides |
+| GET | /artists/{slug}/google-reviews | public | – | GoogleReviewsResponse (≤5 reviews, show with Google attribution) · 204 when the artist has no Google listing or the server has no Places key |
 | GET | /artists/{slug}/similar?size= | public | – | `{items: ArtistCard[]}` |
 | POST | /artists/{slug}/contact-click | public | – | 204 |
 | POST | /artists | artist | ArtistProfileInput | 201 ArtistProfile · 409 `artist_exists` · 422 |

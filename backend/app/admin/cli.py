@@ -36,6 +36,7 @@ def build_parser() -> argparse.ArgumentParser:
     cmd("block-user", "block a user (artists are also suspended and billing cancelled)", "user", reason=True)
     cmd("unblock-user", "undo a block", "user")
     cmd("sync-subscription", "re-read the artist's subscription from Razorpay and apply it", "slug")
+    cmd("clear-google-place", "remove a wrong or abusive Google listing from a profile", "slug")
     cmd("reports", "list reported reviews and the latest contact messages")
     return parser
 
@@ -59,6 +60,7 @@ async def _run(args: argparse.Namespace) -> str:
         "block-user": lambda s: actions.block_user(s, args.user, actor=actor, reason=args.reason),
         "unblock-user": lambda s: actions.unblock_user(s, args.user, actor=actor),
         "sync-subscription": lambda s: actions.sync_subscription(s, args.slug, actor=actor),
+        "clear-google-place": lambda s: actions.clear_google_place(s, args.slug, actor=actor),
     }
     if args.command == "reports":
         async with get_sessionmaker()() as session:

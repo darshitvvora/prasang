@@ -124,5 +124,6 @@
     ]
   },
   "suspended": false,
-  "suspensionReason": null
+  "suspensionReason": null,
+  "googlePlaceUrl": null
 }
