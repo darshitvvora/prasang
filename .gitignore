@@ -39,3 +39,11 @@ Thumbs.db
 
 # Superpowers scratch workspace
 .superpowers/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+.ruff_cache/
+backend/.env
