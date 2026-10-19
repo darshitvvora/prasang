@@ -82,3 +82,13 @@ class TemporalStarter:
             await client.get_workflow_handle(f"booking-{lead_id}").signal("settled")
         except RPCError:  # already finished or never started (older lead): nothing to stop
             pass
+
+    async def start_media_deletion(self, user_id: str, keys: list[str]) -> None:
+        from app.workflows.media_cleanup import DeleteMediaWorkflow
+
+        client = await asyncio.wait_for(get_temporal_client(), timeout=5)
+        try:
+            await client.start_workflow(DeleteMediaWorkflow.run, keys, id=f"delete-media-{user_id}",
+                                        task_queue=get_settings().temporal_task_queue)
+        except WorkflowAlreadyStartedError:
+            pass

@@ -13,6 +13,7 @@ class WorkflowStarter(Protocol):
     async def start_message(self, message_id: str) -> None: ...
     async def start_booking_followup(self, lead_id: str, inquiry_at_iso: str, event_date_iso: str | None) -> None: ...
     async def signal_booking_settled(self, lead_id: str) -> None: ...
+    async def start_media_deletion(self, user_id: str, keys: list[str]) -> None: ...
 
 
 class NoopStarter:
@@ -36,6 +37,9 @@ class NoopStarter:
 
     async def signal_booking_settled(self, lead_id: str) -> None:
         log.info("booking %s settled (workflows disabled)", lead_id)
+
+    async def start_media_deletion(self, user_id: str, keys: list[str]) -> None:
+        log.info("media deletion for %s: %d files (workflows disabled)", user_id, len(keys))
 
 
 _starter: WorkflowStarter = NoopStarter()

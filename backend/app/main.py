@@ -7,6 +7,7 @@ from supertokens_python import get_all_cors_headers
 from supertokens_python.framework.fastapi import get_middleware
 
 import app.models  # noqa: F401  - registers every ORM mapper before first use
+from app.accounts.router import router as accounts_router
 from app.artists.router import router as artists_router
 from app.auth.router import router as auth_router
 from app.auth.supertokens_setup import init_supertokens
@@ -43,7 +44,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     install_error_handlers(app)
     app.include_router(health_router)
     app.include_router(share_page_router)
-    routers = (auth_router, locations_router, reviews_router, media_router, search_router, artists_router, leads_router,
+    routers = (accounts_router, auth_router, locations_router, reviews_router, media_router, search_router, artists_router, leads_router,
                subscriptions_router, site_router, share_api_router, dev_router)
     for router in routers:
         app.include_router(router, prefix=API_PREFIX)

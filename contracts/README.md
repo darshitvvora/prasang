@@ -37,6 +37,7 @@ This folder is the contract between the React frontend and the FastAPI backend.
 | GET | /me | any | – | 200 Me · 401 `unauthenticated` · 404 `profile_required` |
 | POST | /me | signed-in, no profile | CreateMeRequest | 201 Me · 409 `profile_exists` |
 | PATCH | /me | user | UpdateMeRequest | 200 Me |
+| DELETE | /me | any (fresh sign-in ≤10 min) | – | 204 — deletes the account now: artist profile hidden and anonymised, billing cancelled, media removed; planners' inquiries/reviews anonymised; payment records kept · 403 `reauth_required` with `details: {method: 'phone', phone} \| {method: 'google', email}` |
 | GET | /auth/providers | public | – | AuthProvidersResponse — which sign-in methods are configured |
 | * | /auth/* | – | SuperTokens SDK routes (phone OTP `signinup/code`, `signinup/code/consume`, Google `authorisationurl`, `signinup`, `session/refresh`, `signout`) | managed by `supertokens-web-js` / `supertokens-react-native` |
 | GET | /locations | public | – | LocationsResponse |
@@ -103,6 +104,7 @@ This folder is the contract between the React frontend and the FastAPI backend.
 | `review_not_allowed` | 403 | Reviews need a confirmed booking whose event date has passed |
 | `review_exists` | 409 | This booking already has a review |
 | `review_locked` | 409 | Reviews can be edited for 7 days only |
+| `reauth_required` | 403 | Deleting the account needs a sign-in from the last 10 minutes; `details.method` says how |
 | `contact_rate_limited` | 429 | More than 5 contact messages from one IP in an hour |
 | `internal_error` | 500 | Unexpected server error |
 

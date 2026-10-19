@@ -23,7 +23,7 @@ async def to_me(db: AsyncSession, user: User) -> Me:
               avatar_url=user.avatar_url, artist_slug=slug, created_at=user.created_at)
 
 
-async def _login_contact(identity: AuthIdentity) -> tuple[str | None, str | None]:
+async def login_contact(identity: AuthIdentity) -> tuple[str | None, str | None]:
     """Email / 10-digit phone the user signed in with (Google email or OTP phone)."""
     if identity.dev:
         return DEV_IDENTITY_EMAILS.get(identity.user_id), None
@@ -53,7 +53,7 @@ async def create_me(body: CreateMeRequest, identity: AuthIdentity = Depends(curr
         raise validation({"role": "Choose artist or planner"})
     if await db.get(User, identity.user_id) is not None:
         raise conflict("profile_exists", "Your profile already exists")
-    email, login_phone = await _login_contact(identity)
+    email, login_phone = await login_contact(identity)
     user = User(id=identity.user_id, role=body.role, full_name=body.full_name.strip(), email=email, phone=body.phone or login_phone)
     db.add(user)
     await db.flush()

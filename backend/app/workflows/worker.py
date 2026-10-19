@@ -9,10 +9,17 @@ from app.config import get_settings
 from app.db import get_sessionmaker
 from app.notifications.notifier import get_notifier
 from app.subscriptions.gateway import get_gateway
-from app.workflows.activities import BookingActivities, LeadActivities, MessageActivities, SubscriptionActivities
+from app.workflows.activities import (
+    BookingActivities,
+    LeadActivities,
+    MediaActivities,
+    MessageActivities,
+    SubscriptionActivities,
+)
 from app.workflows.booking_followup import BookingFollowUpWorkflow
 from app.workflows.client import get_temporal_client
 from app.workflows.lead_notification import LeadNotificationWorkflow
+from app.workflows.media_cleanup import DeleteMediaWorkflow
 from app.workflows.message import DeliverMessageWorkflow
 from app.workflows.subscription import SubscriptionWorkflow, TrialWorkflow
 
@@ -26,8 +33,10 @@ async def main() -> None:
     sessions = get_sessionmaker()
     notifier = get_notifier(settings)
     activities = (LeadActivities(sessions, notifier).all() + SubscriptionActivities(sessions, get_gateway()).all()
-                  + MessageActivities(sessions, notifier).all() + BookingActivities(sessions).all())
-    workflows = [LeadNotificationWorkflow, SubscriptionWorkflow, TrialWorkflow, DeliverMessageWorkflow, BookingFollowUpWorkflow]
+                  + MessageActivities(sessions, notifier).all() + BookingActivities(sessions).all()
+                  + MediaActivities().all())
+    workflows = [LeadNotificationWorkflow, SubscriptionWorkflow, TrialWorkflow, DeliverMessageWorkflow, BookingFollowUpWorkflow,
+                 DeleteMediaWorkflow]
     worker = Worker(client, task_queue=settings.temporal_task_queue, workflows=workflows, activities=activities)
     log.info("worker polling task queue %s", settings.temporal_task_queue)
     await worker.run()

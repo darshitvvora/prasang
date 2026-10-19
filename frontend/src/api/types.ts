@@ -117,6 +117,7 @@ export interface ReviewReplyRequest { text: string }
 export interface ReviewReportRequest { reason: string }
 export interface GoogleReviewItem { author: string; rating: number; relativeTime: string; text: string }
 export interface GoogleReviewsResponse { rating: number | null; count: number; mapsUrl: string | null; items: GoogleReviewItem[] }
+export type ReauthDetails = { method: 'phone'; phone: string } | { method: 'google'; email: string | null };
 export interface SiteInfo { supportEmail: string | null; supportPhone: string | null; businessAddress: string | null }
 export type ContactTopic = 'general' | 'artist_support' | 'payments' | 'report';
 export interface ContactRequest { name: string; contact: string; topic: ContactTopic; message: string }

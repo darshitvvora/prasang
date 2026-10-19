@@ -988,6 +988,55 @@
       "responseMode": null
     },
     {
+      "uuid": "33cdf259-e3b2-55c9-a9cd-197c4058051e",
+      "type": "http",
+      "documentation": "",
+      "method": "delete",
+      "endpoint": "me",
+      "responses": [
+        {
+          "uuid": "c88be22c-4923-5ab5-aac1-f714816c0f7a",
+          "label": "",
+          "statusCode": 401,
+          "body": "{\"error\":{\"code\":\"unauthenticated\",\"message\":\"Please sign in to continue\",\"details\":{}}}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [
+            {
+              "operator": "null",
+              "invert": false,
+              "target": "header",
+              "modifier": "Authorization",
+              "value": ""
+            }
+          ],
+          "rulesOperator": "AND",
+          "default": false,
+          "latency": 0,
+          "disableTemplating": false
+        },
+        {
+          "uuid": "f90948ab-c890-52a4-aa63-01286441db63",
+          "label": "",
+          "statusCode": 204,
+          "body": "",
+          "bodyType": "INLINE",
+          "headers": [],
+          "rules": [],
+          "rulesOperator": "AND",
+          "default": true,
+          "latency": 0,
+          "disableTemplating": false
+        }
+      ],
+      "responseMode": null
+    },
+    {
       "uuid": "6eae24fd-f786-5fb0-a955-7651d02e0f07",
       "type": "http",
       "documentation": "",
@@ -3381,6 +3430,10 @@
     {
       "type": "route",
       "uuid": "a2356ac3-f45a-5084-a40e-343e60929ad0"
+    },
+    {
+      "type": "route",
+      "uuid": "33cdf259-e3b2-55c9-a9cd-197c4058051e"
     },
     {
       "type": "route",

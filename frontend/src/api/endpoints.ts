@@ -32,6 +32,7 @@ export const getMyPayments = () => api<T.BillingHistoryResponse>('/subscriptions
 // ---- me ----
 export const getMe = () => api<T.Me>('/me');
 export const createMe = (body: T.CreateMeRequest) => api<T.Me>('/me', { method: 'POST', body });
+export const deleteMe = () => api<void>('/me', { method: 'DELETE' });
 export const updateMe = (body: T.UpdateMeRequest) => api<T.Me>('/me', { method: 'PATCH', body });
 
 // ---- public discovery ----

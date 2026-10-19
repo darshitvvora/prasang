@@ -45,6 +45,7 @@ export default function Navbar() {
   const accountLinks = status === 'signedIn' && user ? (
     <>
       <Link to={homePathFor(user)} className="navbar-signin" onClick={close}>Dashboard</Link>
+      <Link to="/settings" className="navbar-signin" onClick={close}>Settings</Link>
       <button type="button" className="navbar-signin navbar-signout" onClick={handleSignOut}>Sign out</button>
     </>
   ) : (

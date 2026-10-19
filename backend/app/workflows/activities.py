@@ -122,3 +122,17 @@ class BookingActivities:
 
     def all(self) -> list:
         return [self.booking_state, self.send_booking_check]
+
+
+class MediaActivities:
+    @activity.defn(name="delete_media_files")
+    async def delete_media_files(self, keys: list[str]) -> int:
+        from app.media.storage import get_storage
+
+        storage = get_storage()
+        for key in keys:
+            await storage.delete(key)
+        return len(keys)
+
+    def all(self) -> list:
+        return [self.delete_media_files]
