@@ -56,3 +56,32 @@ class LeadActivities:
 
     def all(self) -> list:
         return [self.load_lead_context, self.send_email, self.send_whatsapp, self.send_sms]
+
+
+class SubscriptionActivities:
+    def __init__(self, sessions: async_sessionmaker[AsyncSession], gateway):
+        self.sessions, self.gateway = sessions, gateway
+
+    @activity.defn(name="expire_unpaid_subscription")
+    async def expire_unpaid_subscription(self, subscription_id: str) -> None:
+        from app.subscriptions.service import expire_unpaid
+
+        async with self.sessions() as s:
+            await expire_unpaid(s, subscription_id, self.gateway)
+
+    @activity.defn(name="lapse_subscription")
+    async def lapse_subscription(self, subscription_id: str) -> None:
+        from app.subscriptions.service import lapse
+
+        async with self.sessions() as s:
+            await lapse(s, subscription_id)
+
+    @activity.defn(name="end_trial")
+    async def end_trial(self, artist_id: str) -> None:
+        from app.subscriptions.service import end_trial
+
+        async with self.sessions() as s:
+            await end_trial(s, artist_id)
+
+    def all(self) -> list:
+        return [self.expire_unpaid_subscription, self.lapse_subscription, self.end_trial]

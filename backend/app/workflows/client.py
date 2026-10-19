@@ -29,3 +29,27 @@ class TemporalStarter:
                                         task_queue=get_settings().temporal_task_queue)
         except WorkflowAlreadyStartedError:
             pass
+
+    async def start_subscription(self, subscription_id: str) -> None:
+        from app.workflows.subscription import SubscriptionWorkflow
+
+        client = await asyncio.wait_for(get_temporal_client(), timeout=5)
+        try:
+            await client.start_workflow(SubscriptionWorkflow.run, args=[subscription_id, None], id=f"sub-{subscription_id}",
+                                        task_queue=get_settings().temporal_task_queue)
+        except WorkflowAlreadyStartedError:
+            pass
+
+    async def signal_subscription(self, subscription_id: str, signal: str, arg: str) -> None:
+        client = await asyncio.wait_for(get_temporal_client(), timeout=5)
+        await client.get_workflow_handle(f"sub-{subscription_id}").signal(signal, arg)
+
+    async def start_trial(self, artist_id: str, ends_at_iso: str) -> None:
+        from app.workflows.subscription import TrialWorkflow
+
+        client = await asyncio.wait_for(get_temporal_client(), timeout=5)
+        try:
+            await client.start_workflow(TrialWorkflow.run, args=[artist_id, ends_at_iso], id=f"trial-{artist_id}",
+                                        task_queue=get_settings().temporal_task_queue)
+        except WorkflowAlreadyStartedError:
+            pass

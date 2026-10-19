@@ -45,7 +45,7 @@
 - [x] B10 Temporal worker + `LeadNotificationWorkflow` (console notifier locally; 🔑 MSG91/Resend in prod)
 
 **S7 Monetisation**
-- [ ] B11 Plans, 7-day trial (`TrialWorkflow`), subscriptions (`SubscriptionWorkflow`), fake gateway locally (🔑 Razorpay test/live keys later), webhooks
+- [x] B11 Plans, 7-day trial (`TrialWorkflow`), subscriptions (`SubscriptionWorkflow`), fake gateway locally (🔑 Razorpay test/live keys later), webhooks
 
 **S8 Web app on the real backend**
 - [ ] B12 React: SuperTokens auth mode (OTP + Google callback), Facebook embeds, iframes on profile
