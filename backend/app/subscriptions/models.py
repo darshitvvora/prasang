@@ -59,3 +59,18 @@ class PaymentEvent(Base):
     received_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
     signalled_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     processed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))  # NULL = received but not applied yet
+
+
+class SubscriptionPayment(Base):
+    """One gateway payment (charge or failed attempt) for a subscription — the artist's billing history."""
+
+    __tablename__ = "subscription_payments"
+    id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
+    subscription_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("subscriptions.id", ondelete="CASCADE"), index=True)
+    gateway_payment_id: Mapped[str] = mapped_column(String(80), unique=True)
+    gateway_invoice_id: Mapped[str | None] = mapped_column(String(80))
+    amount: Mapped[int]  # paise
+    currency: Mapped[str] = mapped_column(String(3), default="INR")
+    status: Mapped[str] = mapped_column(String(10))  # paid | failed
+    paid_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    receipt_url: Mapped[str | None] = mapped_column(String(300))

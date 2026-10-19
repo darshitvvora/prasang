@@ -69,6 +69,7 @@ This folder is the contract between the React frontend and the FastAPI backend.
 | POST | /subscriptions/cancel | artist | – | MySubscriptionResponse |
 | GET | /site-info | public | – | SiteInfo — support email/phone and business address (nulls when not configured) |
 | POST | /contact | public | ContactRequest | 201 `{id}` · 429 `contact_rate_limited` (5 per IP per hour) |
+| GET | /subscriptions/me/payments | artist | – | BillingHistoryResponse — newest first; `receiptUrl` is the gateway's hosted invoice (null for failed payments) |
 | POST | /subscriptions/webhook | Razorpay HMAC | Razorpay event | 200 |
 
 ## Error codes

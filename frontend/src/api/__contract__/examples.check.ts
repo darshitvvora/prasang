@@ -8,6 +8,7 @@ import type { ArtistProfileInput } from '../types';
 import siteInfo from '../../../../contracts/examples/site/info.response.json';
 import contactReq from '../../../../contracts/examples/site/contact.request.json';
 import contactRes from '../../../../contracts/examples/site/contact.response.json';
+import billing from '../../../../contracts/examples/subscriptions/payments.response.json';
 import meGet from '../../../../contracts/examples/me/get.response.json';
 import mePostReq from '../../../../contracts/examples/me/post.request.json';
 import mePostRes from '../../../../contracts/examples/me/post.response.json';
@@ -107,3 +108,4 @@ for (const e of [errValidation, errNotFound, errUnauth, errProfileRequired, errQ
 check<T.SiteInfo>()(siteInfo);
 check<T.ContactRequest>()(contactReq);
 check<T.ContactResponse>()(contactRes);
+check<T.BillingHistoryResponse>()(billing);

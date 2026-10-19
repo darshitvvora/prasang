@@ -16,6 +16,7 @@ from app.reviews.models import Review
 from app.reviews.ratings import recalc_rating
 from app.subscriptions import service as subs
 from app.subscriptions.models import Subscription, SubscriptionPlan
+from app.subscriptions.payments import record_payment
 
 log = logging.getLogger(__name__)
 
@@ -182,9 +183,14 @@ async def sync_subscription(session: AsyncSession, slug: str, *, actor: str) -> 
                                  .order_by(Subscription.created_at.desc()))).scalars().first()
     if sub is None:
         raise not_found("subscription_not_found", f"{slug} has no subscriptions")
-    entity = await subs.get_gateway().fetch_subscription(sub.gateway_subscription_id)
+    gateway = subs.get_gateway()
+    entity = await gateway.fetch_subscription(sub.gateway_subscription_id)
     event = SYNC_EVENTS.get(entity.get("status", ""))
-    _log(session, actor, "sync_subscription", "subscription", sub.id, gateway_status=entity.get("status"), applied=event)
+    payments = await gateway.fetch_payments(sub.gateway_subscription_id)
+    for payment in payments:
+        await record_payment(session, sub, payment, gateway)
+    _log(session, actor, "sync_subscription", "subscription", sub.id, gateway_status=entity.get("status"), applied=event,
+         payments=len(payments))
     await session.commit()
     if event:
         await subs.handle_webhook(session, event, entity)

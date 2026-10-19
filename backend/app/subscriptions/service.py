@@ -10,6 +10,8 @@ from app.artists.service import get_own, usage_for
 from app.artists.stats import IST
 from app.auth.models import User
 from app.contract import (
+    BillingHistoryResponse,
+    BillingItem,
     Checkout,
     CheckoutPrefill,
     CreateSubscriptionResponse,
@@ -24,6 +26,7 @@ from app.leads.service import unlock_month
 from app.outbox.emit import artist_changed
 from app.subscriptions.gateway import PaymentGateway, get_gateway
 from app.subscriptions.models import Subscription, SubscriptionPlan
+from app.subscriptions.payments import billing_history, record_payment
 from app.workflows.starter import get_starter
 
 log = logging.getLogger(__name__)
@@ -194,6 +197,10 @@ async def verify(session: AsyncSession, user: User, payment_id: str, gateway_sub
         raise not_found("subscription_not_found", "That subscription doesn't exist")
     if sub.status == "created":
         await activate(session, sub, date.today() + timedelta(days=CYCLE_DAYS[sub.billing_cycle]))
+    plan = await session.get(SubscriptionPlan, sub.tier)
+    price = plan.annual_price if sub.billing_cycle == "annual" else plan.monthly_price
+    await record_payment(session, sub, {"id": payment_id, "status": "captured"}, gateway, fallback_amount=price * 100)
+    await session.commit()
     return await usage_for(session, artist, datetime.now(UTC))
 
 
@@ -206,6 +213,13 @@ async def cancel(session: AsyncSession, user: User, gateway: PaymentGateway) -> 
     sub.cancel_at_period_end = True
     await session.commit()
     return await my_subscription(session, user)
+
+
+async def payments(session: AsyncSession, user: User) -> BillingHistoryResponse:
+    artist = await get_own(session, user)
+    return BillingHistoryResponse(items=[BillingItem(
+        id=str(p.id), paid_at=p.paid_at, tier=sub.tier, billing_cycle=sub.billing_cycle, amount=p.amount // 100,
+        currency=p.currency, status=p.status, receipt_url=p.receipt_url) for p, sub in await billing_history(session, artist.id)])
 
 
 async def expire_unpaid(session: AsyncSession, subscription_id: str, gateway: PaymentGateway) -> None:
@@ -250,15 +264,24 @@ async def _paid(session: AsyncSession, sub: Subscription, period_end: date) -> N
         log.exception("could not cancel %s", sub.gateway_subscription_id)
 
 
-async def handle_webhook(session: AsyncSession, event: str, entity: dict) -> None:
-    sub = await _by_gateway_id(session, entity.get("id", ""))
+async def handle_webhook(session: AsyncSession, event: str, entity: dict, payment: dict | None = None) -> None:
+    gateway_id = entity.get("id") or (payment or {}).get("subscription_id") or ""
+    sub = await _by_gateway_id(session, gateway_id)
     if sub is None:
-        log.warning("webhook %s for unknown subscription %s", event, entity.get("id"))
+        log.warning("webhook %s for unknown subscription %s", event, gateway_id)
+        return
+    if event == "payment.failed":
+        if payment:
+            await record_payment(session, sub, payment, get_gateway())
+            await session.commit()
         return
     current_end = entity.get("current_end")
     period_end = datetime.fromtimestamp(current_end, IST).date() if current_end else None
     if event in ("subscription.activated", "subscription.charged") and period_end:
         await _paid(session, sub, period_end)
+        if payment:
+            await record_payment(session, sub, payment, get_gateway())
+            await session.commit()
     elif event == "subscription.halted":
         if sub.status == "active":
             sub.status = "halted"

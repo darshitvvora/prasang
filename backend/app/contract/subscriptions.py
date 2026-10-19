@@ -3,7 +3,7 @@ from typing import Literal
 
 from pydantic import ConfigDict
 
-from app.contract.common import BillingCycle, ContractModel, PaidTier, SubscriptionTier
+from app.contract.common import BillingCycle, ContractModel, PaidTier, SubscriptionTier, UtcDatetime
 
 
 class PlanUsage(ContractModel):
@@ -100,3 +100,18 @@ class RazorpayWebhookEvent(ContractModel):
     model_config = ConfigDict(extra="allow")
     event: str
     payload: dict
+
+
+class BillingItem(ContractModel):
+    id: str
+    paid_at: UtcDatetime
+    tier: PaidTier
+    billing_cycle: BillingCycle
+    amount: int  # rupees
+    currency: str
+    status: Literal["paid", "failed"]
+    receipt_url: str | None
+
+
+class BillingHistoryResponse(ContractModel):
+    items: list[BillingItem]

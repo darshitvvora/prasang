@@ -20,6 +20,8 @@ class PaymentGateway(Protocol):
     def verify_webhook_signature(self, body: bytes, signature: str) -> bool: ...
     def plan_id(self, plan, billing_cycle: str) -> str: ...
     async def fetch_subscription(self, gateway_subscription_id: str) -> dict: ...
+    async def fetch_payments(self, gateway_subscription_id: str) -> list[dict]: ...
+    async def invoice_url(self, invoice_id: str) -> str | None: ...
 
 
 class FakeGateway:
@@ -47,6 +49,12 @@ class FakeGateway:
         end = datetime.now(UTC) + timedelta(days=30)
         return {"id": gateway_subscription_id, "status": "active", "current_end": int(end.timestamp())}
 
+    async def fetch_payments(self, gateway_subscription_id: str) -> list[dict]:
+        return []
+
+    async def invoice_url(self, invoice_id: str) -> str | None:
+        return f"{get_settings().public_web_url.rstrip('/')}/receipts/mock/{invoice_id}"
+
 
 class RazorpayGateway:
     API = "https://api.razorpay.com/v1"
@@ -70,6 +78,20 @@ class RazorpayGateway:
         res = await self.http.get(f"{self.API}/subscriptions/{gateway_subscription_id}", auth=(self.key_id, self._secret))
         res.raise_for_status()
         return res.json()
+
+    async def fetch_payments(self, gateway_subscription_id: str) -> list[dict]:
+        """Paid invoices of the subscription, shaped like payment entities (used to back-fill billing history)."""
+        res = await self.http.get(f"{self.API}/invoices", auth=(self.key_id, self._secret),
+                                  params={"subscription_id": gateway_subscription_id, "count": 100})
+        res.raise_for_status()
+        return [{"id": inv["payment_id"], "amount": inv.get("amount_paid") or inv.get("amount"), "currency": inv.get("currency"),
+                 "status": "captured", "invoice_id": inv["id"], "created_at": inv.get("paid_at") or inv.get("created_at")}
+                for inv in res.json().get("items", []) if inv.get("payment_id") and inv.get("status") == "paid"]
+
+    async def invoice_url(self, invoice_id: str) -> str | None:
+        res = await self.http.get(f"{self.API}/invoices/{invoice_id}", auth=(self.key_id, self._secret))
+        res.raise_for_status()
+        return res.json().get("short_url")
 
     def verify_payment_signature(self, payment_id: str, subscription_id: str, signature: str) -> bool:
         expected = hmac.new(self._secret.encode(), f"{payment_id}|{subscription_id}".encode(), hashlib.sha256).hexdigest()

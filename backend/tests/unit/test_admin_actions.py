@@ -185,3 +185,20 @@ def test_reason_required(argv):
     with pytest.raises(SystemExit) as exit_:
         build_parser().parse_args(argv)
     assert exit_.value.code == 2
+
+
+async def test_sync_subscription_backfills_payments(gateway):
+    from app.subscriptions.models import SubscriptionPayment
+
+    async def payments(gateway_subscription_id):
+        return [{"id": "pay_hist", "amount": 59900, "currency": "INR", "status": "captured", "invoice_id": "inv_h",
+                 "created_at": 1750000000}]
+
+    gateway.fetch_payments = payments
+    await seed_demo()
+    async with get_sessionmaker()() as s:
+        await _add_sub(s, await _artist(s))
+        await actions.sync_subscription(s, SLUG, actor="test")
+    async with get_sessionmaker()() as s:
+        row = (await s.execute(select(SubscriptionPayment))).scalar_one()
+        assert (row.gateway_payment_id, row.amount, row.status) == ("pay_hist", 59900, "paid")

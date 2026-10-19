@@ -21,12 +21,14 @@ export const keys = {
   plans: ['plans'] as const,
   mySubscription: ['subscriptions', 'me'] as const,
   siteInfo: ['site-info'] as const,
+  myPayments: ['subscriptions', 'me', 'payments'] as const,
 };
 
 const STATIC = { staleTime: 60 * 60 * 1000 }; // locations/plans rarely change
 
 export const useAuthProviders = () => useQuery({ queryKey: keys.authProviders, queryFn: E.getAuthProviders, ...STATIC });
 export const useLocations = () => useQuery({ queryKey: keys.locations, queryFn: E.getLocations, ...STATIC });
+export const useMyPayments = () => useQuery({ queryKey: keys.myPayments, queryFn: E.getMyPayments });
 export const useSiteInfo = () => useQuery({ queryKey: keys.siteInfo, queryFn: E.getSiteInfo, ...STATIC });
 export const usePlans = () => useQuery({ queryKey: keys.plans, queryFn: E.getPlans, ...STATIC });
 export const useSearchArtists = (params: T.SearchParams) =>

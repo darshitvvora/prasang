@@ -2379,6 +2379,86 @@
       "responseMode": null
     },
     {
+      "uuid": "0ad9a33a-52b9-521b-a61d-54c51895a84e",
+      "type": "http",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "subscriptions/me/payments",
+      "responses": [
+        {
+          "uuid": "9e235879-31c1-54f4-a02f-9f29e620fc45",
+          "label": "",
+          "statusCode": 401,
+          "body": "{\"error\":{\"code\":\"unauthenticated\",\"message\":\"Please sign in to continue\",\"details\":{}}}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [
+            {
+              "operator": "null",
+              "invert": false,
+              "target": "header",
+              "modifier": "Authorization",
+              "value": ""
+            }
+          ],
+          "rulesOperator": "AND",
+          "default": false,
+          "latency": 0,
+          "disableTemplating": false
+        },
+        {
+          "uuid": "76ed618e-e9aa-5855-a996-078d617eb6c9",
+          "label": "",
+          "statusCode": 403,
+          "body": "{\"error\":{\"code\":\"forbidden\",\"message\":\"This action is not available for your account\",\"details\":{}}}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [
+            {
+              "operator": "equals",
+              "invert": false,
+              "target": "header",
+              "modifier": "Authorization",
+              "value": "Bearer mock-planner"
+            }
+          ],
+          "rulesOperator": "OR",
+          "default": false,
+          "latency": 0,
+          "disableTemplating": false
+        },
+        {
+          "uuid": "4f6af023-46fb-5ed1-ada0-89e868103f29",
+          "label": "",
+          "statusCode": 200,
+          "body": "{\n  \"items\": [\n    {\n      \"id\": \"8d2b4c1e-6f3a-4b7d-9e21-5a0c3f7b9d11\",\n      \"paidAt\": \"2026-10-05T06:30:00Z\",\n      \"tier\": \"pro\",\n      \"billingCycle\": \"monthly\",\n      \"amount\": 599,\n      \"currency\": \"INR\",\n      \"status\": \"paid\",\n      \"receiptUrl\": \"https://rzp.io/i/inv_Pq7XyZ\"\n    },\n    {\n      \"id\": \"1a7e9c33-0b4d-4e5f-8a62-7c9d1e2f3a40\",\n      \"paidAt\": \"2026-09-05T06:30:00Z\",\n      \"tier\": \"pro\",\n      \"billingCycle\": \"monthly\",\n      \"amount\": 599,\n      \"currency\": \"INR\",\n      \"status\": \"failed\",\n      \"receiptUrl\": null\n    }\n  ]\n}\n",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [],
+          "rulesOperator": "AND",
+          "default": true,
+          "latency": 0,
+          "disableTemplating": false
+        }
+      ],
+      "responseMode": null
+    },
+    {
       "uuid": "aac69a39-3b19-5fc7-aa7a-dc5e8af57960",
       "type": "http",
       "documentation": "",
@@ -2853,6 +2933,10 @@
     {
       "type": "route",
       "uuid": "adefe98a-3fb4-5a01-aadb-6aa47e049b44"
+    },
+    {
+      "type": "route",
+      "uuid": "0ad9a33a-52b9-521b-a61d-54c51895a84e"
     },
     {
       "type": "route",
