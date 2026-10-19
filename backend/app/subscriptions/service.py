@@ -16,6 +16,7 @@ from app.contract import (
     MySubscriptionResponse,
     Plan,
     PlanFeature,
+    PlanUsage,
     SubscriptionSummary,
 )
 from app.errors import AppError, conflict, not_found
@@ -60,7 +61,12 @@ def _summary(sub: Subscription | None) -> SubscriptionSummary | None:
 
 
 async def my_subscription(session: AsyncSession, user: User) -> MySubscriptionResponse:
-    artist = await get_own(session, user)
+    artist = (await session.execute(select(ArtistProfile).where(ArtistProfile.user_id == user.id))).scalar_one_or_none()
+    if artist is None:  # contract: before POST /artists the artist is on Free with the trial available
+        free = await session.get(SubscriptionPlan, "free")
+        return MySubscriptionResponse(plan=PlanUsage(
+            tier="free", name=free.name, status="free", lead_limit_monthly=free.lead_limit_monthly, leads_used_this_month=0,
+            leads_remaining=max(free.lead_limit_monthly, 0), period_end=None, trial_ends_at=None, trial_available=True), subscription=None)
     return MySubscriptionResponse(plan=await usage_for(session, artist, datetime.now(UTC)),
                                   subscription=_summary(await _current(session, artist.id)))
 

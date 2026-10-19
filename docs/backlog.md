@@ -19,7 +19,7 @@
 - [x] Planner dashboard/inquiries, pricing + Razorpay checkout (mocked)
 - [x] Review fixes: outage ≠ sign-out, expired sessions, no-profile routing, plan-change contract
 
-## EB — Backend & whole app running locally `[~]` (Plan B, branch `feat/plan-b-backend`)
+## EB — Backend & whole app running locally ✅ (Plan B, branch `feat/plan-b-backend`)
 **Goal:** `docker compose up` → full app on http://localhost:5173 with real API, auth, search, workflows.
 
 **S1 Local infrastructure**
@@ -49,7 +49,7 @@
 
 **S8 Web app on the real backend**
 - [x] B12 React: SuperTokens auth mode (OTP + Google callback), Facebook embeds, iframes on profile
-- [ ] B13 Everything in `docker compose` (api, worker, projector, migrate+seed, web); Plan A smoke passes against the real API; runbook
+- [x] B13 Everything in `docker compose` (api, worker, projector, migrate+seed, web); Plan A smoke passes against the real API; runbook
 
 ## EC — React Native apps (Android + iOS) `[ ]`
 - [ ] C1 Expo/React Native project sharing `frontend/src/api/types.ts` (move to a shared `packages/contract`)
