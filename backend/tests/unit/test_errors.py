@@ -72,3 +72,13 @@ def test_production_refuses_dev_auth_header():
 def test_app_error_carries_details():
     err = AppError(409, "media_quota_exceeded", "Limit reached", {"limit": 5, "used": 5})
     assert (err.status, err.code, err.details) == (409, "media_quota_exceeded", {"limit": 5, "used": 5})
+
+
+def test_public_https_domains_require_production_env():
+    """Review fix Important 7: a real deployment that forgets ENV=production must not start with insecure cookies."""
+    s = Settings(env="local", api_domain="https://api.prasang.in", website_domain="https://prasang.in", database_url="postgresql+asyncpg://x/y")
+    with pytest.raises(ValueError, match="ENV=production"):
+        s.validate_for_env()
+    Settings(env="local", api_domain="http://localhost:5173", database_url="postgresql+asyncpg://x/y").validate_for_env()
+    Settings(env="production", dev_auth_header=False, api_domain="https://api.prasang.in", website_domain="https://prasang.in",
+             database_url="postgresql+asyncpg://x/y").validate_for_env()

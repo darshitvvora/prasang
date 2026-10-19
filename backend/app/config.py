@@ -55,6 +55,10 @@ class Settings(BaseSettings):
     def validate_for_env(self) -> None:
         if self.env == "production" and self.dev_auth_header:
             raise ValueError("DEV_AUTH_HEADER must never be enabled in production")
+        public = [d for d in (self.api_domain, self.website_domain) if d.startswith("https://") and "localhost" not in d]
+        if public and self.env != "production":
+            # Fail closed: public HTTPS domains mean a real deployment, which needs secure cookies and no dev shortcuts.
+            raise ValueError(f"{public[0]} is a public domain — set ENV=production")
 
     @property
     def es_alias(self) -> str:
