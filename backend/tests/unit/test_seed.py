@@ -68,3 +68,10 @@ async def test_alembic_migration_matches_models():
         await conn.execute(text("DROP DATABASE prasang_migration_check WITH (FORCE)"))
     await admin.dispose()
     assert diff == []
+
+
+async def test_seeded_leads_are_not_renotified():
+    async with get_sessionmaker()() as session:
+        await seed(session, demo=True)
+        pending = await _count(session, select(func.count()).select_from(Lead).where(Lead.notification_started_at.is_(None)))
+    assert pending == 0
