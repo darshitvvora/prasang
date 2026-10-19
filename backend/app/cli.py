@@ -51,6 +51,22 @@ async def _expire_leads() -> None:
         print(f"expired {await expire_leads(session)} leads")
 
 
+async def _sweep(loop_seconds: int | None) -> None:
+    from app.sweeps import run_sweeps
+    from app.workflows.client import TemporalStarter
+
+    starter = TemporalStarter()
+    while True:
+        try:
+            async with get_sessionmaker()() as session:
+                print(await run_sweeps(session, starter), flush=True)
+        except Exception:
+            logging.exception("sweep failed")
+        if not loop_seconds:
+            return
+        await asyncio.sleep(loop_seconds)
+
+
 def main(argv: list[str] | None = None) -> None:
     parser = argparse.ArgumentParser(prog="app.cli")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -61,6 +77,8 @@ def main(argv: list[str] | None = None) -> None:
     sub.add_parser("reindex", help="rebuild the Elasticsearch index from Postgres (alias swap)")
     sub.add_parser("project", help="run the outbox → Elasticsearch projector loop")
     sub.add_parser("expire-leads", help="mark past-dated new leads as expired")
+    sweep = sub.add_parser("sweep", help="retry missed lead notifications, end overdue trials, lapse overdue subscriptions")
+    sweep.add_argument("--loop", type=int, default=0, help="repeat every N seconds")
     args = parser.parse_args(argv)
 
     if args.command == "migrate":
@@ -73,6 +91,9 @@ def main(argv: list[str] | None = None) -> None:
         asyncio.run(_reindex())
     if args.command == "expire-leads":
         asyncio.run(_expire_leads())
+    if args.command == "sweep":
+        logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s %(message)s")
+        asyncio.run(_sweep(args.loop))
     if args.command == "project":
         logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s %(message)s")
         asyncio.run(_project())

@@ -1,7 +1,7 @@
 import uuid
-from datetime import date
+from datetime import date, datetime
 
-from sqlalchemy import Date, ForeignKey, Index, String, Text
+from sqlalchemy import Date, DateTime, ForeignKey, Index, String, Text
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.db import Base
@@ -28,3 +28,5 @@ class Lead(Timestamps, Base):
     source: Mapped[str] = mapped_column(LeadSourceEnum)
     status: Mapped[str] = mapped_column(LeadStatusEnum, default="new")
     is_locked: Mapped[bool] = mapped_column(default=False)
+    # Set once the notification workflow was started; NULL rows are retried by the sweeper (Temporal was unreachable).
+    notification_started_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))

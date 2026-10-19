@@ -1,4 +1,5 @@
 import logging
+from datetime import UTC, datetime
 
 from fastapi import APIRouter, Depends, Query, Response
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -33,7 +34,9 @@ async def create_lead(body: CreateLeadRequest, response: Response, user: User = 
     if created:
         try:
             await get_starter().start_lead_notification(str(lead.id))
-        except Exception:  # notifications are retried by ops; the planner must still get the contact (spec 5.5)
+            lead.notification_started_at = datetime.now(UTC)
+            await db.commit()
+        except Exception:  # the scheduler's sweep retries it; the planner must still get the contact (spec 5.5)
             log.exception("could not start notification workflow for lead %s", lead.id)
     else:
         response.status_code = 200
