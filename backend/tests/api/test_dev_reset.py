@@ -22,3 +22,18 @@ async def test_reset_restores_demo_world(client):
 async def test_reset_is_unavailable_without_dev_auth(client, monkeypatch):
     monkeypatch.setattr(get_settings(), "dev_auth_header", False)
     assert (await client.post("/api/v1/_mock/reset")).status_code == 404
+
+
+async def test_reset_clears_contact_messages(client):
+    """The smoke test posts a contact message each run; reset keeps it under the per-IP limit."""
+    from sqlalchemy import func, select
+
+    from app.db import get_sessionmaker
+    from app.site.models import ContactMessage
+
+    await seed_demo()
+    body = {"name": "Smoke", "contact": "9820012345", "topic": "general", "message": "Hello from the smoke test"}
+    assert (await client.post("/api/v1/contact", json=body)).status_code == 201
+    assert (await client.post("/api/v1/_mock/reset")).status_code == 200
+    async with get_sessionmaker()() as s:
+        assert (await s.execute(select(func.count()).select_from(ContactMessage))).scalar_one() == 0

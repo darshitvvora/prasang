@@ -90,6 +90,16 @@ expect 200 '"plan"' -H "$A" "$BASE/subscriptions/me"
 GW_SUB=$(json "$BASE/subscriptions" "d['checkout']['razorpaySubscriptionId']" -X POST -H "$A" -H "$J" -d '{"tier":"pro","billingCycle":"monthly"}')
 expect 200 '"status": *"active"' -X POST -H "$A" -H "$J" -d "{\"razorpayPaymentId\":\"pay_smoke\",\"razorpaySubscriptionId\":\"$GW_SUB\",\"razorpaySignature\":\"mock-signature\"}" "$BASE/subscriptions/verify"
 expect 200 '"cancelAtPeriodEnd": *true' -X POST -H "$A" "$BASE/subscriptions/cancel"
+# --- site, billing, booking confirmation, reviews ---
+expect 200 '"supportEmail"' "$BASE/site-info"
+expect 201 '"id"' -X POST -H "$J" -d @contracts/examples/site/contact.request.json "$BASE/contact"
+expect 200 '"items"' -H "$A" "$BASE/subscriptions/me/payments"
+expect 403 '"forbidden"' -H "$P" "$BASE/subscriptions/me/payments"
+INQ=$(json "$BASE/leads/planner" "d['items'][0]['id']" -H "$P")
+expect 200 '"bookingConfirmed": *true' -X PATCH -H "$P" -H "$J" -d '{"answer":"booked"}' "$BASE/leads/$INQ/planner-answer"
+expect 200 '"items"' -H "$A" "$BASE/reviews/mine"
+GR=$(curl -s -o /dev/null -w "%{http_code}" "$BASE/artists/arjun-malhotra-magic/google-reviews")
+if [ "$GR" = "200" ] || [ "$GR" = "204" ]; then echo "OK   $GR google-reviews"; else echo "FAIL google-reviews $GR"; fail=1; fi
 # --- new-user journey (stateful via Mockoon global vars) ---
 expect 404 '"profile_required"' -H "$N" "$BASE/artists/me"
 expect 201 '"role": *"artist"' -X POST -H "$N" -H "$J" -d '{"role":"artist","fullName":"Tanvi Rao"}' "$BASE/me"

@@ -6,7 +6,7 @@
 
 **Stack (locked 2026-10-19):** React web + React Native (Android/iOS) clients · FastAPI · PostgreSQL 16 (writes) · **Elasticsearch 8 for all UI search/listing reads** (CQRS via outbox projector) · SuperTokens self-hosted (Google + phone OTP) · Temporal self-hosted on Postgres · Amazon S3 · Razorpay · MSG91 / Resend · deploy on **AWS**, rehearsed first on **LocalStack** (Docker).
 
-**Release order (decided 2026-10-19): web first.** EF follow-ups → EG LocalStack AWS simulation → ED AWS deploy → web go-live. React Native (EC) starts after the web release.
+**Release order (decided 2026-10-19): web first.** EL web launch readiness ✅ → EF follow-ups → EG LocalStack AWS simulation → ED AWS deploy → web go-live. React Native (EC) starts after the web release.
 
 ---
 
@@ -69,8 +69,8 @@
 - [ ] F5 Planner daily limit serialised; production build defaults to SuperTokens auth; JSON logs; hide API docs in production; require MSG91 notifier in production
 - [ ] F6 Decide: proration on plan change; how Razorpay plan ids survive re-seeding
 
-## EL — Web launch readiness (feature-complete web) `[~]` ← next, before deployment
-**Decided 2026-10-19:** finish these on the web before any deploy work. Design: [web launch readiness](superpowers/specs/2026-10-19-web-launch-readiness-design.md).
+## EL — Web launch readiness (feature-complete web) ✅ (Plan C, branch `feat/web-launch`)
+**Decided 2026-10-19:** finish these on the web before any deploy work. Design: [web launch readiness](superpowers/specs/2026-10-19-web-launch-readiness-design.md) · plan [C](superpowers/plans/2026-10-19-plan-c-web-launch.md).
 
 **Decisions log (change here; the design follows):**
 - Not GST-registered → Razorpay's standard invoice is the receipt; enable Razorpay GST invoices after registration
@@ -79,16 +79,16 @@
 - Google reviews shown separately with attribution; Prasang rating counts only verified reviews
 - Admin at launch is CLI only; admin UI post-launch
 - Grant-plan refused while a paid plan is live; replaces a running trial
-- **Suspend** leaves billing running (temporary; refunds manually in Razorpay); **block** = suspend + cancel billing at Razorpay immediately *(recommended default — confirm)*
+- **Suspend** leaves billing running (temporary; refunds manually in Razorpay); **block** = suspend + cancel billing at Razorpay immediately *(recommended default — change here if you disagree)*
 - Account deletion immediate after OTP re-confirm; payment records kept without contact details
 - Production nginx/web image stay in ED/EG
-- [ ] L1 Admin at launch = **CLI commands, no UI** (run on the server via SSM): verify/unverify, feature/unfeature, suspend/restore artist, grant plan for N days, hide/restore review, block user, sync subscription from Razorpay; each updates search via the outbox and writes an `admin_actions` log row
-- [ ] L2 Link previews for shared profiles (Open Graph/Twitter tags: photo, name, type, city) for Instagram/WhatsApp
-- [ ] L3 Reviews: only for confirmed bookings (artist marks booked **or** planner says yes); planner nudged 3 days after inquiry and again the day after the event if still unmarked (Temporal); review form opens after the event; artist reply + report; Google reviews shown separately with attribution (🔑 Google Places API key)
-- [ ] L4 Billing history: list of charges with links to Razorpay's hosted invoice/receipt (not GST-registered yet — enable Razorpay GST invoices after registration)
-- [ ] L5 Lifecycle messages: welcome, trial ending, renewal reminder, payment failed/plan ended (SMS + email)
-- [ ] L6 Account and data deletion (DPDP Act, Google sign-in policy)
-- [ ] L7 About and Contact pages (contact form emails the team)
+- [x] L1 Admin at launch = **CLI commands, no UI** (run on the server via SSM): verify/unverify, feature/unfeature, suspend/restore artist, grant plan for N days, hide/restore review, block user, sync subscription from Razorpay; each updates search via the outbox and writes an `admin_actions` log row
+- [x] L2 Link previews for shared profiles (Open Graph/Twitter tags: photo, name, type, city) for Instagram/WhatsApp
+- [x] L3 Reviews: only for confirmed bookings (artist marks booked **or** planner says yes); planner nudged 3 days after inquiry and again the day after the event if still unmarked (Temporal); review form opens after the event; artist reply + report; Google reviews shown separately with attribution (🔑 Google Places API key)
+- [x] L4 Billing history: list of charges with links to Razorpay's hosted invoice/receipt (not GST-registered yet — enable Razorpay GST invoices after registration)
+- [x] L5 Lifecycle messages: welcome, trial ending, renewal reminder, payment failed/plan ended (SMS + email)
+- [x] L6 Account and data deletion (DPDP Act, Google sign-in policy)
+- [x] L7 About and Contact pages (contact form emails the team)
 
 ## EG — AWS simulation on LocalStack (Docker) `[ ]`
 **Goal:** rehearse the AWS deploy locally — same IaC, same S3/IAM/SSM wiring — before spending on a real account. Also makes photo/video uploads work locally with no AWS credentials.
