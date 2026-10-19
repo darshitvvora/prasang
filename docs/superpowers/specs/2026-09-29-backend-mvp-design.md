@@ -148,7 +148,7 @@ Presigned PUT (5 min; image ≤10 MB, video ≤100 MB, avatar ≤5 MB); confirm 
 - End-to-end smoke: `mockoon/smoke.sh` pointed at the real API using a dev-only header session (`ENV=local` + `DEV_AUTH_HEADER=true`, refused in production).
 
 ## 8. Deployment
-AWS — decided in its own plan (candidates: single EC2/Lightsail instance running the compose stack vs. managed RDS/OpenSearch/ECS). Requirements carried over: TLS on `api.prasang.in`, images built in GitHub Actions, migrations on deploy, nightly backups of `prasang` + `supertokens` to S3.
+AWS topology (user, 2026-10-19): VPC with 2 public subnets (nginx, NAT gateway), 2 private backend subnets (EC2: api, worker, projector), 2 private data subnets (RDS PostgreSQL; EC2 hosting Temporal, SuperTokens, Elasticsearch), S3 for media, SSM Session Manager for access, optimised for lowest monthly cost. Implemented in its own plan. Requirements carried over: TLS on `api.prasang.in`, images built in GitHub Actions, migrations on deploy, nightly backups of `prasang` + `supertokens` to S3.
 
 ## 9. Out of scope (post-launch)
 React Native apps (separate epic), review submission, favourites, referrals, AI bio/semantic search, Instagram/Facebook/YouTube feed auto-import (Graph/Data APIs), admin UI, analytics dashboard beyond the contract.
