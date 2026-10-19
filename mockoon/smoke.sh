@@ -37,6 +37,7 @@ expect 404 '"profile_required"' -H "$N" "$BASE/me"
 expect 401 '"unauthenticated"' -H 'Authorization: Bearer expired-or-junk' "$BASE/me"
 expect 200 '"fullName": *"Neha K."' -X PATCH -H "$P" -H "$J" -d '{"fullName":"Neha K."}' "$BASE/me"
 # --- public ---
+expect 200 '"phoneOtp": *true' "$BASE/auth/providers"
 expect 200 '"Mumbai"' "$BASE/locations"
 expect 200 '"total": *12' "$BASE/search/artists"
 expect 200 '"total": *2' "$BASE/search/artists?artistType=dj"

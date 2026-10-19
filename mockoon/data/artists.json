@@ -17,6 +17,7 @@
     "subscriptionTier": "basic",
     "instagramHandle": "arjunmagic",
     "youtubeChannel": "ArjunMalhotraMagic",
+    "facebookUrl": null,
     "experienceYears": 8,
     "eventTypesSupported": [
       "birthday",
@@ -35,6 +36,7 @@
         "id": "med-001-1",
         "kind": "image",
         "url": "/artists/magician.png",
+        "embedUrl": null,
         "thumbnailUrl": null,
         "caption": "Arjun Malhotra live",
         "displayOrder": 0
@@ -43,6 +45,7 @@
         "id": "med-001-2",
         "kind": "image",
         "url": "/artists/dj.png",
+        "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
         "displayOrder": 1
@@ -51,6 +54,7 @@
         "id": "med-001-3",
         "kind": "image",
         "url": "/artists/singer.png",
+        "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
         "displayOrder": 2
@@ -59,6 +63,7 @@
         "id": "med-001-4",
         "kind": "image",
         "url": "/artists/comedian.png",
+        "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
         "displayOrder": 3
@@ -85,6 +90,7 @@
     "subscriptionTier": "pro",
     "instagramHandle": "djkrish_official",
     "youtubeChannel": "DJKrishOfficial",
+    "facebookUrl": null,
     "experienceYears": 10,
     "eventTypesSupported": [
       "wedding",
@@ -104,6 +110,7 @@
         "id": "med-002-1",
         "kind": "image",
         "url": "/artists/dj.png",
+        "embedUrl": null,
         "thumbnailUrl": null,
         "caption": "DJ Krish live",
         "displayOrder": 0
@@ -112,6 +119,7 @@
         "id": "med-002-2",
         "kind": "image",
         "url": "/artists/magician.png",
+        "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
         "displayOrder": 1
@@ -120,6 +128,7 @@
         "id": "med-002-3",
         "kind": "image",
         "url": "/artists/singer.png",
+        "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
         "displayOrder": 2
@@ -128,6 +137,7 @@
         "id": "med-002-4",
         "kind": "image",
         "url": "/artists/comedian.png",
+        "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
         "displayOrder": 3
@@ -154,6 +164,7 @@
     "subscriptionTier": "pro",
     "instagramHandle": "priyasharmamusic",
     "youtubeChannel": "PriyaSharmaLive",
+    "facebookUrl": null,
     "experienceYears": 6,
     "eventTypesSupported": [
       "wedding",
@@ -172,6 +183,7 @@
         "id": "med-003-1",
         "kind": "image",
         "url": "/artists/singer.png",
+        "embedUrl": null,
         "thumbnailUrl": null,
         "caption": "Priya Sharma live",
         "displayOrder": 0
@@ -180,6 +192,7 @@
         "id": "med-003-2",
         "kind": "image",
         "url": "/artists/magician.png",
+        "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
         "displayOrder": 1
@@ -188,6 +201,7 @@
         "id": "med-003-3",
         "kind": "image",
         "url": "/artists/dj.png",
+        "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
         "displayOrder": 2
@@ -196,6 +210,7 @@
         "id": "med-003-4",
         "kind": "image",
         "url": "/artists/comedian.png",
+        "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
         "displayOrder": 3
@@ -222,6 +237,7 @@
     "subscriptionTier": "premium",
     "instagramHandle": "rohandesaicomedy",
     "youtubeChannel": "RohanDesaiComedy",
+    "facebookUrl": null,
     "experienceYears": 5,
     "eventTypesSupported": [
       "corporate",
@@ -240,6 +256,7 @@
         "id": "med-004-1",
         "kind": "image",
         "url": "/artists/comedian.png",
+        "embedUrl": null,
         "thumbnailUrl": null,
         "caption": "Rohan Desai live",
         "displayOrder": 0
@@ -248,6 +265,7 @@
         "id": "med-004-2",
         "kind": "image",
         "url": "/artists/magician.png",
+        "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
         "displayOrder": 1
@@ -256,6 +274,7 @@
         "id": "med-004-3",
         "kind": "image",
         "url": "/artists/dj.png",
+        "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
         "displayOrder": 2
@@ -264,6 +283,7 @@
         "id": "med-004-4",
         "kind": "image",
         "url": "/artists/singer.png",
+        "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
         "displayOrder": 3
@@ -290,6 +310,7 @@
     "subscriptionTier": "premium",
     "instagramHandle": "theraagacollective",
     "youtubeChannel": "TheRaagaCollective",
+    "facebookUrl": null,
     "experienceYears": 7,
     "eventTypesSupported": [
       "wedding",
@@ -308,6 +329,7 @@
         "id": "med-005-1",
         "kind": "image",
         "url": "/artists/band.png",
+        "embedUrl": null,
         "thumbnailUrl": null,
         "caption": "The Raaga Collective live",
         "displayOrder": 0
@@ -316,6 +338,7 @@
         "id": "med-005-2",
         "kind": "image",
         "url": "/artists/magician.png",
+        "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
         "displayOrder": 1
@@ -324,6 +347,7 @@
         "id": "med-005-3",
         "kind": "image",
         "url": "/artists/dj.png",
+        "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
         "displayOrder": 2
@@ -332,6 +356,7 @@
         "id": "med-005-4",
         "kind": "image",
         "url": "/artists/singer.png",
+        "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
         "displayOrder": 3
@@ -370,11 +395,13 @@
     ],
     "readyToTravel": false,
     "youtubeChannel": null,
+    "facebookUrl": null,
     "media": [
       {
         "id": "med-006-1",
         "kind": "image",
         "url": "/artists/anchor.png",
+        "embedUrl": null,
         "thumbnailUrl": null,
         "caption": "Meera Kapoor live",
         "displayOrder": 0
@@ -383,6 +410,7 @@
         "id": "med-006-2",
         "kind": "image",
         "url": "/artists/magician.png",
+        "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
         "displayOrder": 1
@@ -391,6 +419,7 @@
         "id": "med-006-3",
         "kind": "image",
         "url": "/artists/dj.png",
+        "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
         "displayOrder": 2
@@ -399,6 +428,7 @@
         "id": "med-006-4",
         "kind": "image",
         "url": "/artists/singer.png",
+        "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
         "displayOrder": 3
@@ -425,6 +455,7 @@
     "subscriptionTier": "pro",
     "instagramHandle": "vikrambubbles",
     "youtubeChannel": "VikramBubbleShow",
+    "facebookUrl": null,
     "experienceYears": 9,
     "eventTypesSupported": [
       "birthday",
@@ -444,6 +475,7 @@
         "id": "med-007-1",
         "kind": "image",
         "url": "/artists/magician.png",
+        "embedUrl": null,
         "thumbnailUrl": null,
         "caption": "Vikram Bubbles live",
         "displayOrder": 0
@@ -452,6 +484,7 @@
         "id": "med-007-2",
         "kind": "image",
         "url": "/artists/dj.png",
+        "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
         "displayOrder": 1
@@ -460,6 +493,7 @@
         "id": "med-007-3",
         "kind": "image",
         "url": "/artists/singer.png",
+        "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
         "displayOrder": 2
@@ -468,6 +502,7 @@
         "id": "med-007-4",
         "kind": "image",
         "url": "/artists/comedian.png",
+        "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
         "displayOrder": 3
@@ -507,11 +542,13 @@
     ],
     "readyToTravel": false,
     "youtubeChannel": null,
+    "facebookUrl": null,
     "media": [
       {
         "id": "med-008-1",
         "kind": "image",
         "url": "/artists/comedian.png",
+        "embedUrl": null,
         "thumbnailUrl": null,
         "caption": "Aditya Naik live",
         "displayOrder": 0
@@ -520,6 +557,7 @@
         "id": "med-008-2",
         "kind": "image",
         "url": "/artists/magician.png",
+        "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
         "displayOrder": 1
@@ -528,6 +566,7 @@
         "id": "med-008-3",
         "kind": "image",
         "url": "/artists/dj.png",
+        "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
         "displayOrder": 2
@@ -536,6 +575,7 @@
         "id": "med-008-4",
         "kind": "image",
         "url": "/artists/singer.png",
+        "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
         "displayOrder": 3
@@ -576,11 +616,13 @@
     ],
     "readyToTravel": true,
     "youtubeChannel": null,
+    "facebookUrl": null,
     "media": [
       {
         "id": "med-009-1",
         "kind": "image",
         "url": "/artists/dj.png",
+        "embedUrl": null,
         "thumbnailUrl": null,
         "caption": "DJ Nikhil live",
         "displayOrder": 0
@@ -589,6 +631,7 @@
         "id": "med-009-2",
         "kind": "image",
         "url": "/artists/magician.png",
+        "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
         "displayOrder": 1
@@ -597,6 +640,7 @@
         "id": "med-009-3",
         "kind": "image",
         "url": "/artists/singer.png",
+        "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
         "displayOrder": 2
@@ -605,6 +649,7 @@
         "id": "med-009-4",
         "kind": "image",
         "url": "/artists/comedian.png",
+        "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
         "displayOrder": 3
@@ -631,6 +676,7 @@
     "subscriptionTier": "pro",
     "instagramHandle": "sanaqureshilive",
     "youtubeChannel": "SanaQureshiLive",
+    "facebookUrl": null,
     "experienceYears": 7,
     "eventTypesSupported": [
       "wedding",
@@ -649,6 +695,7 @@
         "id": "med-010-1",
         "kind": "image",
         "url": "/artists/singer.png",
+        "embedUrl": null,
         "thumbnailUrl": null,
         "caption": "Sana Qureshi live",
         "displayOrder": 0
@@ -657,6 +704,7 @@
         "id": "med-010-2",
         "kind": "image",
         "url": "/artists/magician.png",
+        "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
         "displayOrder": 1
@@ -665,6 +713,7 @@
         "id": "med-010-3",
         "kind": "image",
         "url": "/artists/dj.png",
+        "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
         "displayOrder": 2
@@ -673,6 +722,7 @@
         "id": "med-010-4",
         "kind": "image",
         "url": "/artists/comedian.png",
+        "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
         "displayOrder": 3
@@ -711,11 +761,13 @@
     ],
     "readyToTravel": false,
     "youtubeChannel": null,
+    "facebookUrl": null,
     "media": [
       {
         "id": "med-011-1",
         "kind": "image",
         "url": "/artists/magician.png",
+        "embedUrl": null,
         "thumbnailUrl": null,
         "caption": "Kabir the Mentalist live",
         "displayOrder": 0
@@ -724,6 +776,7 @@
         "id": "med-011-2",
         "kind": "image",
         "url": "/artists/dj.png",
+        "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
         "displayOrder": 1
@@ -732,6 +785,7 @@
         "id": "med-011-3",
         "kind": "image",
         "url": "/artists/singer.png",
+        "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
         "displayOrder": 2
@@ -740,6 +794,7 @@
         "id": "med-011-4",
         "kind": "image",
         "url": "/artists/comedian.png",
+        "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
         "displayOrder": 3
@@ -777,11 +832,13 @@
     "readyToTravel": false,
     "instagramHandle": null,
     "youtubeChannel": null,
+    "facebookUrl": null,
     "media": [
       {
         "id": "med-012-1",
         "kind": "image",
         "url": "/artists/comedian.png",
+        "embedUrl": null,
         "thumbnailUrl": null,
         "caption": "Ravi Laugh Riot live",
         "displayOrder": 0
@@ -790,6 +847,7 @@
         "id": "med-012-2",
         "kind": "image",
         "url": "/artists/magician.png",
+        "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
         "displayOrder": 1
@@ -798,6 +856,7 @@
         "id": "med-012-3",
         "kind": "image",
         "url": "/artists/dj.png",
+        "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
         "displayOrder": 2
@@ -806,6 +865,7 @@
         "id": "med-012-4",
         "kind": "image",
         "url": "/artists/singer.png",
+        "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
         "displayOrder": 3

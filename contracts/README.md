@@ -37,6 +37,8 @@ This folder is the contract between the React frontend and the FastAPI backend.
 | GET | /me | any | – | 200 Me · 401 `unauthenticated` · 404 `profile_required` |
 | POST | /me | signed-in, no profile | CreateMeRequest | 201 Me · 409 `profile_exists` |
 | PATCH | /me | user | UpdateMeRequest | 200 Me |
+| GET | /auth/providers | public | – | AuthProvidersResponse — which sign-in methods are configured |
+| * | /auth/* | – | SuperTokens SDK routes (phone OTP `signinup/code`, `signinup/code/consume`, Google `authorisationurl`, `signinup`, `session/refresh`, `signout`) | managed by `supertokens-web-js` / `supertokens-react-native` |
 | GET | /locations | public | – | LocationsResponse |
 | GET | /search/artists | public | SearchParams (query) | SearchResponse |
 | GET | /search/suggestions?q= | public | – | `{items: Suggestion[]}` |
@@ -51,7 +53,7 @@ This folder is the contract between the React frontend and the FastAPI backend.
 | GET | /artists/me/dashboard | artist | – | ArtistDashboard |
 | GET | /artists/me/media | artist | – | MediaListResponse |
 | POST | /artists/me/media/upload-url | artist | UploadUrlRequest | UploadUrlResponse · 409 `media_quota_exceeded` |
-| POST | /artists/me/media | artist | CreateMediaRequest | 201 Media |
+| POST | /artists/me/media | artist | CreateMediaRequest | 201 Media · 422 `fields.url` for unsupported links · 503 `storage_not_configured` for uploads without S3 |
 | POST | /artists/me/avatar | artist | `{storageKey}` | `{profileImageUrl}` |
 | DELETE | /artists/me/media/{id} | artist | – | 204 |
 | PUT | /artists/me/media/order | artist | `{ids: string[]}` | `{items: Media[]}` |
@@ -84,6 +86,7 @@ This folder is the contract between the React frontend and the FastAPI backend.
 | `invalid_transition` | 409 | Lead status change not allowed |
 | `trial_used` | 409 | Artist already used the 7-day trial |
 | `invalid_signature` | 400 | Razorpay signature mismatch |
+| `storage_not_configured` | 503 | Photo/video uploads are not set up on this server (social links still work) |
 | `internal_error` | 500 | Unexpected server error |
 
 ## Business rules the contract encodes
@@ -95,6 +98,8 @@ This folder is the contract between the React frontend and the FastAPI backend.
 - Before `POST /artists`, artist-scoped reads (`/artists/me`, `/artists/me/dashboard`, `/artists/me/media`, `/leads/artist`) return 404 `artist_profile_not_found`; `/subscriptions/me` returns the Free plan with `trialAvailable: true`.
 - Phone numbers are 10-digit Indian mobile numbers without country code (`9820011001`); the UI adds `+91`.
 - `Review.eventMonth` is `YYYY-MM`.
+- **Social embeds:** `POST /artists/me/media` with `kind` `youtube` | `instagram` | `facebook` and the public post URL. The server validates the link and returns `embedUrl` (the iframe `src`). Accepted: YouTube `watch?v=`, `youtu.be/`, `shorts/`; Instagram `/p/`, `/reel/`, `/tv/`; Facebook posts, photos, `/videos/` and `fb.watch`. Anything else → 422 `fields.url`. `facebookUrl` on a profile must be a `facebook.com` link.
+- **Sessions:** web uses SuperTokens httpOnly cookies; mobile apps use header tokens (`st-auth-mode: header`). Both hit the same endpoints.
 
 ## Mock tokens (Mockoon only)
 

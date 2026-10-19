@@ -6,7 +6,7 @@ import type { ArtistProfile } from '../../api/types';
 const filled: ProfileFormState = {
   ...emptyProfileForm(), name: 'Arjun Malhotra', artistType: 'magician', city: 'Mumbai', area: 'Bandra West',
   bio: 'Close-up magician', experienceYears: '8', rateMin: '15000', rateMax: '25000', contactPhone: '9820011001',
-  whatsappNumber: '', instagram: '@arjunmagic', youtube: '', eventTypes: ['wedding'], languages: ['Hindi'], readyToTravel: true,
+  whatsappNumber: '', instagram: '@arjunmagic', youtube: '', facebook: '', eventTypes: ['wedding'], languages: ['Hindi'], readyToTravel: true,
 };
 
 describe('validateProfileForm', () => {
@@ -17,6 +17,10 @@ describe('validateProfileForm', () => {
   });
   it('rejects a max rate below the min rate', () =>
     expect(validateProfileForm({ ...filled, rateMin: '30000', rateMax: '20000' })).toHaveProperty('rateMax'));
+  it('accepts a Facebook page URL', () =>
+    expect(validateProfileForm({ ...filled, facebook: 'https://www.facebook.com/arjunmagic' })).toEqual({}));
+  it('rejects a non-Facebook URL in the Facebook field', () =>
+    expect(validateProfileForm({ ...filled, facebook: 'https://evil.example/arjun' })).toHaveProperty('facebook'));
   it('rejects a malformed WhatsApp number when given', () =>
     expect(validateProfileForm({ ...filled, whatsappNumber: '123' })).toHaveProperty('whatsappNumber'));
 });
@@ -26,7 +30,7 @@ describe('toProfileInput', () => {
     expect(toProfileInput(filled)).toEqual({
       name: 'Arjun Malhotra', artistType: 'magician', locationCity: 'Mumbai', locationArea: 'Bandra West', bio: 'Close-up magician',
       experienceYears: 8, perEventRateMin: 15000, perEventRateMax: 25000, eventTypesSupported: ['wedding'], languagesSpoken: ['Hindi'],
-      readyToTravel: true, instagramHandle: 'arjunmagic', youtubeChannel: null, contactPhone: '9820011001', whatsappNumber: null,
+      readyToTravel: true, instagramHandle: 'arjunmagic', youtubeChannel: null, facebookUrl: null, contactPhone: '9820011001', whatsappNumber: null,
     });
   });
 });
