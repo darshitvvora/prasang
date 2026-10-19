@@ -26,8 +26,8 @@
 - [x] B1 Postgres (prasang, prasang_test, supertokens, temporal, temporal_visibility), Elasticsearch 8.19, Temporal 1.32 (server + schema job + namespace job + UI :8080), SuperTokens core 12.3 — `scripts/stack-health.sh`
 
 **S2 API foundation**
-- [ ] B2 FastAPI scaffold: config, async SQLAlchemy, error contract (incl. 422 → `details.fields`), `/healthz` `/readyz`, pytest harness
-- [ ] B3 Pydantic contract models + contract tests; contract additions: Facebook embeds, `Media.embedUrl`, `facebookUrl`, `GET /auth/providers`
+- [x] B2 FastAPI scaffold: config, async SQLAlchemy, error contract (incl. 422 → `details.fields`), `/healthz` `/readyz`, pytest harness
+- [x] B3 Pydantic contract models + contract tests; contract additions: Facebook embeds, `Media.embedUrl`, `facebookUrl`, `GET /auth/providers`
 - [ ] B4 Schema migration + seed (localities, plans, 12 demo artists, demo leads)
 
 **S3 Identity**

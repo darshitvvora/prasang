@@ -5,6 +5,7 @@ export interface ApiErrorBody { error: { code: string; message: string; details?
 export interface Page<T> { items: T[]; total: number; page: number; size: number }
 
 export type Role = 'artist' | 'planner' | 'admin';
+export interface AuthProvidersResponse { google: boolean; phoneOtp: boolean }
 export interface Me { id: string; email: string | null; fullName: string; phone: string | null; role: Role; avatarUrl: string | null; artistSlug: string | null; createdAt: string }
 export interface CreateMeRequest { role: 'artist' | 'planner'; fullName: string; phone?: string }
 export interface UpdateMeRequest { fullName?: string; phone?: string }
@@ -16,18 +17,19 @@ export interface ArtistCard {
   artistId: string; slug: string; name: string; artistType: ArtistType; profileImageUrl: string | null; bio: string;
   locationCity: string; locationArea: string; perEventRateMin: number; perEventRateMax: number;
   averageRating: number; totalReviews: number; isVerified: boolean; isFeatured: boolean; subscriptionTier: SubscriptionTier;
-  instagramHandle: string | null; youtubeChannel: string | null; experienceYears: number;
+  instagramHandle: string | null; youtubeChannel: string | null; facebookUrl: string | null; experienceYears: number;
   eventTypesSupported: EventType[]; languagesSpoken: string[]; readyToTravel: boolean;
 }
-export type MediaKind = 'image' | 'video' | 'youtube' | 'instagram';
-export interface Media { id: string; kind: MediaKind; url: string; thumbnailUrl: string | null; caption: string | null; displayOrder: number }
+export type MediaKind = 'image' | 'video' | 'youtube' | 'instagram' | 'facebook';
+/** `url`: public file URL (image/video) or the original social link. `embedUrl`: iframe src for social kinds, else null. */
+export interface Media { id: string; kind: MediaKind; url: string; embedUrl: string | null; thumbnailUrl: string | null; caption: string | null; displayOrder: number }
 export interface ArtistDetail extends ArtistCard { media: Media[] }
 export interface Review { id: string; reviewerName: string; rating: number; eventType: EventType; eventMonth: string; text: string; createdAt: string }
 
 export interface ArtistProfileInput {
   name: string; artistType: ArtistType; locationCity: string; locationArea: string; bio: string; experienceYears: number;
   perEventRateMin: number; perEventRateMax: number; eventTypesSupported: EventType[]; languagesSpoken: string[];
-  readyToTravel: boolean; instagramHandle: string | null; youtubeChannel: string | null;
+  readyToTravel: boolean; instagramHandle: string | null; youtubeChannel: string | null; facebookUrl: string | null;
   contactPhone: string; whatsappNumber: string | null;
 }
 export interface CompletenessItem { key: 'basic_info' | 'photo' | 'bio' | 'media' | 'instagram' | 'review'; label: string; done: boolean }
@@ -51,7 +53,7 @@ export interface MediaQuota { images: { used: number; limit: number }; videos: {
 export interface MediaListResponse { items: Media[]; quota: MediaQuota }
 export interface UploadUrlRequest { kind: 'image' | 'video' | 'avatar'; contentType: string; sizeBytes: number }
 export interface UploadUrlResponse { uploadUrl: string; storageKey: string; expiresAt: string; headers: Record<string, string> }
-export type CreateMediaRequest = { kind: 'image' | 'video'; storageKey: string; caption?: string } | { kind: 'youtube' | 'instagram'; url: string; caption?: string };
+export type CreateMediaRequest = { kind: 'image' | 'video'; storageKey: string; caption?: string } | { kind: 'youtube' | 'instagram' | 'facebook'; url: string; caption?: string };
 
 export type SortOption = 'relevance' | 'rating' | 'price_low' | 'price_high' | 'popular' | 'newest';
 export interface SearchParams {

@@ -80,6 +80,9 @@ export const routes = [
     { status: 200, file: 'me/get.response.json' },
   ] },
 
+  // ---------- auth providers (which sign-in methods the UI should offer) ----------
+  { method: 'get', path: 'auth/providers', responses: [{ status: 200, file: 'auth/providers.response.json' }] },
+
   // ---------- public ----------
   { method: 'get', path: 'locations', responses: [{ status: 200, body: `{{{stringify (dataRaw 'locations')}}}` }] },
   { method: 'get', path: 'search/suggestions', responses: [{ status: 200, file: 'search/suggestions.response.json' }] },

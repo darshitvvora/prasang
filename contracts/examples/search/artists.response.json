@@ -18,6 +18,7 @@
       "subscriptionTier": "pro",
       "instagramHandle": "djkrish_official",
       "youtubeChannel": "DJKrishOfficial",
+      "facebookUrl": null,
       "experienceYears": 10,
       "eventTypesSupported": [
         "wedding",
@@ -64,7 +65,8 @@
         "Marathi"
       ],
       "readyToTravel": true,
-      "youtubeChannel": null
+      "youtubeChannel": null,
+      "facebookUrl": null
     }
   ],
   "total": 2,
