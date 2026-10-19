@@ -38,7 +38,7 @@
 - [x] B7 Media uploads to S3 (🔑 AWS dev bucket + credentials for uploads; embeds work without), quotas
 
 **S5 Search (Elasticsearch read side)**
-- [ ] B8 Outbox projector → Elasticsearch; search, suggestions, featured, similar — all UI listing reads from ES
+- [x] B8 Outbox projector → Elasticsearch; search, suggestions, featured, similar — all UI listing reads from ES
 
 **S6 Leads & notifications**
 - [ ] B9 Leads with quota locking (concurrency-safe), artist leads, planner inquiries, plan usage

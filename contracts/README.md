@@ -86,6 +86,7 @@ This folder is the contract between the React frontend and the FastAPI backend.
 | `invalid_transition` | 409 | Lead status change not allowed |
 | `trial_used` | 409 | Artist already used the 7-day trial |
 | `invalid_signature` | 400 | Razorpay signature mismatch |
+| `search_unavailable` | 503 | Elasticsearch is unreachable; retry shortly |
 | `storage_not_configured` | 503 | Photo/video uploads are not set up on this server (social links still work) |
 | `internal_error` | 500 | Unexpected server error |
 
