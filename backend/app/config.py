@@ -43,7 +43,10 @@ class Settings(BaseSettings):
 
     notifier: Literal["console", "msg91"] = "console"
     msg91_auth_key: str | None = None
+    msg91_sms_template_id: str | None = None  # DLT-approved template with a ##message## variable
+    msg91_whatsapp_number: str | None = None
     resend_api_key: str | None = None
+    email_sender: str = "Prasang <leads@prasang.in>"
 
     cors_origins: list[str] = ["http://localhost:5173"]
     # Repo root containing contracts/ and mockoon/data (seed datasets). Docker mounts them at /seed.

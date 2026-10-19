@@ -16,8 +16,11 @@ from app.health import router as health_router
 from app.leads.router import router as leads_router
 from app.locations.router import router as locations_router
 from app.media.router import router as media_router
+from app.notifications.notifier import get_notifier
 from app.reviews.router import router as reviews_router
 from app.search.router import router as search_router
+from app.workflows.client import TemporalStarter
+from app.workflows.starter import set_starter
 
 API_PREFIX = "/api/v1"
 
@@ -27,7 +30,10 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     settings.validate_for_env()
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s %(message)s")
 
-    init_supertokens(settings)
+    notifier = get_notifier(settings)
+    init_supertokens(settings, sms_sender=notifier.send_sms)
+    if settings.env != "test":
+        set_starter(TemporalStarter())
     app = FastAPI(title="Prasang API", version="1.0.0", docs_url=f"{API_PREFIX}/docs", openapi_url=f"{API_PREFIX}/openapi.json")
     install_error_handlers(app)
     app.include_router(health_router)

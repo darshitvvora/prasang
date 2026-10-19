@@ -42,7 +42,7 @@
 
 **S6 Leads & notifications**
 - [x] B9 Leads with quota locking (concurrency-safe), artist leads, planner inquiries, plan usage
-- [ ] B10 Temporal worker + `LeadNotificationWorkflow` (console notifier locally; 🔑 MSG91/Resend in prod)
+- [x] B10 Temporal worker + `LeadNotificationWorkflow` (console notifier locally; 🔑 MSG91/Resend in prod)
 
 **S7 Monetisation**
 - [ ] B11 Plans, 7-day trial (`TrialWorkflow`), subscriptions (`SubscriptionWorkflow`), fake gateway locally (🔑 Razorpay test/live keys later), webhooks
