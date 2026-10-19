@@ -145,3 +145,29 @@ async def test_avatar(client, s3):
 async def test_planner_cannot_manage_media(client):
     await seed_demo()
     assert (await client.get("/api/v1/artists/me/media", headers=PLANNER)).status_code == 403
+
+
+async def test_oversized_upload_is_rejected_and_deleted(client, s3, monkeypatch):
+    """Review fix Important 5: the declared size is enforced; anything bigger never becomes a portfolio item."""
+    from app.media import service
+    monkeypatch.setitem(service.LIMITS, "image", 100)
+    await seed_demo()
+    res = await client.post("/api/v1/artists/me/media/upload-url", headers=ARTIST, json={"kind": "image", "contentType": "image/jpeg", "sizeBytes": 50})
+    target = res.json()
+    async with httpx.AsyncClient() as raw:
+        put = await raw.put(target["uploadUrl"], content=b"x" * 500, headers=target["headers"])
+    if put.status_code == 200:  # storage accepted the bigger body; confirm must refuse it
+        confirm = await client.post("/api/v1/artists/me/media", headers=ARTIST, json={"kind": "image", "storageKey": target["storageKey"]})
+        assert confirm.status_code == 422 and "storageKey" in confirm.json()["error"]["details"]["fields"]
+    keys = [o["Key"] for o in s3.list_objects_v2(Bucket=BUCKET).get("Contents", [])]
+    assert target["storageKey"] not in keys
+
+
+async def test_video_upload_cannot_be_saved_as_image(client, s3):
+    await seed_demo()
+    res = await client.post("/api/v1/artists/me/media/upload-url", headers=ARTIST, json={"kind": "video", "contentType": "video/mp4", "sizeBytes": 4})
+    target = res.json()
+    async with httpx.AsyncClient() as raw:
+        await raw.put(target["uploadUrl"], content=b"mp4!", headers=target["headers"])
+    confirm = await client.post("/api/v1/artists/me/media", headers=ARTIST, json={"kind": "image", "storageKey": target["storageKey"]})
+    assert confirm.status_code == 422 and "storageKey" in confirm.json()["error"]["details"]["fields"]

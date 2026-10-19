@@ -65,16 +65,26 @@ async def upload_url(session: AsyncSession, artist: ArtistProfile, req: UploadUr
         _check_quota(await quota(session, artist), req.kind)
     name = f"avatar-{uuid.uuid4().hex}" if req.kind == "avatar" else uuid.uuid4().hex
     key = f"{_prefix(artist)}{name}.{ext}"
-    url, expires = await storage.presign_put(key, req.content_type)
+    url, expires = await storage.presign_put(key, req.content_type, req.size_bytes)
     return UploadUrlResponse(upload_url=url, storage_key=key, expires_at=expires.strftime("%Y-%m-%dT%H:%M:%SZ"),
                              headers={"Content-Type": req.content_type})
 
 
-async def _require_uploaded(artist: ArtistProfile, key: str, storage: Storage, avatar: bool) -> None:
+async def _require_uploaded(artist: ArtistProfile, key: str, storage: Storage, kind: str) -> None:
+    """The object must be ours, of the declared kind, and within that kind's size/type limits; otherwise it is deleted."""
     name = key.removeprefix(_prefix(artist))
+    avatar = kind == "avatar"
+    ext = name.rsplit(".", 1)[-1] if "." in name else ""
     owned = key.startswith(_prefix(artist)) and "/" not in name and name.startswith("avatar-") == avatar
-    if not owned or not await storage.exists(key):
+    if not owned or ext not in TYPES[kind].values():
         raise validation({"storageKey": "Upload the file first, then save it"})
+    meta = await storage.head(key)
+    if meta is None:
+        raise validation({"storageKey": "Upload the file first, then save it"})
+    size, content_type = meta
+    if size > LIMITS[kind] or content_type not in TYPES[kind]:
+        await storage.delete(key)
+        raise validation({"storageKey": f"That file is too large or not a supported type (max {LIMITS[kind] // MB or 1} MB)"})
 
 
 def _next_order(artist: ArtistProfile) -> int:
@@ -82,7 +92,7 @@ def _next_order(artist: ArtistProfile) -> int:
 
 
 async def add_upload(session: AsyncSession, artist: ArtistProfile, req: CreateMediaUploadRequest, storage: Storage) -> ArtistMedia:
-    await _require_uploaded(artist, req.storage_key, storage, avatar=False)
+    await _require_uploaded(artist, req.storage_key, storage, req.kind)
     _check_quota(await quota(session, artist), req.kind)
     media = ArtistMedia(artist_id=artist.id, kind=req.kind, url=storage.public_url(req.storage_key), storage_key=req.storage_key,
                         caption=req.caption, display_order=_next_order(artist))
@@ -104,7 +114,7 @@ async def add_link(session: AsyncSession, artist: ArtistProfile, req: CreateMedi
 
 
 async def set_avatar(session: AsyncSession, artist: ArtistProfile, key: str, storage: Storage) -> str:
-    await _require_uploaded(artist, key, storage, avatar=True)
+    await _require_uploaded(artist, key, storage, "avatar")
     artist.profile_image_url = storage.public_url(key)
     artist_changed(session, artist.id)
     await session.commit()

@@ -10,7 +10,8 @@ from app.errors import AppError
 
 
 class Storage(Protocol):
-    async def presign_put(self, key: str, content_type: str, expires_s: int = 300) -> tuple[str, datetime]: ...
+    async def presign_put(self, key: str, content_type: str, size_bytes: int, expires_s: int = 300) -> tuple[str, datetime]: ...
+    async def head(self, key: str) -> tuple[int, str] | None: ...
     async def exists(self, key: str) -> bool: ...
     async def delete(self, key: str) -> None: ...
     def public_url(self, key: str) -> str: ...
@@ -26,11 +27,21 @@ class S3Storage:
     def _client(self):
         return self._session.client("s3", **self._client_kwargs)
 
-    async def presign_put(self, key: str, content_type: str, expires_s: int = 300) -> tuple[str, datetime]:
+    async def presign_put(self, key: str, content_type: str, size_bytes: int, expires_s: int = 300) -> tuple[str, datetime]:
+        """The declared size is part of the signature: S3 rejects a body of any other length."""
         async with self._client() as s3:
             url = await s3.generate_presigned_url(
-                "put_object", Params={"Bucket": self.bucket, "Key": key, "ContentType": content_type}, ExpiresIn=expires_s)
+                "put_object", Params={"Bucket": self.bucket, "Key": key, "ContentType": content_type, "ContentLength": size_bytes},
+                ExpiresIn=expires_s)
         return url, datetime.now(UTC) + timedelta(seconds=expires_s)
+
+    async def head(self, key: str) -> tuple[int, str] | None:
+        async with self._client() as s3:
+            try:
+                meta = await s3.head_object(Bucket=self.bucket, Key=key)
+            except ClientError:
+                return None
+        return meta["ContentLength"], meta.get("ContentType", "")
 
     async def exists(self, key: str) -> bool:
         async with self._client() as s3:

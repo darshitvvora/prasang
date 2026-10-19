@@ -71,7 +71,7 @@ expect 200 '"contactPhone"' -H "$A" "$BASE/artists/me"
 expect 200 '"greetingName"' -H "$A" "$BASE/artists/me/dashboard"
 expect 200 '"quota"' -H "$A" "$BASE/artists/me/media"
 # Uploads need S3 on the real API; without a bucket it answers 503 storage_not_configured and those steps are skipped.
-UP=$(curl -s -w '\n%{http_code}' -X POST -H "$A" -H "$J" -d @contracts/examples/media/upload-url.request.json "$BASE/artists/me/media/upload-url")
+UP=$(curl -s -w '\n%{http_code}' -X POST -H "$A" -H "$J" -d '{"kind":"image","contentType":"image/jpeg","sizeBytes":10}' "$BASE/artists/me/media/upload-url")
 if [ "${UP##*$'\n'}" = "503" ]; then
   echo "SKIP uploads (storage_not_configured)"
 else
