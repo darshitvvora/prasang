@@ -6,6 +6,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db import Base
 from app.enums import ArtistTypeEnum, TierEnum, TierSourceEnum
+from app.media.models import ArtistMedia
 from app.timestamps import Timestamps
 
 
@@ -44,8 +45,8 @@ class ArtistProfile(Timestamps, Base):
     total_reviews: Mapped[int] = mapped_column(default=0)
     total_leads: Mapped[int] = mapped_column(default=0)
 
-    media: Mapped[list["ArtistMedia"]] = relationship(  # noqa: F821
-        back_populates="artist", order_by="ArtistMedia.display_order", cascade="all, delete-orphan", lazy="selectin")
+    media: Mapped[list[ArtistMedia]] = relationship(
+        back_populates="artist", order_by=ArtistMedia.display_order, cascade="all, delete-orphan", lazy="selectin")
 
 
 class ArtistDailyStat(Base):

@@ -16,6 +16,7 @@ from app.health import router as health_router
 from app.locations.router import router as locations_router
 from app.media.router import router as media_router
 from app.reviews.router import router as reviews_router
+from app.search.router import router as search_router
 
 API_PREFIX = "/api/v1"
 
@@ -29,7 +30,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app = FastAPI(title="Prasang API", version="1.0.0", docs_url=f"{API_PREFIX}/docs", openapi_url=f"{API_PREFIX}/openapi.json")
     install_error_handlers(app)
     app.include_router(health_router)
-    for router in (auth_router, locations_router, reviews_router, media_router, artists_router):
+    for router in (auth_router, locations_router, reviews_router, media_router, search_router, artists_router):
         app.include_router(router, prefix=API_PREFIX)
     app.add_middleware(get_middleware())  # SuperTokens routes under /api/v1/auth + session handling
     app.add_middleware(
