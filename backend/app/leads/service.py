@@ -27,6 +27,7 @@ from app.leads.budgets import BUDGETS
 from app.leads.models import Lead
 from app.leads.usage import month_bounds_ist
 from app.leads.views import to_artist_lead
+from app.reviews.models import Review
 from app.subscriptions.models import SubscriptionPlan
 
 DAILY_PLANNER_LIMIT = 10
@@ -150,7 +151,9 @@ async def planner_answer(session: AsyncSession, user: User, lead_id: str, answer
     await session.commit()
     if answer in ("booked", "not_booked"):
         await signal_settled(str(lead.id))
-    return to_inquiry(lead, await session.get(ArtistProfile, lead.artist_id), today or today_ist())
+    review_id = (await session.execute(select(Review.id).where(Review.lead_id == lead.id))).scalar()
+    return to_inquiry(lead, await session.get(ArtistProfile, lead.artist_id), today or today_ist(),
+                      str(review_id) if review_id else None)
 
 
 async def planner_inquiries(session: AsyncSession, user: User, status: str | None, page: int, size: int,
@@ -163,7 +166,10 @@ async def planner_inquiries(session: AsyncSession, user: User, status: str | Non
     total = (await session.execute(select(func.count()).select_from(Lead).where(where))).scalar_one()
     rows = (await session.execute(select(Lead, ArtistProfile).join(ArtistProfile, ArtistProfile.id == Lead.artist_id).where(where)
                                   .order_by(Lead.created_at.desc()).offset((page - 1) * size).limit(size))).all()
-    items = [to_inquiry(lead, a, today) for lead, a in rows]
+    rows = list(rows)
+    reviewed = dict((await session.execute(select(Review.lead_id, Review.id).where(
+        Review.lead_id.in_([lead.id for lead, _ in rows])))).all()) if rows else {}
+    items = [to_inquiry(lead, a, today, str(reviewed[lead.id]) if lead.id in reviewed else None) for lead, a in rows]
 
     artists_contacted = (await session.execute(select(func.count(func.distinct(Lead.artist_id))).where(base))).scalar_one()
     upcoming_row = (await session.execute(select(Lead, ArtistProfile).join(ArtistProfile, ArtistProfile.id == Lead.artist_id).where(

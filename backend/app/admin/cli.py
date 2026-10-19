@@ -36,6 +36,7 @@ def build_parser() -> argparse.ArgumentParser:
     cmd("block-user", "block a user (artists are also suspended and billing cancelled)", "user", reason=True)
     cmd("unblock-user", "undo a block", "user")
     cmd("sync-subscription", "re-read the artist's subscription from Razorpay and apply it", "slug")
+    cmd("reports", "list reported reviews and the latest contact messages")
     return parser
 
 
@@ -59,6 +60,13 @@ async def _run(args: argparse.Namespace) -> str:
         "unblock-user": lambda s: actions.unblock_user(s, args.user, actor=actor),
         "sync-subscription": lambda s: actions.sync_subscription(s, args.slug, actor=actor),
     }
+    if args.command == "reports":
+        async with get_sessionmaker()() as session:
+            data = await actions.open_reports(session)
+        reviews = [f"  {r['review_id']}  {r['rating']}★  reason: {r['reason']}\n      {r['text']}" for r in data["reviews"]]
+        contact = [f"  {m['at'][:16]}  [{m['topic']}] {m['from']}: {m['message']}" for m in data["contact"]]
+        lines = ["Reported reviews:", *(reviews or ["  none"]), "Latest contact messages:", *(contact or ["  none"])]
+        return "\n".join(lines)
     async with get_sessionmaker()() as session:
         await calls[args.command](session)
     return f"ok: {args.command} {' '.join(str(v) for k, v in vars(args).items() if k not in ('command', 'actor', 'reason'))}"

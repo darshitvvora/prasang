@@ -45,6 +45,11 @@ This folder is the contract between the React frontend and the FastAPI backend.
 | GET | /artists/featured?size= | public | – | `{items: ArtistCard[]}` |
 | GET | /artists/{slug} | public | – | ArtistDetail · 404 `artist_not_found` |
 | GET | /artists/{slug}/reviews | public | page,size | Page<Review> |
+| GET | /reviews/mine?page&size | artist | – | Page<Review> — reviews about the signed-in artist (hidden ones excluded) |
+| POST | /reviews | planner | CreateReviewRequest | 201 Review · 404 `lead_not_found` · 403 `review_not_allowed` (booking not confirmed or event not over) · 409 `review_exists` |
+| PATCH | /reviews/{id} | planner (author) | UpdateReviewRequest | Review · 409 `review_locked` after 7 days |
+| PUT | /reviews/{id}/reply | artist (reviewed) | `{text}` | Review — one public reply, editable |
+| POST | /reviews/{id}/report | artist (reviewed) | `{reason}` | 204 — one open report per review; Prasang decides |
 | GET | /artists/{slug}/similar?size= | public | – | `{items: ArtistCard[]}` |
 | POST | /artists/{slug}/contact-click | public | – | 204 |
 | POST | /artists | artist | ArtistProfileInput | 201 ArtistProfile · 409 `artist_exists` · 422 |
@@ -94,6 +99,9 @@ This folder is the contract between the React frontend and the FastAPI backend.
 | `storage_not_configured` | 503 | Photo/video uploads are not set up on this server (social links still work) |
 | `artist_suspended` | 409 | The artist is suspended and not taking enquiries |
 | `account_blocked` | 403 | The signed-in account has been blocked by Prasang |
+| `review_not_allowed` | 403 | Reviews need a confirmed booking whose event date has passed |
+| `review_exists` | 409 | This booking already has a review |
+| `review_locked` | 409 | Reviews can be edited for 7 days only |
 | `contact_rate_limited` | 429 | More than 5 contact messages from one IP in an hour |
 | `internal_error` | 500 | Unexpected server error |
 

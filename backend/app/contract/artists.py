@@ -158,6 +158,27 @@ class Review(ContractModel):
     event_month: YearMonth
     text: str
     created_at: UtcDatetime
+    verified: bool
+    artist_reply: str | None
+
+
+class CreateReviewRequest(ContractModel):
+    lead_id: str
+    rating: int = Field(ge=1, le=5)
+    text: str = Field(min_length=20, max_length=2000)
+
+
+class UpdateReviewRequest(ContractModel):
+    rating: int | None = Field(default=None, ge=1, le=5)
+    text: str | None = Field(default=None, min_length=20, max_length=2000)
+
+
+class ReviewReplyRequest(ContractModel):
+    text: str = Field(min_length=1, max_length=1000)
+
+
+class ReviewReportRequest(ContractModel):
+    reason: str = Field(min_length=10, max_length=1000)
 
 
 ReviewPage = Page[Review]

@@ -345,11 +345,20 @@ function ArtistProfile({ artist }: { artist: ArtistDetail }) {
                             <div className="review-avatar">{r.reviewerName[0]}</div>
                             <div>
                               <div className="review-name">{r.reviewerName}</div>
-                              <div className="review-meta">{EVENT_TYPE_LABELS[r.eventType]} · {formatMonth(r.eventMonth)}</div>
+                              <div className="review-meta">
+                                {EVENT_TYPE_LABELS[r.eventType]} · {formatMonth(r.eventMonth)}
+                                {r.verified && <span className="review-verified">✓ Booked via Prasang</span>}
+                              </div>
                             </div>
                             <Stars rating={r.rating} />
                           </div>
                           <p className="review-text">{r.text}</p>
+                          {r.artistReply && (
+                            <div className="review-reply">
+                              <div className="review-reply-label">Reply from {artist.name}</div>
+                              <p className="review-text">{r.artistReply}</p>
+                            </div>
+                          )}
                         </div>
                       ))}
                     </div>

@@ -55,7 +55,7 @@
       "id": "reviews",
       "name": "reviews",
       "documentation": "",
-      "value": "[{\"id\":\"rev-1\",\"reviewerName\":\"Rahul Mehta\",\"rating\":5,\"eventType\":\"wedding\",\"eventMonth\":\"2026-08\",\"text\":\"Absolutely phenomenal! The crowd went wild. Best decision we made for our wedding.\",\"createdAt\":\"2026-08-21T09:12:00Z\"},{\"id\":\"rev-2\",\"reviewerName\":\"Sneha Patel\",\"rating\":5,\"eventType\":\"corporate\",\"eventMonth\":\"2026-07\",\"text\":\"Very professional, arrived early, took briefing seriously. Our team loved every moment.\",\"createdAt\":\"2026-07-30T14:40:00Z\"},{\"id\":\"rev-3\",\"reviewerName\":\"Ankit Sharma\",\"rating\":4,\"eventType\":\"birthday\",\"eventMonth\":\"2026-06\",\"text\":\"Great performer! Kept the energy up the entire evening. Will book again for sure.\",\"createdAt\":\"2026-06-18T18:05:00Z\"}]"
+      "value": "[{\"id\":\"rev-1\",\"reviewerName\":\"Rahul Mehta\",\"rating\":5,\"eventType\":\"wedding\",\"eventMonth\":\"2026-08\",\"text\":\"Absolutely phenomenal! The crowd went wild. Best decision we made for our wedding.\",\"createdAt\":\"2026-08-21T09:12:00Z\",\"verified\":false,\"artistReply\":null},{\"id\":\"rev-2\",\"reviewerName\":\"Sneha Patel\",\"rating\":5,\"eventType\":\"corporate\",\"eventMonth\":\"2026-07\",\"text\":\"Very professional, arrived early, took briefing seriously. Our team loved every moment.\",\"createdAt\":\"2026-07-30T14:40:00Z\",\"verified\":false,\"artistReply\":null},{\"id\":\"rev-3\",\"reviewerName\":\"Ankit Sharma\",\"rating\":4,\"eventType\":\"birthday\",\"eventMonth\":\"2026-06\",\"text\":\"Great performer! Kept the energy up the entire evening. Will book again for sure.\",\"createdAt\":\"2026-06-18T18:05:00Z\",\"verified\":false,\"artistReply\":null}]"
     },
     {
       "uuid": "5d662e62-31db-5ed3-abe0-2636cb0e60dd",
@@ -534,6 +534,401 @@
               "value": "application/json"
             }
           ],
+          "rules": [],
+          "rulesOperator": "AND",
+          "default": true,
+          "latency": 0,
+          "disableTemplating": false
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "5161cdee-bd9b-5a6b-a07f-5c82183fa8e2",
+      "type": "http",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "reviews/mine",
+      "responses": [
+        {
+          "uuid": "56252d41-f2ac-52ad-a809-5614fe2dfcbf",
+          "label": "",
+          "statusCode": 401,
+          "body": "{\"error\":{\"code\":\"unauthenticated\",\"message\":\"Please sign in to continue\",\"details\":{}}}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [
+            {
+              "operator": "null",
+              "invert": false,
+              "target": "header",
+              "modifier": "Authorization",
+              "value": ""
+            }
+          ],
+          "rulesOperator": "AND",
+          "default": false,
+          "latency": 0,
+          "disableTemplating": false
+        },
+        {
+          "uuid": "c2f87fbb-050f-5cb8-a1c9-a3d288d05abc",
+          "label": "",
+          "statusCode": 403,
+          "body": "{\"error\":{\"code\":\"forbidden\",\"message\":\"This action is not available for your account\",\"details\":{}}}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [
+            {
+              "operator": "equals",
+              "invert": false,
+              "target": "header",
+              "modifier": "Authorization",
+              "value": "Bearer mock-planner"
+            }
+          ],
+          "rulesOperator": "OR",
+          "default": false,
+          "latency": 0,
+          "disableTemplating": false
+        },
+        {
+          "uuid": "946f412f-7f27-5b0c-a1c6-9ca08e2c066d",
+          "label": "",
+          "statusCode": 200,
+          "body": "{\n  \"items\": [\n    {\n      \"id\": \"6f0c2a9e-1b3d-4c5e-8f7a-9b0c1d2e3f40\",\n      \"reviewerName\": \"Neha K.\",\n      \"rating\": 5,\n      \"eventType\": \"birthday\",\n      \"eventMonth\": \"2026-10\",\n      \"text\": \"Arjun kept 40 kids spellbound for an hour. Brilliant!\",\n      \"createdAt\": \"2026-10-18T09:15:00Z\",\n      \"verified\": true,\n      \"artistReply\": \"Thank you, Neha! It was a joy.\"\n    }\n  ],\n  \"total\": 1,\n  \"page\": 1,\n  \"size\": 20\n}\n",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [],
+          "rulesOperator": "AND",
+          "default": true,
+          "latency": 0,
+          "disableTemplating": false
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "e92eb735-0d4a-5fc7-ab66-4c7a6724e2c7",
+      "type": "http",
+      "documentation": "",
+      "method": "post",
+      "endpoint": "reviews",
+      "responses": [
+        {
+          "uuid": "26beb4b7-aadf-5e51-ae15-c28f5f2f9397",
+          "label": "",
+          "statusCode": 401,
+          "body": "{\"error\":{\"code\":\"unauthenticated\",\"message\":\"Please sign in to continue\",\"details\":{}}}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [
+            {
+              "operator": "null",
+              "invert": false,
+              "target": "header",
+              "modifier": "Authorization",
+              "value": ""
+            }
+          ],
+          "rulesOperator": "AND",
+          "default": false,
+          "latency": 0,
+          "disableTemplating": false
+        },
+        {
+          "uuid": "dc9922f4-99c0-57f5-a43c-9880e73496b4",
+          "label": "",
+          "statusCode": 403,
+          "body": "{\"error\":{\"code\":\"forbidden\",\"message\":\"This action is not available for your account\",\"details\":{}}}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [
+            {
+              "operator": "equals",
+              "invert": false,
+              "target": "header",
+              "modifier": "Authorization",
+              "value": "Bearer mock-artist"
+            }
+          ],
+          "rulesOperator": "OR",
+          "default": false,
+          "latency": 0,
+          "disableTemplating": false
+        },
+        {
+          "uuid": "17db631a-af1b-5252-ac8b-f56fe1c491a2",
+          "label": "",
+          "statusCode": 201,
+          "body": "{\n  \"id\": \"6f0c2a9e-1b3d-4c5e-8f7a-9b0c1d2e3f40\",\n  \"reviewerName\": \"Neha K.\",\n  \"rating\": 5,\n  \"eventType\": \"birthday\",\n  \"eventMonth\": \"2026-10\",\n  \"text\": \"Arjun kept 40 kids spellbound for an hour. Brilliant!\",\n  \"createdAt\": \"2026-10-18T09:15:00Z\",\n  \"verified\": true,\n  \"artistReply\": null\n}\n",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [],
+          "rulesOperator": "AND",
+          "default": true,
+          "latency": 0,
+          "disableTemplating": false
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "4d557dc6-f95f-50cd-a8e2-7f70f7024d19",
+      "type": "http",
+      "documentation": "",
+      "method": "patch",
+      "endpoint": "reviews/:id",
+      "responses": [
+        {
+          "uuid": "1eed72fe-0398-572a-a2d8-f72fcba3cded",
+          "label": "",
+          "statusCode": 401,
+          "body": "{\"error\":{\"code\":\"unauthenticated\",\"message\":\"Please sign in to continue\",\"details\":{}}}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [
+            {
+              "operator": "null",
+              "invert": false,
+              "target": "header",
+              "modifier": "Authorization",
+              "value": ""
+            }
+          ],
+          "rulesOperator": "AND",
+          "default": false,
+          "latency": 0,
+          "disableTemplating": false
+        },
+        {
+          "uuid": "2e70c800-8ce0-5c27-a191-fff69f1a03a1",
+          "label": "",
+          "statusCode": 403,
+          "body": "{\"error\":{\"code\":\"forbidden\",\"message\":\"This action is not available for your account\",\"details\":{}}}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [
+            {
+              "operator": "equals",
+              "invert": false,
+              "target": "header",
+              "modifier": "Authorization",
+              "value": "Bearer mock-artist"
+            }
+          ],
+          "rulesOperator": "OR",
+          "default": false,
+          "latency": 0,
+          "disableTemplating": false
+        },
+        {
+          "uuid": "732cc854-f300-5335-ae91-79a793227958",
+          "label": "",
+          "statusCode": 200,
+          "body": "{\n  \"id\": \"6f0c2a9e-1b3d-4c5e-8f7a-9b0c1d2e3f40\",\n  \"reviewerName\": \"Neha K.\",\n  \"rating\": 5,\n  \"eventType\": \"birthday\",\n  \"eventMonth\": \"2026-10\",\n  \"text\": \"Arjun kept 40 kids spellbound for an hour. Brilliant!\",\n  \"createdAt\": \"2026-10-18T09:15:00Z\",\n  \"verified\": true,\n  \"artistReply\": null\n}\n",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [],
+          "rulesOperator": "AND",
+          "default": true,
+          "latency": 0,
+          "disableTemplating": false
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "99958521-b252-5f0e-a843-8432dc40948c",
+      "type": "http",
+      "documentation": "",
+      "method": "put",
+      "endpoint": "reviews/:id/reply",
+      "responses": [
+        {
+          "uuid": "12174156-c37c-55f7-ab47-ce9e613e9658",
+          "label": "",
+          "statusCode": 401,
+          "body": "{\"error\":{\"code\":\"unauthenticated\",\"message\":\"Please sign in to continue\",\"details\":{}}}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [
+            {
+              "operator": "null",
+              "invert": false,
+              "target": "header",
+              "modifier": "Authorization",
+              "value": ""
+            }
+          ],
+          "rulesOperator": "AND",
+          "default": false,
+          "latency": 0,
+          "disableTemplating": false
+        },
+        {
+          "uuid": "93261147-9595-51fa-aa46-d5bcd2884ff1",
+          "label": "",
+          "statusCode": 403,
+          "body": "{\"error\":{\"code\":\"forbidden\",\"message\":\"This action is not available for your account\",\"details\":{}}}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [
+            {
+              "operator": "equals",
+              "invert": false,
+              "target": "header",
+              "modifier": "Authorization",
+              "value": "Bearer mock-planner"
+            }
+          ],
+          "rulesOperator": "OR",
+          "default": false,
+          "latency": 0,
+          "disableTemplating": false
+        },
+        {
+          "uuid": "795d6150-ef68-5036-a9b2-f13abbd0333f",
+          "label": "",
+          "statusCode": 200,
+          "body": "{\n  \"id\": \"6f0c2a9e-1b3d-4c5e-8f7a-9b0c1d2e3f40\",\n  \"reviewerName\": \"Neha K.\",\n  \"rating\": 5,\n  \"eventType\": \"birthday\",\n  \"eventMonth\": \"2026-10\",\n  \"text\": \"Arjun kept 40 kids spellbound for an hour. Brilliant!\",\n  \"createdAt\": \"2026-10-18T09:15:00Z\",\n  \"verified\": true,\n  \"artistReply\": \"Thank you, Neha! It was a joy.\"\n}\n",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [],
+          "rulesOperator": "AND",
+          "default": true,
+          "latency": 0,
+          "disableTemplating": false
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "a2356ac3-f45a-5084-a40e-343e60929ad0",
+      "type": "http",
+      "documentation": "",
+      "method": "post",
+      "endpoint": "reviews/:id/report",
+      "responses": [
+        {
+          "uuid": "b6816fe2-e521-58b2-a7d0-c0a18e2b133a",
+          "label": "",
+          "statusCode": 401,
+          "body": "{\"error\":{\"code\":\"unauthenticated\",\"message\":\"Please sign in to continue\",\"details\":{}}}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [
+            {
+              "operator": "null",
+              "invert": false,
+              "target": "header",
+              "modifier": "Authorization",
+              "value": ""
+            }
+          ],
+          "rulesOperator": "AND",
+          "default": false,
+          "latency": 0,
+          "disableTemplating": false
+        },
+        {
+          "uuid": "20f242c9-44f7-5cc9-aba4-da0e70338748",
+          "label": "",
+          "statusCode": 403,
+          "body": "{\"error\":{\"code\":\"forbidden\",\"message\":\"This action is not available for your account\",\"details\":{}}}",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [
+            {
+              "operator": "equals",
+              "invert": false,
+              "target": "header",
+              "modifier": "Authorization",
+              "value": "Bearer mock-planner"
+            }
+          ],
+          "rulesOperator": "OR",
+          "default": false,
+          "latency": 0,
+          "disableTemplating": false
+        },
+        {
+          "uuid": "3cdeb67c-3797-57bf-a3cc-e182aaeac6af",
+          "label": "",
+          "statusCode": 204,
+          "body": "",
+          "bodyType": "INLINE",
+          "headers": [],
           "rules": [],
           "rulesOperator": "AND",
           "default": true,
@@ -2913,6 +3308,26 @@
     {
       "type": "route",
       "uuid": "bd624d02-dce1-5e0b-aa8f-609e7dfff16a"
+    },
+    {
+      "type": "route",
+      "uuid": "5161cdee-bd9b-5a6b-a07f-5c82183fa8e2"
+    },
+    {
+      "type": "route",
+      "uuid": "e92eb735-0d4a-5fc7-ab66-4c7a6724e2c7"
+    },
+    {
+      "type": "route",
+      "uuid": "4d557dc6-f95f-50cd-a8e2-7f70f7024d19"
+    },
+    {
+      "type": "route",
+      "uuid": "99958521-b252-5f0e-a843-8432dc40948c"
+    },
+    {
+      "type": "route",
+      "uuid": "a2356ac3-f45a-5084-a40e-343e60929ad0"
     },
     {
       "type": "route",

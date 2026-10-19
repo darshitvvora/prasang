@@ -86,6 +86,11 @@ export const routes = [
 
   // ---------- auth providers (which sign-in methods the UI should offer) ----------
   { method: 'get', path: 'auth/providers', responses: [{ status: 200, file: 'auth/providers.response.json' }] },
+  { method: 'get', path: 'reviews/mine', responses: [unauth, forbidden([PLANNER]), { status: 200, file: 'reviews/mine.response.json' }] },
+  { method: 'post', path: 'reviews', responses: [unauth, forbidden([ARTIST]), { status: 201, file: 'reviews/create.response.json' }] },
+  { method: 'patch', path: 'reviews/:id', responses: [unauth, forbidden([ARTIST]), { status: 200, file: 'reviews/create.response.json' }] },
+  { method: 'put', path: 'reviews/:id/reply', responses: [unauth, forbidden([PLANNER]), { status: 200, file: 'reviews/reply.response.json' }] },
+  { method: 'post', path: 'reviews/:id/report', responses: [unauth, forbidden([PLANNER]), { status: 204 }] },
   { method: 'get', path: 'site-info', responses: [{ status: 200, file: 'site/info.response.json' }] },
   { method: 'post', path: 'contact', responses: [{ status: 201, file: 'site/contact.response.json' }] },
 

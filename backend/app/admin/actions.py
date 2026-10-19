@@ -194,3 +194,19 @@ async def sync_subscription(session: AsyncSession, slug: str, *, actor: str) -> 
     await session.commit()
     if event:
         await subs.handle_webhook(session, event, entity)
+
+
+async def open_reports(session: AsyncSession) -> dict:
+    """Open review reports and the latest contact messages, for `admin reports`."""
+    from app.reviews.models import ReviewReport
+    from app.site.models import ContactMessage
+
+    reports = (await session.execute(select(ReviewReport, Review).join(Review, Review.id == ReviewReport.review_id)
+                                     .where(ReviewReport.status == "open").order_by(ReviewReport.created_at))).all()
+    messages = (await session.execute(select(ContactMessage).order_by(ContactMessage.created_at.desc()).limit(20))).scalars().all()
+    return {
+        "reviews": [{"review_id": str(r.id), "rating": r.rating, "text": r.text[:120], "reason": rep.reason,
+                     "reported_at": rep.created_at.isoformat()} for rep, r in reports],
+        "contact": [{"at": m.created_at.isoformat(), "from": f"{m.name} <{m.contact}>", "topic": m.topic, "message": m.message[:160]}
+                    for m in messages],
+    }

@@ -12,6 +12,16 @@ export const getAuthProviders = () => api<T.AuthProvidersResponse>('/auth/provid
 export const getSiteInfo = () => api<T.SiteInfo>('/site-info');
 export const sendContactMessage = (body: T.ContactRequest) => api<T.ContactResponse>('/contact', { method: 'POST', body });
 
+// ---- reviews ----
+export const getMyReviews = (page = 1) => api<T.Page<T.Review>>('/reviews/mine', { query: { page } });
+export const createReview = (body: T.CreateReviewRequest) => api<T.Review>('/reviews', { method: 'POST', body });
+export const updateReview = (id: string, body: T.UpdateReviewRequest) =>
+  api<T.Review>(`/reviews/${encodeURIComponent(id)}`, { method: 'PATCH', body });
+export const replyToReview = (id: string, body: T.ReviewReplyRequest) =>
+  api<T.Review>(`/reviews/${encodeURIComponent(id)}/reply`, { method: 'PUT', body });
+export const reportReview = (id: string, body: T.ReviewReportRequest) =>
+  api<void>(`/reviews/${encodeURIComponent(id)}/report`, { method: 'POST', body });
+
 // ---- booking confirmation ----
 export const answerInquiry = (id: string, body: T.PlannerAnswerRequest) =>
   api<T.PlannerInquiry>(`/leads/${encodeURIComponent(id)}/planner-answer`, { method: 'PATCH', body });

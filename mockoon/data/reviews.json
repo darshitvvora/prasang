@@ -6,7 +6,9 @@
     "eventType": "wedding",
     "eventMonth": "2026-08",
     "text": "Absolutely phenomenal! The crowd went wild. Best decision we made for our wedding.",
-    "createdAt": "2026-08-21T09:12:00Z"
+    "createdAt": "2026-08-21T09:12:00Z",
+    "verified": false,
+    "artistReply": null
   },
   {
     "id": "rev-2",
@@ -15,7 +17,9 @@
     "eventType": "corporate",
     "eventMonth": "2026-07",
     "text": "Very professional, arrived early, took briefing seriously. Our team loved every moment.",
-    "createdAt": "2026-07-30T14:40:00Z"
+    "createdAt": "2026-07-30T14:40:00Z",
+    "verified": false,
+    "artistReply": null
   },
   {
     "id": "rev-3",
@@ -24,6 +28,8 @@
     "eventType": "birthday",
     "eventMonth": "2026-06",
     "text": "Great performer! Kept the energy up the entire evening. Will book again for sure.",
-    "createdAt": "2026-06-18T18:05:00Z"
+    "createdAt": "2026-06-18T18:05:00Z",
+    "verified": false,
+    "artistReply": null
   }
 ]

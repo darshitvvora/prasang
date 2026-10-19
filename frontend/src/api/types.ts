@@ -26,7 +26,7 @@ export interface Media { id: string; kind: MediaKind; url: string; embedUrl: str
 /** Profile-level widget built from the artist's social links. `embedUrl` null = show as a link only. */
 export interface SocialWidget { platform: 'instagram' | 'youtube' | 'facebook'; profileUrl: string; embedUrl: string | null }
 export interface ArtistDetail extends ArtistCard { media: Media[]; socialWidgets: SocialWidget[] }
-export interface Review { id: string; reviewerName: string; rating: number; eventType: EventType; eventMonth: string; text: string; createdAt: string }
+export interface Review { id: string; reviewerName: string; rating: number; eventType: EventType; eventMonth: string; text: string; createdAt: string; verified: boolean; artistReply: string | null }
 
 export interface ArtistProfileInput {
   name: string; artistType: ArtistType; locationCity: string; locationArea: string; bio: string; experienceYears: number;
@@ -111,6 +111,10 @@ export interface BillingItem {
   status: 'paid' | 'failed'; receiptUrl: string | null;
 }
 export interface BillingHistoryResponse { items: BillingItem[] }
+export interface CreateReviewRequest { leadId: string; rating: number; text: string }
+export interface UpdateReviewRequest { rating?: number; text?: string }
+export interface ReviewReplyRequest { text: string }
+export interface ReviewReportRequest { reason: string }
 export interface SiteInfo { supportEmail: string | null; supportPhone: string | null; businessAddress: string | null }
 export type ContactTopic = 'general' | 'artist_support' | 'payments' | 'report';
 export interface ContactRequest { name: string; contact: string; topic: ContactTopic; message: string }

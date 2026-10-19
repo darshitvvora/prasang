@@ -1247,3 +1247,14 @@ button.ob-upload-box { width: 100%; font: inherit; cursor: pointer; }
 .billing-table { width: 100%; border-collapse: collapse; }
 .billing-table th, .billing-table td { text-align: left; padding: 0.55rem 0.4rem; border-bottom: 1px solid #ecece6; }
 .billing-failed { color: #8a1c13; font-weight: 600; }
+
+.artist-review-item { padding: 1rem 0; border-bottom: 1px solid #ecece6; }
+.artist-review-item:last-child { border-bottom: 0; }
+.artist-review-verified { margin-left: 0.5rem; font-size: 0.8rem; color: #2f7a1f; font-weight: 600; }
+.artist-review-reply { background: #f7f7f2; padding: 0.6rem 0.8rem; border-radius: 6px; }
+.artist-review-note { color: #2f7a1f; }
+.artist-review-actions { display: flex; gap: 0.5rem; margin-top: 0.4rem; }
+.artist-review-actions button { padding: 0.35rem 0.9rem; border-radius: 999px; border: 1px solid #d0d0c8; background: #fff; cursor: pointer; font-weight: 600; }
+.artist-review-editor { display: grid; gap: 0.4rem; margin-top: 0.5rem; }
+.artist-review-editor textarea { font: inherit; padding: 0.6rem; border: 1px solid #d0d0c8; border-radius: 8px; }
+.artist-review-error { color: #b42318; font-size: 0.9rem; }

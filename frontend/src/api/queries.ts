@@ -22,12 +22,14 @@ export const keys = {
   mySubscription: ['subscriptions', 'me'] as const,
   siteInfo: ['site-info'] as const,
   myPayments: ['subscriptions', 'me', 'payments'] as const,
+  myReviews: ['reviews', 'mine'] as const,
 };
 
 const STATIC = { staleTime: 60 * 60 * 1000 }; // locations/plans rarely change
 
 export const useAuthProviders = () => useQuery({ queryKey: keys.authProviders, queryFn: E.getAuthProviders, ...STATIC });
 export const useLocations = () => useQuery({ queryKey: keys.locations, queryFn: E.getLocations, ...STATIC });
+export const useMyReviews = () => useQuery({ queryKey: keys.myReviews, queryFn: () => E.getMyReviews() });
 export const useMyPayments = () => useQuery({ queryKey: keys.myPayments, queryFn: E.getMyPayments });
 export const useSiteInfo = () => useQuery({ queryKey: keys.siteInfo, queryFn: E.getSiteInfo, ...STATIC });
 export const usePlans = () => useQuery({ queryKey: keys.plans, queryFn: E.getPlans, ...STATIC });
@@ -49,6 +51,22 @@ export const useMySubscription = (enabled = true) => useQuery({ queryKey: keys.m
 
 // ---- mutations ----
 export const useSendContactMessage = () => useMutation({ mutationFn: E.sendContactMessage });
+
+export function useCreateReview() {
+  const qc = useQueryClient();
+  return useMutation({ mutationFn: E.createReview, onSuccess: () => qc.invalidateQueries({ queryKey: ['leads', 'planner'] }) });
+}
+
+export function useReplyToReview() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, text }: { id: string; text: string }) => E.replyToReview(id, { text }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: keys.myReviews }),
+  });
+}
+
+export const useReportReview = () =>
+  useMutation({ mutationFn: ({ id, reason }: { id: string; reason: string }) => E.reportReview(id, { reason }) });
 
 export function useAnswerInquiry() {
   const qc = useQueryClient();

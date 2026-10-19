@@ -13,6 +13,8 @@ import DashboardPage from './pages/artist/DashboardPage';
 import OnboardingPage from './pages/artist/OnboardingPage';
 import LeadsPage from './pages/artist/LeadsPage';
 import SubscriptionPage from './pages/artist/SubscriptionPage';
+import ReviewsPage from './pages/artist/ReviewsPage';
+import ReviewFormPage from './pages/planner/ReviewFormPage';
 import PlannerDashboardPage from './pages/planner/DashboardPage';
 import PlannerInquiriesPage from './pages/planner/InquiriesPage';
 import AboutPage from './pages/AboutPage';
@@ -44,8 +46,10 @@ export default function App() {
           <Route path="/artist/onboarding" element={artist(<OnboardingPage />)} />
           <Route path="/artist/leads" element={artist(<LeadsPage />)} />
           <Route path="/artist/subscription" element={artist(<SubscriptionPage />)} />
+          <Route path="/artist/reviews" element={artist(<ReviewsPage />)} />
           <Route path="/planner/dashboard" element={planner(<PlannerDashboardPage />)} />
           <Route path="/planner/inquiries" element={planner(<PlannerInquiriesPage />)} />
+          <Route path="/planner/inquiries/:id/review" element={planner(<ReviewFormPage />)} />
 
           {/* Legal Routes */}
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
