@@ -49,8 +49,11 @@ def period_end_iso(d: date) -> str:
 
 
 async def _current(session: AsyncSession, artist_id) -> Subscription | None:
-    return (await session.execute(select(Subscription).where(
-        Subscription.artist_id == artist_id, Subscription.status.in_(("active", "halted"))))).scalars().first()
+    """The artist's live subscription; active wins over halted, newest first (never raises on duplicates)."""
+    rows = (await session.execute(select(Subscription).where(
+        Subscription.artist_id == artist_id, Subscription.status.in_(("active", "halted")))
+        .order_by(Subscription.created_at.desc()))).scalars().all()
+    return next((r for r in rows if r.status == "active"), rows[0] if rows else None)
 
 
 def _summary(sub: Subscription | None) -> SubscriptionSummary | None:
@@ -76,8 +79,7 @@ async def _apply_tier(session: AsyncSession, artist: ArtistProfile, tier: str, s
     artist.subscription_tier, artist.tier_source = tier, source
     artist.search_boost_score = plan.search_boost_score
     artist.is_featured = plan.is_featured
-    if plan.lead_limit_monthly < 0:
-        await unlock_month(session, artist.id, datetime.now(UTC))
+    await unlock_month(session, artist.id, datetime.now(UTC), plan.lead_limit_monthly)
     artist_changed(session, artist.id)
 
 
@@ -112,7 +114,11 @@ async def subscribe(session: AsyncSession, user: User, tier: str, cycle: str, ga
     plan = await session.get(SubscriptionPlan, tier)
     for stale in (await session.execute(select(Subscription).where(
             Subscription.artist_id == artist.id, Subscription.status == "created"))).scalars():
-        stale.status = "cancelled"  # checkout was closed; its timer workflow will find nothing to expire
+        stale.status = "cancelled"  # checkout was closed; stop the gateway from charging it later
+        try:
+            await gateway.cancel_subscription(stale.gateway_subscription_id, at_cycle_end=False)
+        except Exception:
+            log.warning("could not cancel stale checkout %s at the gateway", stale.gateway_subscription_id, exc_info=True)
     await session.flush()
     gateway_id = await gateway.create_subscription(gateway.plan_id(plan, cycle), TOTAL_COUNT[cycle], {"artist_id": str(artist.id)})
     sub = Subscription(artist_id=artist.id, tier=tier, billing_cycle=cycle, status="created", gateway_subscription_id=gateway_id)
@@ -212,6 +218,31 @@ async def lapse(session: AsyncSession, subscription_id: str) -> None:
         await end(session, sub, "expired")
 
 
+LIVE = ("active", "halted")
+TERMINAL = ("cancelled", "expired", "completed")
+
+
+async def _paid(session: AsyncSession, sub: Subscription, period_end: date) -> None:
+    """A payment arrived for `sub` (activated/charged). Every state must end with the artist on what they paid for."""
+    if sub.status == "active":
+        await record_charge(session, sub, period_end)
+        return
+    if sub.status in ("created", "halted"):
+        await activate(session, sub, period_end)
+        return
+    # Terminal (replaced checkout, lapsed, cancelled): money was taken anyway.
+    other = await _current(session, sub.artist_id)
+    if other is None:
+        await activate(session, sub, period_end)  # restore the plan they are paying for
+        return
+    log.error("payment for replaced subscription %s while %s is live — cancelling it at the gateway; refund manually",
+              sub.gateway_subscription_id, other.gateway_subscription_id)
+    try:
+        await get_gateway().cancel_subscription(sub.gateway_subscription_id, at_cycle_end=False)
+    except Exception:
+        log.exception("could not cancel %s", sub.gateway_subscription_id)
+
+
 async def handle_webhook(session: AsyncSession, event: str, entity: dict) -> None:
     sub = await _by_gateway_id(session, entity.get("id", ""))
     if sub is None:
@@ -220,12 +251,11 @@ async def handle_webhook(session: AsyncSession, event: str, entity: dict) -> Non
     current_end = entity.get("current_end")
     period_end = datetime.fromtimestamp(current_end, IST).date() if current_end else None
     if event in ("subscription.activated", "subscription.charged") and period_end:
-        if sub.status == "created":
-            await activate(session, sub, period_end)
-        else:
-            await record_charge(session, sub, period_end)
+        await _paid(session, sub, period_end)
     elif event == "subscription.halted":
-        sub.status = "halted"
-        await session.commit()
+        if sub.status == "active":
+            sub.status = "halted"
+            await session.commit()
     elif event in ("subscription.cancelled", "subscription.completed"):
-        await end(session, sub, "cancelled" if event == "subscription.cancelled" else "completed")
+        if sub.status not in TERMINAL:
+            await end(session, sub, "cancelled" if event == "subscription.cancelled" else "completed")
