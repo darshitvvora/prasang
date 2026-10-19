@@ -20,7 +20,7 @@ for (const f of readdirSync(join(here, 'data')).filter((f) => f.endsWith('.json'
   buckets[basename(f, '.json')] = JSON.parse(read(`mockoon/data/${f}`));
 }
 const artists = buckets.artists;
-buckets.artistCards = artists.map(({ media, contactPhone, whatsappNumber, ...card }) => card);
+buckets.artistCards = artists.map(({ media, socialWidgets, contactPhone, whatsappNumber, ...card }) => card);
 buckets.artistDetails = artists.map(({ contactPhone, whatsappNumber, ...detail }) => detail);
 buckets.artistContacts = artists.map((a) => ({
   artistId: a.artistId, name: a.name, contactPhone: a.contactPhone, whatsappNumber: a.whatsappNumber, instagramHandle: a.instagramHandle,

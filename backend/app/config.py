@@ -29,6 +29,7 @@ class Settings(BaseSettings):
     google_client_id: str | None = None
     google_client_secret: str | None = None
     dev_auth_header: bool = False
+    youtube_api_key: str | None = None  # optional: resolves @handles to channel ids for the YouTube widget
 
     aws_region: str = "ap-south-1"
     s3_bucket: str | None = None

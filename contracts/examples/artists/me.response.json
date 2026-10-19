@@ -16,7 +16,7 @@
   "subscriptionTier": "basic",
   "instagramHandle": "arjunmagic",
   "youtubeChannel": "ArjunMalhotraMagic",
-  "facebookUrl": null,
+  "facebookUrl": "https://www.facebook.com/arjunmagic",
   "experienceYears": 8,
   "eventTypesSupported": [
     "birthday",
@@ -66,6 +66,23 @@
       "thumbnailUrl": null,
       "caption": null,
       "displayOrder": 3
+    }
+  ],
+  "socialWidgets": [
+    {
+      "platform": "instagram",
+      "profileUrl": "https://www.instagram.com/arjunmagic/",
+      "embedUrl": "https://www.instagram.com/arjunmagic/embed"
+    },
+    {
+      "platform": "youtube",
+      "profileUrl": "https://www.youtube.com/@ArjunMalhotraMagic",
+      "embedUrl": null
+    },
+    {
+      "platform": "facebook",
+      "profileUrl": "https://www.facebook.com/arjunmagic",
+      "embedUrl": "https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Farjunmagic&tabs=timeline&width=500&height=600&small_header=true&adapt_container_width=true"
     }
   ],
   "contactPhone": "9820011001",
