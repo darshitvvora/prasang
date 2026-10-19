@@ -115,3 +115,29 @@ async def test_webhooks(client, monkeypatch):
 async def test_planner_cannot_subscribe(client):
     await seed_demo()
     assert (await client.post("/api/v1/subscriptions", headers=PLANNER, json={"tier": "pro", "billingCycle": "monthly"})).status_code == 403
+
+
+async def test_plan_change_cancels_previous_subscription_at_gateway(client, monkeypatch):
+    from app.subscriptions import service
+    from app.subscriptions.gateway import FakeGateway
+
+    class Recording(FakeGateway):
+        cancelled: list[tuple[str, bool]] = []
+
+        async def cancel_subscription(self, gateway_subscription_id, at_cycle_end):
+            self.cancelled.append((gateway_subscription_id, at_cycle_end))
+
+    gateway = Recording()
+    monkeypatch.setattr(service, "get_gateway", lambda: gateway, raising=False)
+    monkeypatch.setattr("app.subscriptions.router.get_gateway", lambda: gateway)
+    await seed_demo()
+
+    async def buy(tier):
+        checkout = (await client.post("/api/v1/subscriptions", headers=ARTIST, json={"tier": tier, "billingCycle": "monthly"})).json()["checkout"]
+        await client.post("/api/v1/subscriptions/verify", headers=ARTIST, json={
+            "razorpayPaymentId": "pay", "razorpaySubscriptionId": checkout["razorpaySubscriptionId"], "razorpaySignature": "mock-signature"})
+        return checkout["razorpaySubscriptionId"]
+
+    first = await buy("pro")
+    await buy("premium")
+    assert (first, False) in gateway.cancelled

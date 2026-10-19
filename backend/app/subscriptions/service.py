@@ -21,7 +21,7 @@ from app.contract import (
 from app.errors import AppError, conflict, not_found
 from app.leads.service import unlock_month
 from app.outbox.emit import artist_changed
-from app.subscriptions.gateway import PaymentGateway
+from app.subscriptions.gateway import PaymentGateway, get_gateway
 from app.subscriptions.models import Subscription, SubscriptionPlan
 from app.workflows.starter import get_starter
 
@@ -131,7 +131,11 @@ async def activate(session: AsyncSession, sub: Subscription, period_end: date) -
     artist = await session.get(ArtistProfile, sub.artist_id)
     for previous in (await session.execute(select(Subscription).where(
             Subscription.artist_id == sub.artist_id, Subscription.status.in_(("active", "halted")), Subscription.id != sub.id))).scalars():
-        previous.status = "cancelled"  # plan change: the new subscription replaces it
+        previous.status = "cancelled"  # plan change: the new subscription replaces it — stop billing the old one now
+        try:
+            await get_gateway().cancel_subscription(previous.gateway_subscription_id, at_cycle_end=False)
+        except Exception:
+            log.exception("could not cancel replaced subscription %s at the gateway", previous.gateway_subscription_id)
         await _signal(previous, "ended", "cancelled")
     await session.flush()
     sub.status, sub.current_period_end, sub.cancel_at_period_end = "active", period_end, False
