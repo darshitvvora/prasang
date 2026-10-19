@@ -58,3 +58,4 @@ class PaymentEvent(Base):
     payload: Mapped[dict] = mapped_column(JSONB)
     received_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
     signalled_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    processed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))  # NULL = received but not applied yet

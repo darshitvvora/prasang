@@ -146,12 +146,22 @@ async def planner_inquiries(session: AsyncSession, user: User, status: str | Non
                                     counts=InquiryCounts(all=sum(by_status.values()), **inquiry_counts), summary=summary)
 
 
-async def unlock_month(session: AsyncSession, artist_id, now: datetime) -> int:
-    """After an upgrade, reveal this month's locked leads."""
+async def unlock_month(session: AsyncSession, artist_id, now: datetime, limit: int = -1) -> int:
+    """After a tier change, reveal this month's locked leads that fit the new monthly limit (oldest first)."""
     start, end = month_bounds_ist(now)
-    res = await session.execute(update(Lead).where(
-        Lead.artist_id == artist_id, Lead.is_locked.is_(True), Lead.created_at >= start, Lead.created_at < end).values(is_locked=False))
-    return res.rowcount or 0
+    month = and_(Lead.artist_id == artist_id, Lead.created_at >= start, Lead.created_at < end)
+    if limit < 0:
+        res = await session.execute(update(Lead).where(month, Lead.is_locked.is_(True)).values(is_locked=False))
+        return res.rowcount or 0
+    unlocked = (await session.execute(select(func.count()).select_from(Lead).where(month, Lead.is_locked.is_(False)))).scalar_one()
+    allowance = limit - unlocked
+    if allowance <= 0:
+        return 0
+    oldest_locked = select(Lead.id).where(month, Lead.is_locked.is_(True)).order_by(Lead.created_at).limit(allowance)
+    ids = (await session.execute(oldest_locked)).scalars().all()
+    if ids:
+        await session.execute(update(Lead).where(Lead.id.in_(ids)).values(is_locked=False))
+    return len(ids)
 
 
 async def expire_leads(session: AsyncSession, today: date | None = None) -> int:

@@ -1,4 +1,5 @@
 import hashlib
+from datetime import UTC, datetime
 
 from fastapi import APIRouter, Depends, Request
 from sqlalchemy.dialects.postgresql import insert
@@ -67,11 +68,16 @@ async def webhook(request: Request, db: AsyncSession = Depends(get_session)):
     payload = await request.json()
     event_id = request.headers.get("x-razorpay-event-id") or hashlib.sha256(body).hexdigest()[:64]
     entity = payload.get("payload", {}).get("subscription", {}).get("entity", {})
-    inserted = await db.execute(insert(PaymentEvent).values(
+    await db.execute(insert(PaymentEvent).values(
         id=event_id, event_type=payload.get("event", ""), gateway_subscription_id=entity.get("id"), payload=payload,
-    ).on_conflict_do_nothing().returning(PaymentEvent.id))
-    if inserted.scalar_one_or_none() is None:
-        return {"ok": True, "duplicate": True}
+    ).on_conflict_do_nothing())
     await db.commit()
+    record = await db.get(PaymentEvent, event_id)
+    if record.processed_at is not None:
+        return {"ok": True, "duplicate": True}
+    # If processing fails we answer 500 and leave processed_at NULL, so Razorpay's retry applies it.
     await service.handle_webhook(db, payload.get("event", ""), entity)
+    record = await db.get(PaymentEvent, event_id)
+    record.processed_at = datetime.now(UTC)
+    await db.commit()
     return {"ok": True}
