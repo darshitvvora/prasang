@@ -68,6 +68,13 @@
 - [ ] F4 Lock artist row in trial end vs activation; IST date in verify; gateway errors → 502/503 on cancel
 - [ ] F5 Planner daily limit serialised; production build defaults to SuperTokens auth; JSON logs; hide API docs in production; require MSG91 notifier in production
 - [ ] F6 Decide: proration on plan change; how Razorpay plan ids survive re-seeding
+- [ ] F7 Booking check-ins: re-check confirmation right before delivery; skip overdue steps when a follow-up starts late; add `workflow.patched` before changing BookingFollowUpWorkflow (runs last months)
+- [ ] F8 Account deletion: retry SuperTokens user deletion (else the phone is locked out); blank planners' free-text lead notes; replace a deleted artist's name-based slug
+- [ ] F9 Contact-form rate limit: use the client IP nginx sets, not the first X-Forwarded-For entry
+- [ ] F10 Google reviews: validate place ids; cache failed lookups briefly (API cost)
+- [ ] F11 Billing: `sync-subscription` should prefer the live subscription; replace verify's fallback amount with the real charged amount
+- [ ] F12 Verify Razorpay `payment.failed` payload carries `subscription_id` (test mode) 🔑 Razorpay test keys
+- [ ] F13 Vite dev plugin: encode the slug (dev only)
 
 ## EL — Web launch readiness (feature-complete web) ✅ (Plan C, branch `feat/web-launch`)
 **Decided 2026-10-19:** finish these on the web before any deploy work. Design: [web launch readiness](superpowers/specs/2026-10-19-web-launch-readiness-design.md) · plan [C](superpowers/plans/2026-10-19-plan-c-web-launch.md).
