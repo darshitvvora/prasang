@@ -41,7 +41,7 @@
 - [x] B8 Outbox projector → Elasticsearch; search, suggestions, featured, similar — all UI listing reads from ES
 
 **S6 Leads & notifications**
-- [ ] B9 Leads with quota locking (concurrency-safe), artist leads, planner inquiries, plan usage
+- [x] B9 Leads with quota locking (concurrency-safe), artist leads, planner inquiries, plan usage
 - [ ] B10 Temporal worker + `LeadNotificationWorkflow` (console notifier locally; 🔑 MSG91/Resend in prod)
 
 **S7 Monetisation**
