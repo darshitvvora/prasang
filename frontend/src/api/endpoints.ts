@@ -5,6 +5,9 @@ import type * as T from './types';
 const slugPath = (slug: string) => `/artists/${encodeURIComponent(slug)}`;
 type Items<X> = { items: X[] };
 
+// ---- auth ----
+export const getAuthProviders = () => api<T.AuthProvidersResponse>('/auth/providers');
+
 // ---- me ----
 export const getMe = () => api<T.Me>('/me');
 export const createMe = (body: T.CreateMeRequest) => api<T.Me>('/me', { method: 'POST', body });

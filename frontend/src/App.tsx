@@ -8,6 +8,7 @@ import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import PricingPage from './pages/PricingPage';
 import NotFoundPage from './pages/NotFoundPage';
+import AuthCallbackPage from './pages/AuthCallbackPage';
 import DashboardPage from './pages/artist/DashboardPage';
 import OnboardingPage from './pages/artist/OnboardingPage';
 import LeadsPage from './pages/artist/LeadsPage';
@@ -32,6 +33,7 @@ export default function App() {
           <Route path="/profile/:slug" element={<ArtistProfilePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
+          <Route path="/auth/callback/google" element={<AuthCallbackPage />} />
           <Route path="/pricing" element={<PricingPage />} />
           <Route path="/artist/dashboard" element={artist(<DashboardPage />)} />
           <Route path="/artist/onboarding" element={artist(<OnboardingPage />)} />

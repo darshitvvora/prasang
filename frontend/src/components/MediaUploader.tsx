@@ -6,6 +6,7 @@ import { PlayCircle, Trash2, Upload } from 'lucide-react';
 import { createMedia, deleteMedia, requestUploadUrl, uploadToUrl } from '../api/endpoints';
 import { keys, useMyMedia } from '../api/queries';
 import { InlineError } from './QueryState';
+import { linkKind } from './embed';
 
 const MAX_IMAGE_BYTES = 10 * 1024 * 1024;
 const MAX_VIDEO_BYTES = 100 * 1024 * 1024;
@@ -55,9 +56,9 @@ export default function MediaUploader() {
   function handleAddLink(e: React.FormEvent) {
     e.preventDefault();
     const url = linkUrl.trim();
-    const kind = /youtu\.?be/.test(url) ? 'youtube' : /instagram\.com/.test(url) ? 'instagram' : null;
+    const kind = linkKind(url);
     if (!kind) {
-      setError(new Error('Paste a YouTube or Instagram link'));
+      setError(new Error('Paste a YouTube, Instagram or Facebook link'));
       return;
     }
     run(async () => {
@@ -80,7 +81,7 @@ export default function MediaUploader() {
       <input ref={fileInput} type="file" accept="image/*,video/*" multiple hidden onChange={(e) => { handleFiles(e.target.files); e.target.value = ''; }} />
 
       <form className="ob-link-row" onSubmit={handleAddLink}>
-        <input className="ob-input" placeholder="Or paste a YouTube / Instagram link" value={linkUrl} onChange={(e) => setLinkUrl(e.target.value)} />
+        <input className="ob-input" placeholder="Or paste a YouTube, Instagram or Facebook post link" value={linkUrl} onChange={(e) => setLinkUrl(e.target.value)} />
         <button type="submit" className="ob-back-btn" disabled={busy || !linkUrl.trim()}>Add</button>
       </form>
 
@@ -91,7 +92,7 @@ export default function MediaUploader() {
           {media.data.items.map((m) => (
             <div key={m.id} className="ob-media-item">
               {m.kind === 'image' ? <img src={m.url} alt={m.caption ?? ''} /> : (
-                <div className="ob-media-link"><PlayCircle size={22} /> {m.kind === 'youtube' ? 'YouTube' : m.kind === 'instagram' ? 'Instagram' : 'Video'}</div>
+                <div className="ob-media-link"><PlayCircle size={22} /> {m.kind === 'youtube' ? 'YouTube' : m.kind === 'instagram' ? 'Instagram' : m.kind === 'facebook' ? 'Facebook' : 'Video'}</div>
               )}
               <button type="button" className="ob-media-delete" aria-label="Delete" disabled={busy}
                 onClick={() => run(() => deleteMedia(m.id))}>

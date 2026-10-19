@@ -6,6 +6,7 @@ import type * as T from './types';
 
 export const keys = {
   me: ['me'] as const,
+  authProviders: ['auth', 'providers'] as const,
   locations: ['locations'] as const,
   search: (p: T.SearchParams) => ['search', p] as const,
   featured: ['artists', 'featured'] as const,
@@ -23,6 +24,7 @@ export const keys = {
 
 const STATIC = { staleTime: 60 * 60 * 1000 }; // locations/plans rarely change
 
+export const useAuthProviders = () => useQuery({ queryKey: keys.authProviders, queryFn: E.getAuthProviders, ...STATIC });
 export const useLocations = () => useQuery({ queryKey: keys.locations, queryFn: E.getLocations, ...STATIC });
 export const usePlans = () => useQuery({ queryKey: keys.plans, queryFn: E.getPlans, ...STATIC });
 export const useSearchArtists = (params: T.SearchParams) =>

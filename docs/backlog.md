@@ -48,7 +48,7 @@
 - [x] B11 Plans, 7-day trial (`TrialWorkflow`), subscriptions (`SubscriptionWorkflow`), fake gateway locally (🔑 Razorpay test/live keys later), webhooks
 
 **S8 Web app on the real backend**
-- [ ] B12 React: SuperTokens auth mode (OTP + Google callback), Facebook embeds, iframes on profile
+- [x] B12 React: SuperTokens auth mode (OTP + Google callback), Facebook embeds, iframes on profile
 - [ ] B13 Everything in `docker compose` (api, worker, projector, migrate+seed, web); Plan A smoke passes against the real API; runbook
 
 ## EC — React Native apps (Android + iOS) `[ ]`

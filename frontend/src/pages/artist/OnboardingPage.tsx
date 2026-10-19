@@ -121,7 +121,7 @@ function OnboardingWizard({ initial, exists, published, avatarUrl }: { initial: 
   async function saveSocialStep() {
     const input = toProfileInput(form);
     const ok = await save(async () => {
-      await updateArtist.mutateAsync({ instagramHandle: input.instagramHandle, youtubeChannel: input.youtubeChannel });
+      await updateArtist.mutateAsync({ instagramHandle: input.instagramHandle, youtubeChannel: input.youtubeChannel, facebookUrl: input.facebookUrl });
     });
     if (ok) setStep(2);
   }
@@ -337,6 +337,13 @@ function OnboardingWizard({ initial, exists, published, avatarUrl }: { initial: 
                 <span className="ob-social-prefix">youtube.com/</span>
                 <input className="ob-input ob-social-field" placeholder="@arjunmagic" value={form.youtube} onChange={(e) => set('youtube', e.target.value)} />
               </div>
+            </div>
+
+            <div className="ob-field">
+              <label><Globe size={15} /> Facebook page</label>
+              <input className="ob-input" placeholder="facebook.com/yourpage" value={form.facebook} onChange={(e) => set('facebook', e.target.value)} />
+              {fieldError('facebook')}
+              <span className="ob-hint">Your Instagram, YouTube and Facebook appear as live widgets on your profile.</span>
             </div>
 
             <MediaUploader />
