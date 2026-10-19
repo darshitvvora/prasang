@@ -2,7 +2,8 @@ import { Link } from 'react-router-dom';
 import { Eye, MessageCircle, TrendingUp, Star, Crown, ChevronRight } from 'lucide-react';
 import ArtistSidebar from '../../components/ArtistSidebar';
 import QueryState from '../../components/QueryState';
-import { useArtistDashboard } from '../../api/queries';
+import { useArtistDashboard, useMyArtist } from '../../api/queries';
+import { suspensionMessage } from './suspension';
 import { useAuth } from '../../auth/AuthProvider';
 import { formatDate } from '../../api/format';
 import type { ArtistDashboard, Metric } from '../../api/types';
@@ -132,6 +133,8 @@ export default function DashboardPage() {
   const { user } = useAuth();
   const dashboard = useArtistDashboard();
   const name = dashboard.data?.greetingName ?? user?.fullName.split(' ')[0] ?? '';
+  const myArtist = useMyArtist();
+  const hidden = myArtist.data ? suspensionMessage(myArtist.data) : null;
 
   return (
     <div className="artist-layout">
@@ -149,6 +152,12 @@ export default function DashboardPage() {
             )}
           </div>
         </header>
+
+        {hidden && (
+          <div className="artist-suspension-banner" role="alert">
+            {hidden} <Link to="/contact">Contact us</Link> if you have questions.
+          </div>
+        )}
 
         <QueryState query={dashboard}>{(data) => <Dashboard data={data} />}</QueryState>
       </main>

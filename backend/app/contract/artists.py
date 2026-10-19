@@ -74,6 +74,8 @@ class ArtistProfile(ArtistDetail):
     whatsapp_number: str | None
     is_published: bool
     completeness: ProfileCompleteness
+    suspended: bool
+    suspension_reason: str | None
 
 
 class ArtistProfileInput(ContractModel):

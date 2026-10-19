@@ -36,7 +36,7 @@ export interface ArtistProfileInput {
 }
 export interface CompletenessItem { key: 'basic_info' | 'photo' | 'bio' | 'media' | 'instagram' | 'review'; label: string; done: boolean }
 export interface ProfileCompleteness { percent: number; items: CompletenessItem[] }
-export interface ArtistProfile extends ArtistDetail { contactPhone: string; whatsappNumber: string | null; isPublished: boolean; completeness: ProfileCompleteness }
+export interface ArtistProfile extends ArtistDetail { contactPhone: string; whatsappNumber: string | null; isPublished: boolean; completeness: ProfileCompleteness; suspended: boolean; suspensionReason: string | null }
 
 export interface PlanUsage {
   tier: SubscriptionTier; name: string; status: 'free' | 'trial' | 'active' | 'cancelling' | 'halted';

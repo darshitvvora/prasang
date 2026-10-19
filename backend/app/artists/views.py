@@ -38,4 +38,5 @@ def to_detail(p) -> ArtistDetail:
 
 def to_profile(p, completeness: ProfileCompleteness) -> ArtistProfile:
     return ArtistProfile(**detail_fields(p), contact_phone=p.contact_phone, whatsapp_number=p.whatsapp_number,
-                         is_published=p.is_published, completeness=completeness)
+                         is_published=p.is_published, completeness=completeness,
+                         suspended=p.suspended_at is not None, suspension_reason=p.suspension_reason)

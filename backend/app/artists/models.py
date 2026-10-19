@@ -36,6 +36,10 @@ class ArtistProfile(Timestamps, Base):
     is_published: Mapped[bool] = mapped_column(default=False)
     is_verified: Mapped[bool] = mapped_column(default=False)
     is_featured: Mapped[bool] = mapped_column(default=False)
+    featured_override: Mapped[bool] = mapped_column(default=False, server_default="false")  # set by admin; kept across plan changes
+    suspended_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    suspension_reason: Mapped[str | None] = mapped_column(Text)
+    grant_ends_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))  # tier_source == "grant"
     subscription_tier: Mapped[str] = mapped_column(TierEnum, default="free")
     tier_source: Mapped[str] = mapped_column(TierSourceEnum, default="free")
     trial_ends_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))

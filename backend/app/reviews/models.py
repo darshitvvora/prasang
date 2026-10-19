@@ -1,6 +1,7 @@
 import uuid
+from datetime import datetime
 
-from sqlalchemy import CheckConstraint, ForeignKey, String, Text
+from sqlalchemy import CheckConstraint, DateTime, ForeignKey, String, Text
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.db import Base
@@ -18,3 +19,5 @@ class Review(Timestamps, Base):
     event_type: Mapped[str] = mapped_column(EventTypeEnum)
     event_month: Mapped[str] = mapped_column(String(7))
     text: Mapped[str] = mapped_column(Text)
+    hidden_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    hidden_reason: Mapped[str | None] = mapped_column(Text)

@@ -48,6 +48,19 @@ async def end_overdue_trials(session: AsyncSession, now: datetime | None = None)
     return len(ids)
 
 
+async def end_overdue_grants(session: AsyncSession, now: datetime | None = None) -> int:
+    """Plans granted by an admin end here (5-minute precision is enough)."""
+    from app.subscriptions.service import downgrade_to_free
+
+    now = now or datetime.now(UTC)
+    artists = (await session.execute(select(ArtistProfile).where(
+        ArtistProfile.tier_source == "grant", ArtistProfile.grant_ends_at < now).with_for_update())).scalars().all()
+    for artist in artists:
+        await downgrade_to_free(session, artist)
+    await session.commit()
+    return len(artists)
+
+
 async def lapse_overdue_subscriptions(session: AsyncSession) -> int:
     from app.subscriptions.service import lapse
 
@@ -63,6 +76,7 @@ async def run_sweeps(session: AsyncSession, starter: WorkflowStarter) -> dict[st
     result = {
         "lead_notifications": await retry_lead_notifications(session, starter),
         "trials_ended": await end_overdue_trials(session),
+        "grants_ended": await end_overdue_grants(session),
         "subscriptions_lapsed": await lapse_overdue_subscriptions(session),
         "leads_expired": await expire_leads(session),
     }

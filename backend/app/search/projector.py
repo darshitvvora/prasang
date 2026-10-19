@@ -10,6 +10,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
 from app.artists.models import ArtistProfile
+from app.artists.visibility import is_public, public_filter
 from app.outbox.models import OutboxEvent
 from app.search.documents import artist_document
 from app.search.es import alias, get_es
@@ -52,7 +53,7 @@ async def project_batch(sessions: async_sessionmaker[AsyncSession], indexer: Ind
         for artist_id, group in by_artist.items():
             try:
                 profile = await session.get(ArtistProfile, artist_id)
-                if profile is not None and profile.is_published:
+                if profile is not None and is_public(profile):
                     await indexer.upsert(artist_id, artist_document(profile))
                 else:
                     await indexer.delete(artist_id)
@@ -80,7 +81,7 @@ async def reindex_all(sessions: async_sessionmaker[AsyncSession], es: AsyncElast
     name = f"{alias()}_v{datetime.now(UTC):%Y%m%d%H%M%S%f}"
     await es.indices.create(index=name, body=INDEX_BODY)
     async with sessions() as session:
-        profiles = (await session.execute(select(ArtistProfile).where(ArtistProfile.is_published.is_(True)))).scalars().all()
+        profiles = (await session.execute(select(ArtistProfile).where(public_filter()))).scalars().all()
         actions = [{"_index": name, "_id": str(p.id), "_source": artist_document(p)} for p in profiles]
     await async_bulk(es, actions)
     await es.indices.refresh(index=name)

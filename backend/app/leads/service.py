@@ -51,6 +51,9 @@ async def create_lead(session: AsyncSession, planner: User, data: CreateLeadRequ
             ArtistProfile.id == artist_id, ArtistProfile.is_published.is_(True)).with_for_update())).scalar_one_or_none()
     if artist is None:
         raise not_found("artist_not_found", "No artist found for this link")
+    if artist.suspended_at is not None:
+        await session.rollback()
+        raise conflict("artist_suspended", "This artist isn't taking enquiries on Prasang right now")
 
     existing = (await session.execute(select(Lead).where(
         Lead.artist_id == artist.id, Lead.planner_id == planner.id,

@@ -8,6 +8,7 @@ from app.artists.completeness import completeness
 from app.artists.models import ArtistDailyStat, ArtistProfile
 from app.artists.slugs import unique_slug
 from app.artists.views import to_profile
+from app.artists.visibility import public_filter
 from app.auth.models import User
 from app.config import get_settings
 from app.contract import ArtistDashboard, ArtistProfileInput, ArtistProfilePatch, DashboardMetrics, LeadSourceStat, Metric, RatingMetric
@@ -73,7 +74,7 @@ async def get_own(session: AsyncSession, user: User) -> ArtistProfile:
 
 async def get_public(session: AsyncSession, slug: str) -> ArtistProfile:
     profile = (await session.execute(
-        select(ArtistProfile).where(ArtistProfile.slug == slug, ArtistProfile.is_published.is_(True)))).scalar_one_or_none()
+        select(ArtistProfile).where(ArtistProfile.slug == slug, public_filter()))).scalar_one_or_none()
     if profile is None:
         raise not_found("artist_not_found", "No artist found for this link")
     return profile

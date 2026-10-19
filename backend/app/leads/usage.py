@@ -18,6 +18,12 @@ def previous_month_bounds_ist(now: datetime) -> tuple[datetime, datetime]:
     return month_bounds_ist(start - timedelta(hours=1))
 
 
+def _period_end(profile, subscription, status: str):
+    if profile.tier_source == "grant" and profile.grant_ends_at:
+        return profile.grant_ends_at.astimezone(IST).date()
+    return subscription.current_period_end if subscription is not None and status != "trial" else None
+
+
 def plan_usage(profile, plan, leads_used: int, now: datetime, subscription=None) -> PlanUsage:
     if profile.tier_source == "trial":
         status = "trial"
@@ -28,13 +34,15 @@ def plan_usage(profile, plan, leads_used: int, now: datetime, subscription=None)
             status = "cancelling"
         else:
             status = "active"
+    elif profile.tier_source == "grant":
+        status = "active"
     else:
         status = "free"
     limit = plan.lead_limit_monthly
     return PlanUsage(
         tier=profile.subscription_tier, name=plan.name, status=status, lead_limit_monthly=limit,
         leads_used_this_month=leads_used, leads_remaining=None if limit < 0 else max(0, limit - leads_used),
-        period_end=subscription.current_period_end if subscription is not None and status != "trial" else None,
+        period_end=_period_end(profile, subscription, status),
         trial_ends_at=profile.trial_ends_at.astimezone(IST).date() if status == "trial" and profile.trial_ends_at else None,
         trial_available=not profile.trial_used and profile.tier_source == "free",
     )

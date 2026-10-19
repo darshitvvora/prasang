@@ -48,7 +48,7 @@ def period_end_iso(d: date) -> str:
     return datetime.combine(d + timedelta(days=1), datetime.min.time(), tzinfo=IST).isoformat()
 
 
-async def _current(session: AsyncSession, artist_id) -> Subscription | None:
+async def current_subscription(session: AsyncSession, artist_id) -> Subscription | None:
     """The artist's live subscription; active wins over halted, newest first (never raises on duplicates)."""
     rows = (await session.execute(select(Subscription).where(
         Subscription.artist_id == artist_id, Subscription.status.in_(("active", "halted")))
@@ -71,20 +71,22 @@ async def my_subscription(session: AsyncSession, user: User) -> MySubscriptionRe
             tier="free", name=free.name, status="free", lead_limit_monthly=free.lead_limit_monthly, leads_used_this_month=0,
             leads_remaining=max(free.lead_limit_monthly, 0), period_end=None, trial_ends_at=None, trial_available=True), subscription=None)
     return MySubscriptionResponse(plan=await usage_for(session, artist, datetime.now(UTC)),
-                                  subscription=_summary(await _current(session, artist.id)))
+                                  subscription=_summary(await current_subscription(session, artist.id)))
 
 
-async def _apply_tier(session: AsyncSession, artist: ArtistProfile, tier: str, source: str) -> None:
+async def apply_tier(session: AsyncSession, artist: ArtistProfile, tier: str, source: str) -> None:
     plan = await session.get(SubscriptionPlan, tier)
     artist.subscription_tier, artist.tier_source = tier, source
     artist.search_boost_score = plan.search_boost_score
-    artist.is_featured = plan.is_featured
+    artist.is_featured = plan.is_featured or artist.featured_override
+    if source != "grant":
+        artist.grant_ends_at = None
     await unlock_month(session, artist.id, datetime.now(UTC), plan.lead_limit_monthly)
     artist_changed(session, artist.id)
 
 
 async def downgrade_to_free(session: AsyncSession, artist: ArtistProfile) -> None:
-    await _apply_tier(session, artist, "free", "free")
+    await apply_tier(session, artist, "free", "free")
 
 
 async def start_trial(session: AsyncSession, user: User, tier: str):
@@ -93,7 +95,7 @@ async def start_trial(session: AsyncSession, user: User, tier: str):
         raise conflict("trial_used", "You have already used your free trial")
     now = datetime.now(UTC)
     artist.trial_used, artist.trial_ends_at = True, now + timedelta(days=TRIAL_DAYS)
-    await _apply_tier(session, artist, tier, "trial")
+    await apply_tier(session, artist, tier, "trial")
     await session.commit()
     try:
         await get_starter().start_trial(str(artist.id), artist.trial_ends_at.isoformat())
@@ -151,7 +153,7 @@ async def activate(session: AsyncSession, sub: Subscription, period_end: date) -
         await _signal(previous, "ended", "cancelled")
     await session.flush()
     sub.status, sub.current_period_end, sub.cancel_at_period_end = "active", period_end, False
-    await _apply_tier(session, artist, sub.tier, "paid")
+    await apply_tier(session, artist, sub.tier, "paid")
     await session.commit()
     await _signal(sub, "activated", period_end_iso(period_end))
 
@@ -162,13 +164,18 @@ async def record_charge(session: AsyncSession, sub: Subscription, period_end: da
     await _signal(sub, "charged", period_end_iso(period_end))
 
 
-async def end(session: AsyncSession, sub: Subscription, status: str) -> None:
+async def end(session: AsyncSession, sub: Subscription, status: str, commit: bool = True) -> None:
     sub.status = status
     artist = await session.get(ArtistProfile, sub.artist_id)
-    if artist.tier_source == "paid" and await _current(session, artist.id) is None:
+    if artist.tier_source == "paid" and await current_subscription(session, artist.id) is None:
         await downgrade_to_free(session, artist)
-    await session.commit()
-    await _signal(sub, "ended", status)
+    if commit:
+        await session.commit()
+        await signal_ended(sub)
+
+
+async def signal_ended(sub: Subscription) -> None:
+    await _signal(sub, "ended", sub.status)
 
 
 async def _signal(sub: Subscription, name: str, arg: str) -> None:
@@ -192,7 +199,7 @@ async def verify(session: AsyncSession, user: User, payment_id: str, gateway_sub
 
 async def cancel(session: AsyncSession, user: User, gateway: PaymentGateway) -> MySubscriptionResponse:
     artist = await get_own(session, user)
-    sub = await _current(session, artist.id)
+    sub = await current_subscription(session, artist.id)
     if sub is None:
         raise not_found("subscription_not_found", "You don't have an active subscription")
     await gateway.cancel_subscription(sub.gateway_subscription_id, at_cycle_end=True)
@@ -231,7 +238,7 @@ async def _paid(session: AsyncSession, sub: Subscription, period_end: date) -> N
         await activate(session, sub, period_end)
         return
     # Terminal (replaced checkout, lapsed, cancelled): money was taken anyway.
-    other = await _current(session, sub.artist_id)
+    other = await current_subscription(session, sub.artist_id)
     if other is None:
         await activate(session, sub, period_end)  # restore the plan they are paying for
         return
