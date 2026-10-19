@@ -1,0 +1,12 @@
+{
+  "artistId": "art-001",
+  "plannerName": "Neha Kulkarni",
+  "plannerPhone": "9920012345",
+  "plannerEmail": "neha.kulkarni@gmail.com",
+  "eventType": "wedding",
+  "eventDate": "2026-12-12",
+  "eventCity": "Mumbai",
+  "budgetRange": "15k_25k",
+  "notes": "Cocktail hour close-up magic, ~150 guests",
+  "source": "profile"
+}

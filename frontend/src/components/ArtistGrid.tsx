@@ -1,14 +1,16 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight, Sparkles } from 'lucide-react';
-import type { Artist } from '../types/artist';
+import type { ArtistCard as ArtistCardData } from '../api/types';
 import ArtistCard from './ArtistCard';
 import './ArtistGrid.css';
 
 interface ArtistGridProps {
-  artists: Artist[];
+  artists: ArtistCardData[];
+  /** Total artists on the platform, shown on the "Show All" card. */
+  total?: number;
 }
 
-export default function ArtistGrid({ artists }: ArtistGridProps) {
+export default function ArtistGrid({ artists, total }: ArtistGridProps) {
   // Insert "Show All" card at position 3 (after 3 cards)
   const firstThree = artists.slice(0, 3);
   const rest = artists.slice(3);
@@ -27,7 +29,9 @@ export default function ArtistGrid({ artists }: ArtistGridProps) {
               <ArrowRight size={24} />
             </div>
             <div className="artist-grid-show-all-title">Show All</div>
-            <div className="artist-grid-show-all-count">12,500+ artists</div>
+            <div className="artist-grid-show-all-count">
+              {total ? `${total.toLocaleString('en-IN')} artists` : 'Browse artists'}
+            </div>
 
             {/* Decorative star */}
             <div className="artist-grid-show-all-star" aria-hidden="true">

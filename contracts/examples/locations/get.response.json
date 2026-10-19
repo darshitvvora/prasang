@@ -1,0 +1,35 @@
+{
+  "cities": [
+    {
+      "name": "Mumbai",
+      "areas": [
+        "Bandra West",
+        "Andheri West",
+        "Juhu",
+        "Powai",
+        "Lower Parel",
+        "Dadar",
+        "Goregaon",
+        "Malad"
+      ]
+    },
+    {
+      "name": "Delhi",
+      "areas": [
+        "South Delhi",
+        "Connaught Place",
+        "Hauz Khas",
+        "Dwarka"
+      ]
+    },
+    {
+      "name": "Bengaluru",
+      "areas": [
+        "Indiranagar",
+        "Koramangala",
+        "Whitefield",
+        "HSR Layout"
+      ]
+    }
+  ]
+}

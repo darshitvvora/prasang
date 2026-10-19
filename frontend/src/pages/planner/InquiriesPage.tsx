@@ -1,53 +1,72 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { LayoutDashboard, MessageCircle, Search, Calendar, MapPin, IndianRupee, ChevronDown, ExternalLink, ChevronRight } from 'lucide-react';
-import { mockArtists } from '../../data/mockArtists';
-import { INQUIRIES, STATUS_COLORS } from '../../data/mockPlannerActivity';
-import type { InquiryStatus } from '../../data/mockPlannerActivity';
+import { Calendar, ChevronDown, ExternalLink, IndianRupee } from 'lucide-react';
+import PlannerSidebar from '../../components/PlannerSidebar';
+import QueryState from '../../components/QueryState';
+import { usePlannerInquiries } from '../../api/queries';
+import { formatDate, imageOr, relativeTime } from '../../api/format';
+import type { PlannerInquiry } from '../../api/types';
+import type { InquiryStatus } from '../../types/artist';
 import { ARTIST_TYPE_LABELS } from '../../types/artist';
+import { STATUS_COLORS } from './plannerStatus';
 import './PlannerPages.css';
 
 type FilterStatus = 'all' | InquiryStatus;
+const FILTERS: FilterStatus[] = ['all', 'pending', 'responded', 'confirmed', 'declined'];
+const budgetK = (min: number, max: number | null) => `${(min / 1000).toFixed(0)}k${max === null ? '+' : ` – ${(max / 1000).toFixed(0)}k`}`;
+
+function InquiryCard({ inquiry }: { inquiry: PlannerInquiry }) {
+  const [expanded, setExpanded] = useState(false);
+  const { artist } = inquiry;
+  return (
+    <div className="planner-inquiry-card">
+      <div className="planner-inquiry-card-top">
+        <div className="planner-inquiry-card-left">
+          <img src={imageOr(artist.profileImageUrl)} alt={artist.name} className="planner-inquiry-card-avatar" />
+          <div>
+            <div className="planner-inquiry-card-name">{artist.name}</div>
+            <div className="planner-inquiry-card-meta">
+              {inquiry.eventDate && <span><Calendar size={12} /> {formatDate(inquiry.eventDate)}</span>}
+            </div>
+          </div>
+        </div>
+        <div className="planner-inquiry-card-right">
+          <span className="planner-status-badge" style={{ background: `${STATUS_COLORS[inquiry.status]}20`, color: STATUS_COLORS[inquiry.status] }}>
+            {inquiry.status}
+          </span>
+          <span className="planner-inquiry-time">{relativeTime(inquiry.contactedAt)}</span>
+        </div>
+      </div>
+
+      <div className="planner-inquiry-card-event">
+        <span className="planner-inquiry-event-type">{inquiry.eventTitle} · {ARTIST_TYPE_LABELS[artist.artistType]}</span>
+        <span className="planner-inquiry-budget"><IndianRupee size={12} />{budgetK(inquiry.budgetMin, inquiry.budgetMax)}</span>
+      </div>
+
+      {expanded && (
+        <div className="planner-inquiry-card-expanded">
+          {inquiry.notes && <div className="planner-inquiry-notes">{inquiry.notes}</div>}
+          <Link to={`/profile/${artist.slug}`} className="planner-inquiry-view-profile-btn">
+            <ExternalLink size={15} /> View Profile
+          </Link>
+        </div>
+      )}
+
+      <button className="planner-inquiry-expand-btn" onClick={() => setExpanded(!expanded)}>
+        {expanded ? 'Hide details' : 'View details'}
+        <ChevronDown size={14} style={{ transform: expanded ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
+      </button>
+    </div>
+  );
+}
 
 export default function InquiriesPage() {
   const [filter, setFilter] = useState<FilterStatus>('all');
-  const [expanded, setExpanded] = useState<string | null>(null);
-
-  const filtered = filter === 'all' ? INQUIRIES : INQUIRIES.filter((i) => i.status === filter);
-  const counts = {
-    all: INQUIRIES.length,
-    pending: INQUIRIES.filter((i) => i.status === 'pending').length,
-    responded: INQUIRIES.filter((i) => i.status === 'responded').length,
-    confirmed: INQUIRIES.filter((i) => i.status === 'confirmed').length,
-    declined: INQUIRIES.filter((i) => i.status === 'declined').length,
-  };
+  const inquiries = usePlannerInquiries(filter);
 
   return (
     <div className="planner-layout">
-      <aside className="planner-sidebar">
-        <Link to="/" className="planner-sidebar-logo">
-          <span>prasang</span>
-          <span className="planner-sidebar-logo-hindi">प्रसंग</span>
-        </Link>
-        <nav className="planner-sidebar-nav">
-          <Link to="/planner/dashboard" className="planner-sidebar-link">
-            <LayoutDashboard size={18} /> Dashboard
-          </Link>
-          <Link to="/planner/inquiries" className="planner-sidebar-link active">
-            <MessageCircle size={18} /> My Inquiries
-          </Link>
-          <Link to="/search" className="planner-sidebar-link">
-            <Search size={18} /> Browse Artists
-          </Link>
-        </nav>
-        <div className="planner-promo-card">
-          <div className="planner-promo-title">Looking for more artists?</div>
-          <div className="planner-promo-note">Search magicians, DJs, singers and more near you.</div>
-          <Link to="/search" className="planner-promo-btn">
-            Browse Artists <ChevronRight size={14} />
-          </Link>
-        </div>
-      </aside>
+      <PlannerSidebar active="inquiries" />
 
       <main className="planner-main">
         <header className="planner-topbar">
@@ -58,80 +77,22 @@ export default function InquiriesPage() {
         </header>
 
         <div className="planner-filter-tabs">
-          {(['all', 'pending', 'responded', 'confirmed', 'declined'] as FilterStatus[]).map((s) => (
-            <button
-              key={s}
-              className={`planner-filter-tab${filter === s ? ' active' : ''}`}
-              onClick={() => setFilter(s)}
-            >
+          {FILTERS.map((s) => (
+            <button key={s} className={`planner-filter-tab${filter === s ? ' active' : ''}`} onClick={() => setFilter(s)}>
               {s.charAt(0).toUpperCase() + s.slice(1)}
-              <span className="planner-tab-count">{counts[s]}</span>
+              {inquiries.data && <span className="planner-tab-count">{inquiries.data.counts[s]}</span>}
             </button>
           ))}
         </div>
 
-        <div className="planner-inquiry-cards">
-          {filtered.length === 0 && (
-            <div className="planner-inquiries-empty">No inquiries in this category yet.</div>
+        <QueryState query={inquiries} isEmpty={(d) => d.items.length === 0}
+          empty={<div className="planner-inquiries-empty">No inquiries in this category yet.</div>}>
+          {(data) => (
+            <div className="planner-inquiry-cards">
+              {data.items.map((inquiry) => <InquiryCard key={inquiry.id} inquiry={inquiry} />)}
+            </div>
           )}
-          {filtered.map((inquiry) => {
-            const artist = mockArtists.find((a) => a.artistId === inquiry.artistId);
-            if (!artist) return null;
-            return (
-              <div key={inquiry.id} className="planner-inquiry-card">
-                <div className="planner-inquiry-card-top">
-                  <div className="planner-inquiry-card-left">
-                    <img src={artist.profileImageUrl} alt={artist.name} className="planner-inquiry-card-avatar" />
-                    <div>
-                      <div className="planner-inquiry-card-name">{artist.name}</div>
-                      <div className="planner-inquiry-card-meta">
-                        <span><Calendar size={12} /> {inquiry.eventDate}</span>
-                        <span><MapPin size={12} /> {artist.locationArea}, {artist.locationCity}</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="planner-inquiry-card-right">
-                    <span
-                      className="planner-status-badge"
-                      style={{ background: `${STATUS_COLORS[inquiry.status]}20`, color: STATUS_COLORS[inquiry.status] }}
-                    >
-                      {inquiry.status}
-                    </span>
-                    <span className="planner-inquiry-time">{inquiry.contactedAt}</span>
-                  </div>
-                </div>
-
-                <div className="planner-inquiry-card-event">
-                  <span className="planner-inquiry-event-type">{inquiry.event} · {ARTIST_TYPE_LABELS[artist.artistType]}</span>
-                  <span className="planner-inquiry-budget">
-                    <IndianRupee size={12} />
-                    {(inquiry.budgetMin / 1000).toFixed(0)}k – {(inquiry.budgetMax / 1000).toFixed(0)}k
-                  </span>
-                </div>
-
-                {expanded === inquiry.id && (
-                  <div className="planner-inquiry-card-expanded">
-                    <div className="planner-inquiry-notes">{inquiry.notes}</div>
-                    <Link to={`/profile/${artist.slug}`} className="planner-inquiry-view-profile-btn">
-                      <ExternalLink size={15} /> View Profile
-                    </Link>
-                  </div>
-                )}
-
-                <button
-                  className="planner-inquiry-expand-btn"
-                  onClick={() => setExpanded(expanded === inquiry.id ? null : inquiry.id)}
-                >
-                  {expanded === inquiry.id ? 'Hide details' : 'View details'}
-                  <ChevronDown
-                    size={14}
-                    style={{ transform: expanded === inquiry.id ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}
-                  />
-                </button>
-              </div>
-            );
-          })}
-        </div>
+        </QueryState>
       </main>
     </div>
   );

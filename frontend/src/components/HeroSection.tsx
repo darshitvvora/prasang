@@ -1,4 +1,3 @@
-import { Search, SlidersHorizontal } from 'lucide-react';
 import './HeroSection.css';
 
 export default function HeroSection() {

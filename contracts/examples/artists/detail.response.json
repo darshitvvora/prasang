@@ -1,0 +1,66 @@
+{
+  "artistId": "art-001",
+  "name": "Arjun Malhotra",
+  "slug": "arjun-malhotra-magic",
+  "artistType": "magician",
+  "profileImageUrl": "/artists/magician.png",
+  "bio": "Award-winning close-up magician specializing in mentalism and card magic. 500+ shows across Mumbai.",
+  "locationCity": "Mumbai",
+  "locationArea": "Bandra West",
+  "perEventRateMin": 15000,
+  "perEventRateMax": 25000,
+  "averageRating": 4.9,
+  "totalReviews": 127,
+  "isVerified": true,
+  "isFeatured": true,
+  "subscriptionTier": "basic",
+  "instagramHandle": "arjunmagic",
+  "youtubeChannel": "ArjunMalhotraMagic",
+  "experienceYears": 8,
+  "eventTypesSupported": [
+    "birthday",
+    "wedding",
+    "corporate",
+    "anniversary",
+    "house_party"
+  ],
+  "languagesSpoken": [
+    "Hindi",
+    "English"
+  ],
+  "readyToTravel": true,
+  "media": [
+    {
+      "id": "med-001-1",
+      "kind": "image",
+      "url": "/artists/magician.png",
+      "thumbnailUrl": null,
+      "caption": "Arjun Malhotra live",
+      "displayOrder": 0
+    },
+    {
+      "id": "med-001-2",
+      "kind": "image",
+      "url": "/artists/dj.png",
+      "thumbnailUrl": null,
+      "caption": null,
+      "displayOrder": 1
+    },
+    {
+      "id": "med-001-3",
+      "kind": "image",
+      "url": "/artists/singer.png",
+      "thumbnailUrl": null,
+      "caption": null,
+      "displayOrder": 2
+    },
+    {
+      "id": "med-001-4",
+      "kind": "image",
+      "url": "/artists/comedian.png",
+      "thumbnailUrl": null,
+      "caption": null,
+      "displayOrder": 3
+    }
+  ]
+}

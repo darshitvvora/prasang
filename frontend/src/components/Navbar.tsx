@@ -1,72 +1,81 @@
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { MapPin, Menu, X, Sparkles } from 'lucide-react';
+import { useState } from 'react';
+import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { Menu, X, Sparkles } from 'lucide-react';
 import './Navbar.css';
-import indianCities from '../data/indian_cities.json';
+import { useAuth } from '../auth/AuthProvider';
+import { homePathFor } from '../auth/paths';
+import { useLocations } from '../api/queries';
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [city, setCity] = useState('Mumbai, India');
-  useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(() => {
-        // Placeholder: could reverse geocode to city name; fallback to default.
-      });
-    }
-  }, []);
+  const { pathname } = useLocation();
+  const [params] = useSearchParams();
+  const navigate = useNavigate();
+  const { status, user, signOut } = useAuth();
+  const locations = useLocations();
+  const city = params.get('city') ?? 'Mumbai';
+
   const links = [
-    { label: 'Home', to: '/', active: true },
+    { label: 'Home', to: '/' },
     { label: 'Search', to: '/search' },
     { label: 'Pricing', to: '/pricing' },
   ];
+  const listYourArtTo = user?.role === 'artist' ? '/artist/onboarding' : '/signup?role=artist';
+  const close = () => setMobileOpen(false);
+
+  function chooseCity(name: string) {
+    close();
+    navigate(`/search?city=${encodeURIComponent(name)}`);
+  }
+
+  function handleSignOut() {
+    close();
+    signOut();
+    navigate('/');
+  }
+
+  const citySelect = (
+    <select className="navbar-location-select" value={city} onChange={(e) => chooseCity(e.target.value)} aria-label="Select location">
+      {(locations.data?.cities ?? [{ name: city, areas: [] }]).map((c) => (
+        <option key={c.name} value={c.name}>{c.name}, India</option>
+      ))}
+    </select>
+  );
+
+  const accountLinks = status === 'signedIn' && user ? (
+    <>
+      <Link to={homePathFor(user)} className="navbar-signin" onClick={close}>Dashboard</Link>
+      <button type="button" className="navbar-signin navbar-signout" onClick={handleSignOut}>Sign out</button>
+    </>
+  ) : (
+    <Link to="/login" className="navbar-signin" onClick={close}>Sign In</Link>
+  );
 
   return (
     <>
       <nav className="navbar" id="navbar">
         <div className="container navbar-inner">
-          {/* Logo */}
-          <Link to="/" className="navbar-logo" onClick={() => setMobileOpen(false)}>
+          <Link to="/" className="navbar-logo" onClick={close}>
             <span className="navbar-logo-text">prasang</span>
             <span className="navbar-logo-hindi">प्रसंग</span>
           </Link>
 
-          {/* Desktop Links */}
           <div className="navbar-links">
             {links.map((link) => (
-              <Link
-                key={link.label}
-                to={link.to}
-                className={`navbar-link${link.active ? ' active' : ''}`}
-              >
+              <Link key={link.label} to={link.to} className={`navbar-link${pathname === link.to ? ' active' : ''}`}>
                 {link.label}
               </Link>
             ))}
           </div>
 
-          {/* Right Section */}
           <div className="navbar-right">
-            <select className="navbar-location-select" value={city} onChange={(e) => setCity(e.target.value)} aria-label="Select location">
-              {indianCities.map((c) => (
-                <option key={c.name} value={`${c.name}, India`}>{c.name}, India</option>
-              ))}
-            </select>
-
-            <Link to="/login" className="navbar-signin">
-              Sign In
-            </Link>
-
-            <Link to="/artist/onboarding" className="navbar-cta">
+            {citySelect}
+            {accountLinks}
+            <Link to={listYourArtTo} className="navbar-cta">
               <Sparkles size={16} />
               List Your Art
             </Link>
-
-            {/* Mobile toggle */}
-            <button
-              type="button"
-              className="navbar-mobile-toggle"
-              aria-label="Toggle menu"
-              onClick={() => setMobileOpen(!mobileOpen)}
-            >
+            <button type="button" className="navbar-mobile-toggle" aria-label="Toggle menu" onClick={() => setMobileOpen(!mobileOpen)}>
               {mobileOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
@@ -79,25 +88,14 @@ export default function Navbar() {
           the navbar's own height). */}
       <div className={`navbar-mobile-menu${mobileOpen ? ' open' : ''}`}>
         {links.map((link) => (
-          <Link
-            key={link.label}
-            to={link.to}
-            className={`navbar-link${link.active ? ' active' : ''}`}
-            onClick={() => setMobileOpen(false)}
-          >
+          <Link key={link.label} to={link.to} className={`navbar-link${pathname === link.to ? ' active' : ''}`} onClick={close}>
             {link.label}
           </Link>
         ))}
         <div className="navbar-mobile-divider" />
-        <Link to="/login" className="navbar-link" onClick={() => setMobileOpen(false)}>
-          Sign In
-        </Link>
-            <select className="navbar-location-select" value={city} onChange={(e) => setCity(e.target.value)} aria-label="Select location">
-              {indianCities.map((c) => (
-                <option key={c.name} value={`${c.name}, India`}>{c.name}, India</option>
-              ))}
-            </select>
-        <Link to="/artist/onboarding" className="navbar-cta" onClick={() => setMobileOpen(false)}>
+        {accountLinks}
+        {citySelect}
+        <Link to={listYourArtTo} className="navbar-cta" onClick={close}>
           <Sparkles size={16} />
           List Your Art
         </Link>

@@ -1,0 +1,35 @@
+{
+  "items": [
+    {
+      "artistId": "art-011",
+      "name": "Kabir the Mentalist",
+      "slug": "kabir-mentalist",
+      "artistType": "magician",
+      "profileImageUrl": "/artists/magician.png",
+      "bio": "Mind-reading and interactive mentalism for corporate offsites and intimate house parties.",
+      "locationCity": "Bengaluru",
+      "locationArea": "Indiranagar",
+      "perEventRateMin": 10000,
+      "perEventRateMax": 20000,
+      "averageRating": 4.4,
+      "totalReviews": 22,
+      "isVerified": false,
+      "isFeatured": false,
+      "subscriptionTier": "free",
+      "instagramHandle": "kabirmentalist",
+      "experienceYears": 3,
+      "eventTypesSupported": [
+        "corporate",
+        "house_party",
+        "birthday"
+      ],
+      "languagesSpoken": [
+        "English",
+        "Hindi",
+        "Kannada"
+      ],
+      "readyToTravel": false,
+      "youtubeChannel": null
+    }
+  ]
+}

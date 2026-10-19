@@ -1,0 +1,7 @@
+{
+  "error": {
+    "code": "artist_not_found",
+    "message": "No artist found for this link",
+    "details": {}
+  }
+}
