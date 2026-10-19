@@ -1,0 +1,31 @@
+"""Temporal client + the WorkflowStarter used by request handlers."""
+import asyncio
+
+from temporalio.client import Client
+from temporalio.exceptions import WorkflowAlreadyStartedError
+
+from app.config import get_settings
+
+_client: Client | None = None
+_lock = asyncio.Lock()
+
+
+async def get_temporal_client() -> Client:
+    global _client
+    async with _lock:
+        if _client is None:
+            s = get_settings()
+            _client = await Client.connect(s.temporal_address, namespace=s.temporal_namespace)
+    return _client
+
+
+class TemporalStarter:
+    async def start_lead_notification(self, lead_id: str) -> None:
+        from app.workflows.lead_notification import LeadNotificationWorkflow
+
+        client = await asyncio.wait_for(get_temporal_client(), timeout=5)
+        try:
+            await client.start_workflow(LeadNotificationWorkflow.run, lead_id, id=f"lead-{lead_id}",
+                                        task_queue=get_settings().temporal_task_queue)
+        except WorkflowAlreadyStartedError:
+            pass

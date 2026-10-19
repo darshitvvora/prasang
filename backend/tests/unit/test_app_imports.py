@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-ENTRY_POINTS = ["app.main", "app.cli", "app.search.projector", "app.seed"]
+ENTRY_POINTS = ["app.main", "app.cli", "app.search.projector", "app.seed", "app.workflows.worker"]
 
 
 @pytest.mark.parametrize("module", ENTRY_POINTS)
