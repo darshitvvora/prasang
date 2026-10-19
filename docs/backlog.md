@@ -1,97 +1,69 @@
-# Prasang Backend MVP — Backlog
+# Prasang — Backlog
 
-Spec: [docs/superpowers/specs/2026-09-29-backend-mvp-design.md](superpowers/specs/2026-09-29-backend-mvp-design.md)
+**Status date:** 2026-10-19 · Legend: `[x]` done · `[~]` in progress · `[ ]` todo · 🔑 needs an account/credential from you
 
-Legend: `[ ]` todo · `[x]` done · 🔑 = needs an external account/credential from you
+**Source of truth:** spec [backend design v2](superpowers/specs/2026-09-29-backend-mvp-design.md) · API [contract](../contracts/README.md) · plans [A](superpowers/plans/2026-09-29-plan-a-api-contract-mock-ui.md), [B](superpowers/plans/2026-10-19-plan-b-backend.md)
+
+**Stack (locked 2026-10-19):** React web + React Native (Android/iOS) clients · FastAPI · PostgreSQL 16 (writes) · **Elasticsearch 8 for all UI search/listing reads** (CQRS via outbox projector) · SuperTokens self-hosted (Google + phone OTP) · Temporal self-hosted on Postgres · Amazon S3 · Razorpay · MSG91 / Resend · deploy on **AWS**.
 
 ---
 
-## EA — API contract & mock UI ✅ (Plan A: docs/superpowers/plans/2026-09-29-plan-a-api-contract-mock-ui.md)
-- [x] TA.1 Contract conventions, error codes, TypeScript contract types (`contracts/README.md`, `frontend/src/api/types.ts`)
-- [x] TA.2 Canonical request/response examples with compile-time shape check (`contracts/examples/`)
-- [x] TA.3 Mockoon mock API generated from datasets + smoke test (`mockoon/`)
-- [x] TA.4 Typed API client, endpoints, TanStack Query hooks, Vite proxy
-- [x] TA.5 Auth provider (mock mode), role guards, shared login/signup with profile step
-- [x] TA.6 Home, search (URL-synced filters, pagination), profile, contact modal → leads
-- [x] TA.7 Artist onboarding/edit (+ contact phone/WhatsApp, avatar, media), dashboard, leads (locked leads, status actions)
-- [x] TA.8 Planner dashboard/inquiries, pricing + Razorpay checkout (mocked), inline mocks removed
-- [x] TA.9 Runbooks
+## EA — API contract & mock UI ✅ (Plan A, merged to `main`)
+- [x] Contract conventions, error codes, TypeScript contract types
+- [x] Canonical request/response examples with compile-time shape check
+- [x] Mockoon mock API + smoke test
+- [x] Typed API client, TanStack Query, Vite proxy
+- [x] Auth provider (mock mode), role guards, shared login/signup with profile step
+- [x] Home, search (URL filters, pagination), profile, contact modal → leads
+- [x] Artist onboarding/edit, media, dashboard, leads (locked leads, status actions)
+- [x] Planner dashboard/inquiries, pricing + Razorpay checkout (mocked)
+- [x] Review fixes: outage ≠ sign-out, expired sessions, no-profile routing, plan-change contract
 
-**Contract additions discovered from the UI (Plan B must implement):** `GET /locations`, `GET /artists/{slug}/reviews` (read-only), `GET /artists/{slug}/similar`, `POST /artists/{slug}/contact-click`, `GET /artists/me/dashboard` (month-over-month metrics → daily stats table), `POST /subscriptions/trial` (7-day, once per artist), lead `eventCity`, artist `contactPhone`/`whatsappNumber`.
+## EB — Backend & whole app running locally `[~]` (Plan B, branch `feat/plan-b-backend`)
+**Goal:** `docker compose up` → full app on http://localhost:5173 with real API, auth, search, workflows.
 
-## E0 — Foundation
-**S0.1 As a developer I can run the whole backend locally with one command.**
-- [ ] T0.1.1 Scaffold `backend/` with uv, FastAPI app factory, config (pydantic-settings), `/healthz`, `/readyz`
-- [ ] T0.1.2 `docker-compose.yml`: postgres 16, elasticsearch 8, Temporal dev server, MinIO, api (hot reload)
-- [ ] T0.1.3 Async SQLAlchemy 2.0 engine/session, Base, Alembic (async env), first empty migration
-- [ ] T0.1.4 Error model + domain exception handler, request-id + JSON logging, CORS
-- [ ] T0.1.5 pytest harness: test DB schema per session, truncate per test, httpx AsyncClient fixture
-- [ ] T0.1.6 GitHub Actions CI: ruff + pytest with Postgres/ES service containers
+**S1 Local infrastructure**
+- [x] B1 Postgres (prasang, prasang_test, supertokens, temporal, temporal_visibility), Elasticsearch 8.19, Temporal 1.32 (server + schema job + namespace job + UI :8080), SuperTokens core 12.3 — `scripts/stack-health.sh`
 
-## E1 — Identity (Supabase Auth)
-**S1.1 As a signed-in user my Supabase token is accepted by the API.**
-- [ ] T1.1.1 JWKS verifier (cache, kid refetch, iss/aud/exp checks) + `AUTH_MODE=local` HS256 with production guard
-- [ ] T1.1.2 `current_user` / `require_role` dependencies
-**S1.2 As a new user I pick my role (artist/planner) once.**
-- [ ] T1.2.1 `users` model + migration
-- [ ] T1.2.2 `GET /api/v1/me` (404 `profile_required`), `POST /api/v1/me`, `PATCH /api/v1/me`
+**S2 API foundation**
+- [ ] B2 FastAPI scaffold: config, async SQLAlchemy, error contract (incl. 422 → `details.fields`), `/healthz` `/readyz`, pytest harness
+- [ ] B3 Pydantic contract models + contract tests; contract additions: Facebook embeds, `Media.embedUrl`, `facebookUrl`, `GET /auth/providers`
+- [ ] B4 Schema migration + seed (localities, plans, 12 demo artists, demo leads)
 
-## E2 — Artist profiles & media
-**S2.1 As an artist I can create and edit my profile (onboarding).**
-- [ ] T2.1.1 `artist_profiles` model + migration (enums, arrays), slug generator
-- [ ] T2.1.2 `POST /api/v1/artists`, `GET/PATCH /api/v1/artists/me`, publish/unpublish
-**S2.2 As a visitor I can open an artist profile by slug.**
-- [ ] T2.2.1 `GET /api/v1/artists/{slug}` (published only, media included, no contact numbers), view counter
-**S2.3 As an artist I can upload photos/videos and embeds within my tier limits.**
-- [ ] T2.3.1 S3 storage client (MinIO local / R2 prod) with presigned PUT + HEAD
-- [ ] T2.3.2 `artist_media` model; upload-url, confirm, delete, reorder endpoints; tier quotas
-**S2.4 Seed data** — [ ] T2.4.1 `cli seed` loads the 12 mock artists + plans for local/dev
+**S3 Identity**
+- [ ] B5 SuperTokens: phone OTP (code in API logs locally) + Google (🔑 Google OAuth client), cookie + header sessions (web + mobile), `/me`
 
-## E3 — Search (CQRS read side)
-**S3.1 Every artist write is projected into Elasticsearch.**
-- [ ] T3.1.1 `outbox_events` model + `emit()` helper used in artist/subscription services
-- [ ] T3.1.2 ES client, index mapping (`artists_vN` + alias), document builder from Postgres
-- [ ] T3.1.3 Projector loop (SKIP LOCKED batch, dedupe, reload, upsert/delete, retry bookkeeping) + `projector` process
-- [ ] T3.1.4 `cli create-index` / `cli reindex` (alias swap)
-**S3.2 As a planner I can search and filter artists.**
-- [ ] T3.2.1 Query builder: filters, fuzzy multi_match, function_score boost, sorts, pagination, facets
-- [ ] T3.2.2 `GET /api/v1/search/artists`, `GET /api/v1/search/suggestions`, `GET /api/v1/artists/featured`
+**S4 Artists & media**
+- [ ] B6 Artist profile CRUD, public profile, Instagram/YouTube/Facebook URL embeds, daily stats, dashboard
+- [ ] B7 Media uploads to S3 (🔑 AWS dev bucket + credentials for uploads; embeds work without), quotas
 
-## E4 — Leads & inquiries
-**S4.1 As a planner I get an artist's contact info by sharing event details.**
-- [ ] T4.1.1 `leads` model + migration; create service (quota → `is_locked`, rate limit, duplicate guard)
-- [ ] T4.1.2 `POST /api/v1/leads` returns contact numbers; starts workflow after commit (non-fatal on failure)
-**S4.2 As an artist I'm notified instantly about new leads.**
-- [ ] T4.2.1 Temporal client + worker process (local dev server / Temporal Cloud API key)
-- [ ] T4.2.2 `Notifier` interface: console, MSG91 (WhatsApp + SMS), Resend (email)
-- [ ] T4.2.3 `LeadNotificationWorkflow` + activities + time-skipping tests
-**S4.3 As an artist I manage my leads; as a planner I track my inquiries.**
-- [ ] T4.3.1 `GET /api/v1/leads/artist` (masking), `PATCH /api/v1/leads/{id}`, `GET /api/v1/leads/planner` (status mapping)
-- [ ] T4.3.2 `cli expire-leads`, `cli resend-lead-notifications`
+**S5 Search (Elasticsearch read side)**
+- [ ] B8 Outbox projector → Elasticsearch; search, suggestions, featured, similar — all UI listing reads from ES
 
-## E5 — Paid subscriptions (Razorpay + Temporal)
-**S5.1 As an artist I can see plans and subscribe.**
-- [ ] T5.1.1 `subscription_plans`, `subscriptions`, `payment_events` models + seed
-- [ ] T5.1.2 Razorpay client (create/cancel subscription, signature verify) + `cli sync-razorpay-plans` 🔑 test keys
-- [ ] T5.1.3 `SubscriptionWorkflow` (update `get_checkout`, activation wait, apply tier, renew/halt/cancel loop, grace timer, continue-as-new) + tests
-- [ ] T5.1.4 `GET /plans`, `POST /subscriptions`, `POST /subscriptions/verify`, `GET /subscriptions/me`, `POST /subscriptions/cancel`
-**S5.2 Razorpay webhooks drive subscription state reliably.**
-- [ ] T5.2.1 Webhook endpoint: signature, idempotent `payment_events`, signal by subscription id
-**S5.3 Paid tier changes search ranking and unlocks leads.** — [ ] T5.3.1 `apply_tier` / `downgrade_to_free` activities (boost, featured, outbox, unlock)
+**S6 Leads & notifications**
+- [ ] B9 Leads with quota locking (concurrency-safe), artist leads, planner inquiries, plan usage
+- [ ] B10 Temporal worker + `LeadNotificationWorkflow` (console notifier locally; 🔑 MSG91/Resend in prod)
 
-## E6 — Frontend integration
-**S6.1 Login with Google via Supabase.** 🔑 Supabase project + Google OAuth client
-- [ ] T6.1.1 `supabase` mode in `AuthProvider`: Google Identity Services button → `signInWithIdToken`, supabase-js session → token provider
-- [x] T6.1.2 API client with bearer token; route guards for `/artist/*`, `/planner/*` (done in EA)
-**S6.2 Replace mock data with API.** ✅ done in EA against Mockoon — remaining: point `VITE_API_PROXY_TARGET` at FastAPI and run `mockoon/smoke.sh http://localhost:8000/api/v1` against the real backend
+**S7 Monetisation**
+- [ ] B11 Plans, 7-day trial (`TrialWorkflow`), subscriptions (`SubscriptionWorkflow`), fake gateway locally (🔑 Razorpay test/live keys later), webhooks
 
-## E7 — Deploy & go-live
-- [ ] T7.1 `deploy/docker-compose.prod.yml`, Caddyfile, arm64 multi-stage Dockerfile, `.env.example` 🔑 Oracle VM
-- [ ] T7.2 GitHub Actions: build/push GHCR + SSH deploy + migrations
-- [ ] T7.3 Temporal Cloud namespace + API key wiring 🔑 Temporal Cloud
-- [ ] T7.4 Cloudflare: Pages project, R2 bucket + CORS, DNS for `prasang.in` / `api.prasang.in` 🔑 Cloudflare
-- [ ] T7.5 Nightly backup + lead expiry cron container; restore runbook
-- [ ] T7.6 Production smoke test checklist; Razorpay live keys + webhook URL 🔑 Razorpay live; MSG91 prod sender 🔑 MSG91
+**S8 Web app on the real backend**
+- [ ] B12 React: SuperTokens auth mode (OTP + Google callback), Facebook embeds, iframes on profile
+- [ ] B13 Everything in `docker compose` (api, worker, projector, migrate+seed, web); Plan A smoke passes against the real API; runbook
 
-## Post-launch (not scheduled)
-Reviews, favourites, referrals, localities pages, phone OTP (MSG91 SMS hook), AI bio + semantic search, Instagram/YouTube import, admin UI, analytics.
+## EC — React Native apps (Android + iOS) `[ ]`
+- [ ] C1 Expo/React Native project sharing `frontend/src/api/types.ts` (move to a shared `packages/contract`)
+- [ ] C2 Auth with `supertokens-react-native` (header-token sessions), phone OTP + Google
+- [ ] C3 Planner flows: search, profile with embeds, contact artist, inquiries
+- [ ] C4 Artist flows: onboarding, media upload (presigned S3), leads, push notifications for new leads (FCM/APNs) 🔑 Apple/Google developer accounts
+- [ ] C5 Store builds via EAS, internal testing tracks
+
+## ED — Deploy on AWS `[ ]`
+- [ ] D1 Choose topology (single EC2/Lightsail running compose vs RDS + OpenSearch + ECS) with cost estimate 🔑 AWS account
+- [ ] D2 Infrastructure as code, TLS for `api.prasang.in`, S3 media bucket + CloudFront, SES/MSG91
+- [ ] D3 CI/CD (GitHub Actions build/test/deploy, migrations), nightly Postgres backups to S3
+- [ ] D4 Web app hosting (S3 + CloudFront or Cloudflare Pages), DNS for `prasang.in`
+- [ ] D5 Go-live checklist: Razorpay live + webhook URL 🔑, MSG91 DLT 🔑, Google OAuth production consent 🔑
+
+## Post-launch
+Review submission, favourites, referrals, AI bio + semantic search, Instagram/Facebook/YouTube feed auto-import (Graph/Data APIs; 🔑 Meta app review), admin UI, analytics.
