@@ -20,6 +20,7 @@ from app.media.router import router as media_router
 from app.notifications.notifier import get_notifier
 from app.reviews.router import router as reviews_router
 from app.search.router import router as search_router
+from app.site.router import router as site_router
 from app.subscriptions.router import router as subscriptions_router
 from app.workflows.client import TemporalStarter
 from app.workflows.starter import set_starter
@@ -40,7 +41,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     install_error_handlers(app)
     app.include_router(health_router)
     routers = (auth_router, locations_router, reviews_router, media_router, search_router, artists_router, leads_router,
-               subscriptions_router, dev_router)
+               subscriptions_router, site_router, dev_router)
     for router in routers:
         app.include_router(router, prefix=API_PREFIX)
     app.add_middleware(get_middleware())  # SuperTokens routes under /api/v1/auth + session handling

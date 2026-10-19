@@ -103,4 +103,8 @@ export interface CreateSubscriptionRequest { tier: Exclude<SubscriptionTier, 'fr
 export interface CreateSubscriptionResponse { subscriptionId: string; checkout: { keyId: string; razorpaySubscriptionId: string; name: string; description: string; prefill: { name: string; email: string | null; contact: string | null } } }
 export interface VerifyPaymentRequest { razorpayPaymentId: string; razorpaySubscriptionId: string; razorpaySignature: string }
 export interface VerifyPaymentResponse { status: 'active' | 'pending_activation'; plan: PlanUsage }
+export interface SiteInfo { supportEmail: string | null; supportPhone: string | null; businessAddress: string | null }
+export type ContactTopic = 'general' | 'artist_support' | 'payments' | 'report';
+export interface ContactRequest { name: string; contact: string; topic: ContactTopic; message: string }
+export interface ContactResponse { id: string }
 export interface StartTrialRequest { tier: Exclude<SubscriptionTier, 'free'> }

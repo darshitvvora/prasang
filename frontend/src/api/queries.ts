@@ -20,12 +20,14 @@ export const keys = {
   plannerInquiries: (status: string) => ['leads', 'planner', status] as const,
   plans: ['plans'] as const,
   mySubscription: ['subscriptions', 'me'] as const,
+  siteInfo: ['site-info'] as const,
 };
 
 const STATIC = { staleTime: 60 * 60 * 1000 }; // locations/plans rarely change
 
 export const useAuthProviders = () => useQuery({ queryKey: keys.authProviders, queryFn: E.getAuthProviders, ...STATIC });
 export const useLocations = () => useQuery({ queryKey: keys.locations, queryFn: E.getLocations, ...STATIC });
+export const useSiteInfo = () => useQuery({ queryKey: keys.siteInfo, queryFn: E.getSiteInfo, ...STATIC });
 export const usePlans = () => useQuery({ queryKey: keys.plans, queryFn: E.getPlans, ...STATIC });
 export const useSearchArtists = (params: T.SearchParams) =>
   useQuery({ queryKey: keys.search(params), queryFn: () => E.searchArtists(params), placeholderData: (prev) => prev });
@@ -44,6 +46,8 @@ export const usePlannerInquiries = (status: string) =>
 export const useMySubscription = (enabled = true) => useQuery({ queryKey: keys.mySubscription, queryFn: E.getMySubscription, enabled });
 
 // ---- mutations ----
+export const useSendContactMessage = () => useMutation({ mutationFn: E.sendContactMessage });
+
 export function useCreateLead() {
   const qc = useQueryClient();
   return useMutation({ mutationFn: E.createLead, onSuccess: () => qc.invalidateQueries({ queryKey: ['leads', 'planner'] }) });

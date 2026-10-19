@@ -12,6 +12,9 @@ EXAMPLES = Path(__file__).resolve().parents[3] / "contracts" / "examples"
 # example path (relative to contracts/examples) -> contract type
 TABLE: dict[str, object] = {
     "auth/providers.response.json": C.AuthProvidersResponse,
+    "site/info.response.json": C.SiteInfo,
+    "site/contact.request.json": C.ContactRequest,
+    "site/contact.response.json": C.ContactResponse,
     "me/get.response.json": C.Me,
     "me/post.request.json": C.CreateMeRequest,
     "me/post.response.json": C.Me,

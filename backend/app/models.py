@@ -6,4 +6,5 @@ from app.locations.models import Locality  # noqa: F401
 from app.media.models import ArtistMedia  # noqa: F401
 from app.outbox.models import OutboxEvent  # noqa: F401
 from app.reviews.models import Review  # noqa: F401
+from app.site.models import ContactMessage  # noqa: F401
 from app.subscriptions.models import PaymentEvent, Subscription, SubscriptionPlan  # noqa: F401

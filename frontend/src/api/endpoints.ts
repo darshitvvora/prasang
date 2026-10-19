@@ -8,6 +8,10 @@ type Items<X> = { items: X[] };
 // ---- auth ----
 export const getAuthProviders = () => api<T.AuthProvidersResponse>('/auth/providers');
 
+// ---- site ----
+export const getSiteInfo = () => api<T.SiteInfo>('/site-info');
+export const sendContactMessage = (body: T.ContactRequest) => api<T.ContactResponse>('/contact', { method: 'POST', body });
+
 // ---- me ----
 export const getMe = () => api<T.Me>('/me');
 export const createMe = (body: T.CreateMeRequest) => api<T.Me>('/me', { method: 'POST', body });

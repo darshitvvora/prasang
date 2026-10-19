@@ -48,6 +48,12 @@ class Settings(BaseSettings):
     resend_api_key: str | None = None
     email_sender: str = "Prasang <leads@prasang.in>"
 
+    # Public web origin used in links inside messages and share previews.
+    public_web_url: str = "http://localhost:5173"
+    support_email: str | None = None  # contact-form messages are emailed here
+    support_phone: str | None = None
+    business_address: str | None = None
+
     cors_origins: list[str] = ["http://localhost:5173"]
     # Repo root containing contracts/ and mockoon/data (seed datasets). Docker mounts them at /seed.
     seed_root: str = str(Path(__file__).resolve().parents[2])

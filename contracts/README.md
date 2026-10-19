@@ -67,6 +67,8 @@ This folder is the contract between the React frontend and the FastAPI backend.
 | POST | /subscriptions | artist | CreateSubscriptionRequest | 201 CreateSubscriptionResponse (also used to upgrade/switch; see rules) |
 | POST | /subscriptions/verify | artist | VerifyPaymentRequest | VerifyPaymentResponse · 400 `invalid_signature` |
 | POST | /subscriptions/cancel | artist | – | MySubscriptionResponse |
+| GET | /site-info | public | – | SiteInfo — support email/phone and business address (nulls when not configured) |
+| POST | /contact | public | ContactRequest | 201 `{id}` · 429 `contact_rate_limited` (5 per IP per hour) |
 | POST | /subscriptions/webhook | Razorpay HMAC | Razorpay event | 200 |
 
 ## Error codes
@@ -88,6 +90,7 @@ This folder is the contract between the React frontend and the FastAPI backend.
 | `invalid_signature` | 400 | Razorpay signature mismatch |
 | `search_unavailable` | 503 | Elasticsearch is unreachable; retry shortly |
 | `storage_not_configured` | 503 | Photo/video uploads are not set up on this server (social links still work) |
+| `contact_rate_limited` | 429 | More than 5 contact messages from one IP in an hour |
 | `internal_error` | 500 | Unexpected server error |
 
 ## Business rules the contract encodes

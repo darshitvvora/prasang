@@ -544,6 +544,62 @@
       "responseMode": null
     },
     {
+      "uuid": "6eae24fd-f786-5fb0-a955-7651d02e0f07",
+      "type": "http",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "site-info",
+      "responses": [
+        {
+          "uuid": "2a96ebc9-6a1f-540b-a471-9ed045edf69d",
+          "label": "",
+          "statusCode": 200,
+          "body": "{\n  \"supportEmail\": \"hello@prasang.in\",\n  \"supportPhone\": \"9820012345\",\n  \"businessAddress\": \"Andheri West, Mumbai 400053\"\n}\n",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [],
+          "rulesOperator": "AND",
+          "default": true,
+          "latency": 0,
+          "disableTemplating": false
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "7f3e2389-f07e-5023-a057-ae7d6ddf7be6",
+      "type": "http",
+      "documentation": "",
+      "method": "post",
+      "endpoint": "contact",
+      "responses": [
+        {
+          "uuid": "f0cc4aef-74c7-5a0d-a30e-c9d56b7023a4",
+          "label": "",
+          "statusCode": 201,
+          "body": "{\n  \"id\": \"5b1f7a52-3f2c-4d8e-9a77-1c0e2d4b6a10\"\n}\n",
+          "bodyType": "INLINE",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "rules": [],
+          "rulesOperator": "AND",
+          "default": true,
+          "latency": 0,
+          "disableTemplating": false
+        }
+      ],
+      "responseMode": null
+    },
+    {
       "uuid": "0cf708f8-1470-5343-a6c9-5c7d9fee2b4e",
       "type": "http",
       "documentation": "",
@@ -2697,6 +2753,14 @@
     {
       "type": "route",
       "uuid": "bd624d02-dce1-5e0b-aa8f-609e7dfff16a"
+    },
+    {
+      "type": "route",
+      "uuid": "6eae24fd-f786-5fb0-a955-7651d02e0f07"
+    },
+    {
+      "type": "route",
+      "uuid": "7f3e2389-f07e-5023-a057-ae7d6ddf7be6"
     },
     {
       "type": "route",
