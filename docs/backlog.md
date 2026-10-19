@@ -69,6 +69,16 @@
 - [ ] F5 Planner daily limit serialised; production build defaults to SuperTokens auth; JSON logs; hide API docs in production; require MSG91 notifier in production
 - [ ] F6 Decide: proration on plan change; how Razorpay plan ids survive re-seeding
 
+## EL — Web launch readiness (feature-complete web) `[~]` ← next, before deployment
+**Decided 2026-10-19:** finish these on the web before any deploy work. Design in progress.
+- [ ] L1 Admin at launch = **CLI commands, no UI** (run on the server via SSM): verify/unverify, feature/unfeature, suspend/restore artist, grant plan for N days, hide/restore review, block user, sync subscription from Razorpay; each updates search via the outbox and writes an `admin_actions` log row
+- [ ] L2 Link previews for shared profiles (Open Graph/Twitter tags: photo, name, type, city) for Instagram/WhatsApp
+- [ ] L3 Reviews: only for confirmed bookings (artist marks booked **or** planner says yes); planner nudged 3 days after inquiry and again the day after the event if still unmarked (Temporal); review form opens after the event; artist reply + report; Google reviews shown separately with attribution (🔑 Google Places API key)
+- [ ] L4 Billing history: list of charges with links to Razorpay's hosted invoice/receipt (not GST-registered yet — enable Razorpay GST invoices after registration)
+- [ ] L5 Lifecycle messages: welcome, trial ending, renewal reminder, payment failed/plan ended (SMS + email)
+- [ ] L6 Account and data deletion (DPDP Act, Google sign-in policy)
+- [ ] L7 About and Contact pages (contact form emails the team)
+
 ## EG — AWS simulation on LocalStack (Docker) `[ ]`
 **Goal:** rehearse the AWS deploy locally — same IaC, same S3/IAM/SSM wiring — before spending on a real account. Also makes photo/video uploads work locally with no AWS credentials.
 - [ ] G1 LocalStack service in `docker compose` (S3, IAM, SSM Parameter Store, STS); confirm edition/licensing of the current LocalStack image (newer images may need a free auth token 🔑)
@@ -94,7 +104,7 @@
 - [ ] C5 Store builds via EAS, internal testing tracks
 
 ## Post-launch
-Favourites/shortlist, compare, recently viewed; locality pages, trending/new/top-rated, map/nearby; referrals; AI bio + semantic search; Instagram/Facebook/YouTube feed auto-import (Graph/Data APIs; 🔑 Meta app review); full analytics page; blog; Spotify embeds; ticketing (tixcraft/Insider).
+Admin web UI (overview counts, artist/payment/review screens, activity log viewer); favourites/shortlist, compare, recently viewed; locality pages, trending/new/top-rated, map/nearby; referrals; AI bio + semantic search; Instagram/Facebook/YouTube feed auto-import (Graph/Data APIs; 🔑 Meta app review); full analytics page; blog; Spotify embeds; ticketing (tixcraft/Insider).
 
 ## EH — AI event-planning copilot (post-launch, direction of the product) `[ ]`
 **Vision (2026-10-19):** Prasang grows from a directory into a **personal agent for event booking** — an AI copilot that helps a planner plan and run an event end to end, available **on WhatsApp and in our app** (web + React Native).
