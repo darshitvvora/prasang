@@ -2,7 +2,9 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** `docker compose up` runs the entire Prasang app locally — React frontend on :5173 backed by a real FastAPI API that satisfies the Plan A contract, with SuperTokens auth (phone OTP works with zero accounts), self-hosted Temporal on Postgres, Elasticsearch search, MinIO uploads and social embeds.
+**Goal:** `docker compose up` runs the entire Prasang app locally — React frontend on :5173 backed by a real FastAPI API that satisfies the Plan A contract, with SuperTokens auth (phone OTP works with zero accounts), self-hosted Temporal on Postgres, Elasticsearch search, S3 uploads (when a bucket is configured) and social embeds.
+
+> **Revision 2026-10-19 (user):** no MinIO — storage is Amazon S3 (dev bucket via AWS credentials; tests use `moto`); deployment target is AWS; React Native apps will consume the same API, so sessions must support header-token mode.
 
 **Architecture:** One Postgres server (dbs `prasang`, `prasang_test`, `supertokens`, `temporal`, `temporal_visibility`). FastAPI app in `backend/app` organised by domain module; writes go to Postgres plus an `outbox_events` row in the same transaction; a projector process indexes artists into Elasticsearch; a Temporal worker runs lead-notification, subscription and trial workflows. External services (payments, notifications, storage) sit behind small interfaces with local implementations (`fake`, `console`, MinIO).
 

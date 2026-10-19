@@ -1,8 +1,8 @@
 # Prasang Backend MVP — Design (v2)
 
-**Date:** 2026-09-29 · **Revised:** 2026-10-19 (v2: SuperTokens, self-hosted Temporal + Postgres, social embeds, local-first Docker stack)
+**Date:** 2026-09-29 · **Revised:** 2026-10-19 (v2: SuperTokens, self-hosted Temporal + Postgres, social embeds, local-first Docker stack, AWS + S3, React Native apps)
 **Status:** Approved
-**Goal:** Run the whole Prasang application — React frontend, FastAPI backend, auth, search, workflows — with one `docker compose up`, with zero third-party accounts required locally, then deploy the same stack to a single free VM.
+**Goal:** Run the whole Prasang application — React frontend, FastAPI backend, auth, search, workflows — with one `docker compose up` (an S3 bucket is the only external dependency, and only for photo/video uploads), then deploy to AWS. The same API also serves the React Native apps (Android + iOS).
 
 The API contract is defined in [`contracts/README.md`](../../../contracts/README.md) and [`frontend/src/api/types.ts`](../../../frontend/src/api/types.ts) (Plan A). **The contract is authoritative for request/response shapes**; this spec covers how the backend satisfies it.
 
@@ -15,11 +15,12 @@ The API contract is defined in [`contracts/README.md`](../../../contracts/README
 | Read store | Elasticsearch 8 single node, fed by an outbox projector (CQRS) |
 | Auth | **SuperTokens self-hosted** core (`registry.supertokens.io/supertokens/supertokens-postgresql`, pinned) + `supertokens-python` in FastAPI + `supertokens-web-js` in React. Recipes: **ThirdParty (Google)** and **Passwordless (phone OTP, `USER_INPUT_CODE`)**. Session = httpOnly cookies |
 | Workflows | **Temporal self-hosted** (`temporalio/server`, `temporalio/admin-tools` schema job, `temporalio/ui`) on Postgres |
-| Object storage | S3 API: MinIO locally, Cloudflare R2 in production. Browser uploads via presigned PUT |
+| Object storage | **Amazon S3** everywhere (no MinIO — its community images were discontinued). Local dev uses a dev bucket via the standard AWS credential chain; if `S3_BUCKET` is unset, upload endpoints return 503 `storage_not_configured` and everything else works. Browser/app uploads via presigned PUT. Tests use `moto` |
 | Social | Instagram / YouTube / Facebook **URL embeds** (official iframe embed URLs, no API keys); feed auto-import is post-launch (needs Meta app review) |
 | Payments | `PaymentGateway` interface: `razorpay` (Subscriptions API) and `fake` (default locally; checkout key `rzp_test_mock`) |
 | Notifications | `Notifier` interface: `console` (default locally), `msg91` (SMS/WhatsApp), `resend` (email). OTP SMS uses the same interface |
-| Hosting | Oracle Always Free A1 VM runs the backend compose stack behind Caddy (`api.prasang.in`); frontend on Cloudflare Pages (`prasang.in`) — same site, so SuperTokens cookies work with `cookie_domain=.prasang.in` |
+| Hosting | **AWS** (exact services decided in the deployment plan). API on `api.prasang.in`, web on `prasang.in` — same site, so SuperTokens cookies work with `cookie_domain=.prasang.in` |
+| Clients | React web app (this repo `frontend/`) and **React Native apps for Android and iOS** (later epic). Both use the same `/api/v1` contract. SuperTokens sessions support cookies (web) and header tokens (mobile, `st-auth-mode: header`), so the backend must not assume cookies |
 
 **Temporal is used only for durable, long-running or retry-heavy work:**
 1. `LeadNotificationWorkflow` — after a lead commits: email (all tiers), WhatsApp (tiers with WhatsApp), SMS fallback; independent retries.
@@ -41,8 +42,8 @@ Not Temporal: CRUD, auth, media, search projection (outbox poller), webhook inge
    │ ├─ start/signal workflows ──► Temporal (:7233) ──► Postgres dbs `temporal*`
    │ │                                   ▲
    │ │                                 worker (activities: DB, gateway, notifier, outbox)
-   │ └─ presigned URLs ──► MinIO / R2 ◄── browser PUT
- Temporal UI (:8080) · MinIO console (:9001)
+   │ └─ presigned URLs ──► Amazon S3 ◄── browser / app PUT
+ Temporal UI (:8080)
 ```
 
 One backend image, four commands: `api`, `worker`, `projector`, `migrate`.
@@ -132,7 +133,7 @@ As contract: signed-in planner only; quota → `is_locked`; duplicate (same plan
 - Plan usage (`PlanUsage`) computed from profile + leads this month (IST).
 
 ### 5.7 Media
-Presigned PUT (5 min; image ≤10 MB, video ≤100 MB, avatar ≤5 MB); confirm by HEAD; tier quotas from plan; social URLs go through `embeds.parse`. Public URL = `PUBLIC_MEDIA_BASE_URL/<key>`.
+Presigned PUT (5 min; image ≤10 MB, video ≤100 MB, avatar ≤5 MB); confirm by HEAD; tier quotas from plan; social URLs go through `embeds.parse`. Public URL = `PUBLIC_MEDIA_BASE_URL/<key>` (bucket public-read on `artists/*` or CloudFront in production). Bucket CORS must allow PUT from the web origin.
 
 ## 6. Errors, security, ops
 - Error body per contract; FastAPI `RequestValidationError` mapped to 422 `validation_error` with `details.fields` (camelCase).
@@ -147,7 +148,7 @@ Presigned PUT (5 min; image ≤10 MB, video ≤100 MB, avatar ≤5 MB); confirm 
 - End-to-end smoke: `mockoon/smoke.sh` pointed at the real API using a dev-only header session (`ENV=local` + `DEV_AUTH_HEADER=true`, refused in production).
 
 ## 8. Deployment
-Oracle A1 VM: `docker-compose.prod.yml` (same services minus MinIO/UI exposure; Caddy TLS), GHCR images (arm64), GitHub Actions deploy over SSH, nightly `pg_dump` of `prasang` + `supertokens` to R2.
+AWS — decided in its own plan (candidates: single EC2/Lightsail instance running the compose stack vs. managed RDS/OpenSearch/ECS). Requirements carried over: TLS on `api.prasang.in`, images built in GitHub Actions, migrations on deploy, nightly backups of `prasang` + `supertokens` to S3.
 
 ## 9. Out of scope (post-launch)
-Review submission, favourites, referrals, AI bio/semantic search, Instagram/Facebook/YouTube feed auto-import (Graph/Data APIs), admin UI, analytics dashboard beyond the contract.
+React Native apps (separate epic), review submission, favourites, referrals, AI bio/semantic search, Instagram/Facebook/YouTube feed auto-import (Graph/Data APIs), admin UI, analytics dashboard beyond the contract.
