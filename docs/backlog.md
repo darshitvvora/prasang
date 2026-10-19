@@ -31,7 +31,7 @@
 - [x] B4 Schema migration + seed (localities, plans, 12 demo artists, demo leads)
 
 **S3 Identity**
-- [ ] B5 SuperTokens: phone OTP (code in API logs locally) + Google (🔑 Google OAuth client), cookie + header sessions (web + mobile), `/me`
+- [x] B5 SuperTokens: phone OTP (code in API logs locally) + Google (🔑 Google OAuth client), cookie + header sessions (web + mobile), `/me`
 
 **S4 Artists & media**
 - [ ] B6 Artist profile CRUD, public profile, Instagram/YouTube/Facebook URL embeds, daily stats, dashboard

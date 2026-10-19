@@ -1,0 +1,75 @@
+"""SuperTokens initialisation: sessions (cookies for web, header tokens for mobile), phone OTP, optional Google."""
+import logging
+from collections.abc import Awaitable, Callable
+from typing import Any
+
+from supertokens_python import InputAppInfo, SupertokensConfig, init
+from supertokens_python.ingredients.smsdelivery.types import SMSDeliveryConfig, SMSDeliveryInterface
+from supertokens_python.recipe import passwordless, session, thirdparty
+from supertokens_python.recipe.passwordless import ContactPhoneOnlyConfig
+from supertokens_python.recipe.passwordless.types import PasswordlessLoginSMSTemplateVars
+from supertokens_python.recipe.thirdparty.provider import ProviderClientConfig, ProviderConfig, ProviderInput
+
+from app.config import Settings
+
+log = logging.getLogger(__name__)
+AUTH_BASE_PATH = "/api/v1/auth"
+SmsSender = Callable[[str, str], Awaitable[None]]
+_initialised = False
+
+
+async def log_sms(phone: str, text: str) -> None:
+    """Local/dev SMS delivery: the OTP appears in the API logs."""
+    log.warning("SMS to %s: %s", phone, text)
+
+
+class _OtpSms(SMSDeliveryInterface[PasswordlessLoginSMSTemplateVars]):
+    def __init__(self, send: SmsSender):
+        self._send = send
+
+    async def send_sms(self, template_vars: PasswordlessLoginSMSTemplateVars, user_context: dict[str, Any]) -> None:
+        minutes = max(1, template_vars.code_life_time // 60000)
+        await self._send(template_vars.phone_number,
+                         f"{template_vars.user_input_code} is your Prasang login code. It expires in {minutes} minutes.")
+
+
+def google_enabled(settings: Settings) -> bool:
+    return bool(settings.google_client_id and settings.google_client_secret)
+
+
+def init_supertokens(settings: Settings, sms_sender: SmsSender = log_sms) -> None:
+    global _initialised
+    if _initialised:
+        return
+    recipes = [
+        session.init(
+            cookie_secure=settings.env == "production",
+            cookie_same_site="lax",
+            cookie_domain=settings.cookie_domain,
+        ),
+        passwordless.init(
+            contact_config=ContactPhoneOnlyConfig(),
+            flow_type="USER_INPUT_CODE",
+            sms_delivery=SMSDeliveryConfig(service=_OtpSms(sms_sender)),
+        ),
+    ]
+    if google_enabled(settings):
+        recipes.append(thirdparty.init(sign_in_and_up_feature=thirdparty.SignInAndUpFeature(providers=[
+            ProviderInput(config=ProviderConfig(third_party_id="google", clients=[
+                ProviderClientConfig(client_id=settings.google_client_id, client_secret=settings.google_client_secret),
+            ])),
+        ])))
+    init(
+        app_info=InputAppInfo(
+            app_name="Prasang",
+            api_domain=settings.api_domain,
+            website_domain=settings.website_domain,
+            api_base_path=AUTH_BASE_PATH,
+            website_base_path="/auth",
+        ),
+        supertokens_config=SupertokensConfig(connection_uri=settings.supertokens_uri, api_key=settings.supertokens_api_key),
+        framework="fastapi",
+        recipe_list=recipes,
+        mode="asgi",
+    )
+    _initialised = True
