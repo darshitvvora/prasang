@@ -14,11 +14,14 @@ from app.contract import (
     InquiryStatus,
     LeadArtistContact,
     LeadStatus,
+    PlannerAnswerRequest,
     PlannerInquiriesResponse,
+    PlannerInquiry,
     UpdateLeadRequest,
 )
 from app.db import get_session
 from app.leads import service
+from app.leads.booking import start_followup
 from app.workflows.starter import get_starter
 
 log = logging.getLogger(__name__)
@@ -38,6 +41,7 @@ async def create_lead(body: CreateLeadRequest, response: Response, user: User = 
             await db.commit()
         except Exception:  # the scheduler's sweep retries it; the planner must still get the contact (spec 5.5)
             log.exception("could not start notification workflow for lead %s", lead.id)
+        await start_followup(db, lead)
     else:
         response.status_code = 200
     return CreateLeadResponse(lead_id=str(lead.id), artist=LeadArtistContact(
@@ -55,6 +59,12 @@ async def artist_leads(status: LeadStatus | None = None, page: int = Query(1, ge
 async def planner_inquiries(status: InquiryStatus | None = None, page: int = Query(1, ge=1), size: int = Query(20, ge=1, le=50),
                             user: User = Depends(require_role("planner")), db: AsyncSession = Depends(get_session)):
     return await service.planner_inquiries(db, user, status, page, size)
+
+
+@router.patch("/{lead_id}/planner-answer", response_model=PlannerInquiry, **JSON)
+async def planner_answer(lead_id: str, body: PlannerAnswerRequest, user: User = Depends(require_role("planner")),
+                         db: AsyncSession = Depends(get_session)):
+    return await service.planner_answer(db, user, lead_id, body.answer)
 
 
 @router.patch("/{lead_id}", response_model=ArtistLead, **JSON)

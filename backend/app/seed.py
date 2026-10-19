@@ -127,6 +127,7 @@ async def _seed_artist_leads(session: AsyncSession, artist_id: uuid.UUID) -> Non
             budget_range=budget, budget_min=BUDGETS[budget][0], budget_max=BUDGETS[budget][1], notes=item["notes"],
             source="profile", status=item["status"], is_locked=item["isLocked"],
             created_at=_ts(item["createdAt"]) + shift, notification_started_at=_ts(item["createdAt"]) + shift,
+            followup_started_at=_ts(item["createdAt"]) + shift,
         ))
 
 
@@ -140,4 +141,5 @@ async def _seed_planner_inquiries(session: AsyncSession, artist_ids: dict[str, u
             event_city="Mumbai", budget_range=budget, budget_min=BUDGETS[budget][0], budget_max=BUDGETS[budget][1],
             notes=item["notes"], source="search", status=INQUIRY_TO_LEAD_STATUS[item["status"]], is_locked=False,
             created_at=_ts(item["contactedAt"]), notification_started_at=_ts(item["contactedAt"]),
+            followup_started_at=_ts(item["contactedAt"]),
         ))

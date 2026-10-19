@@ -1,4 +1,5 @@
 from datetime import date
+from typing import Literal
 
 from pydantic import Field
 
@@ -14,6 +15,8 @@ from app.contract.common import (
     UtcDatetime,
 )
 from app.contract.subscriptions import PlanUsage
+
+PlannerAnswer = Literal["booked", "not_booked", "deciding"]
 
 
 class CreateLeadRequest(ContractModel):
@@ -100,6 +103,14 @@ class PlannerInquiry(ContractModel):
     notes: str | None
     status: InquiryStatus
     contacted_at: UtcDatetime
+    booking_confirmed: bool
+    planner_answer: PlannerAnswer | None
+    can_review: bool
+    review_id: str | None
+
+
+class PlannerAnswerRequest(ContractModel):
+    answer: PlannerAnswer
 
 
 class InquiryCounts(ContractModel):

@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Calendar, ChevronDown, ExternalLink, IndianRupee } from 'lucide-react';
 import PlannerSidebar from '../../components/PlannerSidebar';
 import QueryState from '../../components/QueryState';
-import { usePlannerInquiries } from '../../api/queries';
+import { useAnswerInquiry, usePlannerInquiries } from '../../api/queries';
+import { afterAnswer, inquiryActions } from './bookingAnswer';
 import { formatDate, imageOr, relativeTime } from '../../api/format';
 import type { PlannerInquiry } from '../../api/types';
 import type { InquiryStatus } from '../../types/artist';
@@ -14,6 +15,36 @@ import './PlannerPages.css';
 type FilterStatus = 'all' | InquiryStatus;
 const FILTERS: FilterStatus[] = ['all', 'pending', 'responded', 'confirmed', 'declined'];
 const budgetK = (min: number, max: number | null) => `${(min / 1000).toFixed(0)}k${max === null ? '+' : ` – ${(max / 1000).toFixed(0)}k`}`;
+
+function BookingBar({ inquiry }: { inquiry: PlannerInquiry }) {
+  const answer = useAnswerInquiry();
+  const navigate = useNavigate();
+  const actions = inquiryActions(inquiry);
+  const send = (value: 'booked' | 'not_booked' | 'deciding') => answer.mutate({ id: inquiry.id, answer: value }, {
+    onSuccess: (updated) => { if (afterAnswer(updated) === 'review') navigate(`/planner/inquiries/${inquiry.id}/review`); },
+  });
+  return (
+    <div className="planner-booking-bar">
+      {actions.label && <span className="planner-booking-label">{actions.label}</span>}
+      {actions.ask && (
+        <div className="planner-booking-question">
+          <span>Did you book {inquiry.artist.name}?</span>
+          <button type="button" disabled={answer.isPending} onClick={() => send('booked')}>Yes, booked</button>
+          <button type="button" disabled={answer.isPending} onClick={() => send('not_booked')}>No</button>
+          {inquiry.plannerAnswer !== 'deciding' && (
+            <button type="button" disabled={answer.isPending} onClick={() => send('deciding')}>Still deciding</button>
+          )}
+        </div>
+      )}
+      {actions.review === 'write' && (
+        <Link to={`/planner/inquiries/${inquiry.id}/review`} className="planner-booking-review">Write a review</Link>
+      )}
+      {actions.review === 'after-event' && <span className="planner-booking-hint">You can review after the event.</span>}
+      {actions.review === 'written' && <span className="planner-booking-hint">Thanks for your review!</span>}
+      {answer.isError && <span className="planner-booking-error">Couldn't save that. Please try again.</span>}
+    </div>
+  );
+}
 
 function InquiryCard({ inquiry }: { inquiry: PlannerInquiry }) {
   const [expanded, setExpanded] = useState(false);
@@ -42,6 +73,8 @@ function InquiryCard({ inquiry }: { inquiry: PlannerInquiry }) {
         <span className="planner-inquiry-event-type">{inquiry.eventTitle} · {ARTIST_TYPE_LABELS[artist.artistType]}</span>
         <span className="planner-inquiry-budget"><IndianRupee size={12} />{budgetK(inquiry.budgetMin, inquiry.budgetMax)}</span>
       </div>
+
+      <BookingBar inquiry={inquiry} />
 
       {expanded && (
         <div className="planner-inquiry-card-expanded">

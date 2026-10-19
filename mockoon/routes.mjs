@@ -161,6 +161,7 @@ export const routes = [
   { method: 'get', path: 'leads/artist', responses: [unauth, forbidden([PLANNER]), NO_USER_404, NO_USER_404_UNSET, NO_PROFILE_404, NO_PROFILE_404_UNSET, { status: 200, body:
     `{{setVar 'list' (dataRaw 'artist-leads' 'items')}}${filterBy('status', 'status')}` +
     pageOf(`, "counts": {{{stringify (dataRaw 'artist-leads' 'counts')}}} , "plan": {{{stringify (dataRaw 'artist-leads' 'plan')}}} `) }] },
+  { method: 'patch', path: 'leads/:id/planner-answer', responses: [unauth, forbidden([ARTIST]), { status: 200, file: 'leads/planner-answer.response.json' }] },
   { method: 'patch', path: 'leads/:id', responses: [unauth, { status: 200, body:
     `{{setVar 'l' (find (dataRaw 'artist-leads' 'items') (object id=(urlParam 'id')))}}` +
     `{{{replace (stringify @l) (concat '"status": "' @l.status '"') (concat '"status": "' (body 'status') '"')}}}` }] },

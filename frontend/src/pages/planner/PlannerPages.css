@@ -713,3 +713,12 @@
 }
 
 a.planner-inquiry-preview-item { text-decoration: none; color: inherit; }
+
+.planner-booking-bar { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; margin: 0.6rem 0; font-size: 0.9rem; }
+.planner-booking-question { display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: center; }
+.planner-booking-question button { padding: 0.35rem 0.8rem; border-radius: 999px; border: 1px solid #d0d0c8; background: #fff; cursor: pointer; font-weight: 600; }
+.planner-booking-question button:first-of-type { background: var(--color-accent); border-color: var(--color-accent); }
+.planner-booking-label { padding: 0.2rem 0.6rem; border-radius: 999px; background: #eef9d0; font-weight: 600; }
+.planner-booking-review { font-weight: 700; color: var(--color-bg-dark); text-decoration: underline; }
+.planner-booking-hint { color: #6b6b66; }
+.planner-booking-error { color: #b42318; }

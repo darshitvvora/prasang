@@ -84,7 +84,10 @@ export interface PlannerInquiry {
   id: string; artist: { artistId: string; slug: string; name: string; artistType: ArtistType; profileImageUrl: string | null };
   eventType: EventType; eventTitle: string; eventDate: string | null; daysToEvent: number | null;
   budgetMin: number; budgetMax: number | null; notes: string | null; status: InquiryStatus; contactedAt: string;
+  bookingConfirmed: boolean; plannerAnswer: PlannerAnswer | null; canReview: boolean; reviewId: string | null;
 }
+export type PlannerAnswer = 'booked' | 'not_booked' | 'deciding';
+export interface PlannerAnswerRequest { answer: PlannerAnswer }
 export interface PlannerInquiriesResponse extends Page<PlannerInquiry> {
   counts: Record<'all' | InquiryStatus, number>;
   summary: { artistsContacted: number; responsesReceived: number; confirmedBookings: number;

@@ -100,3 +100,25 @@ class MessageActivities:
 
     def all(self) -> list:
         return [self.deliver_message]
+
+
+class BookingActivities:
+    def __init__(self, sessions: async_sessionmaker[AsyncSession]):
+        self.sessions = sessions
+
+    @activity.defn(name="booking_state")
+    async def booking_state(self, lead_id: str) -> str:
+        from app.leads.booking import booking_state
+
+        async with self.sessions() as s:
+            return await booking_state(s, lead_id)
+
+    @activity.defn(name="send_booking_check")
+    async def send_booking_check(self, lead_id: str, kind: str) -> None:
+        from app.leads.booking import queue_booking_check
+
+        async with self.sessions() as s:
+            await queue_booking_check(s, lead_id, kind)
+
+    def all(self) -> list:
+        return [self.booking_state, self.send_booking_check]

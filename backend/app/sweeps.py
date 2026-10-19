@@ -10,6 +10,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.artists.models import ArtistProfile
 from app.artists.stats import today_ist
+from app.leads.booking import retry_booking_followups
 from app.leads.models import Lead
 from app.leads.service import expire_leads
 from app.notifications.queue import queue_due_reminders, retry_pending_messages
@@ -82,6 +83,7 @@ async def run_sweeps(session: AsyncSession, starter: WorkflowStarter) -> dict[st
         "leads_expired": await expire_leads(session),
         "reminders_queued": await queue_due_reminders(session),
         "messages_restarted": await retry_pending_messages(session, starter),
+        "booking_followups": await retry_booking_followups(session, starter),
     }
     if any(result.values()):
         log.info("sweep: %s", result)

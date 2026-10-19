@@ -50,6 +50,14 @@ export const useMySubscription = (enabled = true) => useQuery({ queryKey: keys.m
 // ---- mutations ----
 export const useSendContactMessage = () => useMutation({ mutationFn: E.sendContactMessage });
 
+export function useAnswerInquiry() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, answer }: { id: string } & T.PlannerAnswerRequest) => E.answerInquiry(id, { answer }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['leads', 'planner'] }),
+  });
+}
+
 export function useCreateLead() {
   const qc = useQueryClient();
   return useMutation({ mutationFn: E.createLead, onSuccess: () => qc.invalidateQueries({ queryKey: ['leads', 'planner'] }) });

@@ -63,3 +63,22 @@ class TemporalStarter:
                                         task_queue=get_settings().temporal_task_queue)
         except WorkflowAlreadyStartedError:
             pass
+
+    async def start_booking_followup(self, lead_id: str, inquiry_at_iso: str, event_date_iso: str | None) -> None:
+        from app.workflows.booking_followup import BookingFollowUpWorkflow
+
+        client = await asyncio.wait_for(get_temporal_client(), timeout=5)
+        try:
+            await client.start_workflow(BookingFollowUpWorkflow.run, args=[lead_id, inquiry_at_iso, event_date_iso],
+                                        id=f"booking-{lead_id}", task_queue=get_settings().temporal_task_queue)
+        except WorkflowAlreadyStartedError:
+            pass
+
+    async def signal_booking_settled(self, lead_id: str) -> None:
+        from temporalio.service import RPCError
+
+        client = await asyncio.wait_for(get_temporal_client(), timeout=5)
+        try:
+            await client.get_workflow_handle(f"booking-{lead_id}").signal("settled")
+        except RPCError:  # already finished or never started (older lead): nothing to stop
+            pass

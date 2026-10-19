@@ -12,6 +12,10 @@ export const getAuthProviders = () => api<T.AuthProvidersResponse>('/auth/provid
 export const getSiteInfo = () => api<T.SiteInfo>('/site-info');
 export const sendContactMessage = (body: T.ContactRequest) => api<T.ContactResponse>('/contact', { method: 'POST', body });
 
+// ---- booking confirmation ----
+export const answerInquiry = (id: string, body: T.PlannerAnswerRequest) =>
+  api<T.PlannerInquiry>(`/leads/${encodeURIComponent(id)}/planner-answer`, { method: 'PATCH', body });
+
 // ---- billing ----
 export const getMyPayments = () => api<T.BillingHistoryResponse>('/subscriptions/me/payments');
 

@@ -61,6 +61,7 @@ This folder is the contract between the React frontend and the FastAPI backend.
 | GET | /leads/artist?status&page&size | artist | – | ArtistLeadsResponse |
 | PATCH | /leads/{id} | artist | UpdateLeadRequest | ArtistLead · 409 `invalid_transition` |
 | GET | /leads/planner?status&page&size | planner | – | PlannerInquiriesResponse |
+| PATCH | /leads/{id}/planner-answer | planner (own inquiry) | `{answer: 'booked'\|'not_booked'\|'deciding'}` | PlannerInquiry · 404 `lead_not_found` — `booked` confirms the booking (and converts new/contacted/expired leads); either side's confirmation opens the review |
 | GET | /subscriptions/plans | public | – | `{items: Plan[]}` |
 | GET | /subscriptions/me | artist | – | MySubscriptionResponse |
 | POST | /subscriptions/trial | artist | StartTrialRequest | PlanUsage · 409 `trial_used` |

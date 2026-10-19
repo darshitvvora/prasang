@@ -9,7 +9,8 @@ from app.config import get_settings
 from app.db import get_sessionmaker
 from app.notifications.notifier import get_notifier
 from app.subscriptions.gateway import get_gateway
-from app.workflows.activities import LeadActivities, MessageActivities, SubscriptionActivities
+from app.workflows.activities import BookingActivities, LeadActivities, MessageActivities, SubscriptionActivities
+from app.workflows.booking_followup import BookingFollowUpWorkflow
 from app.workflows.client import get_temporal_client
 from app.workflows.lead_notification import LeadNotificationWorkflow
 from app.workflows.message import DeliverMessageWorkflow
@@ -25,8 +26,8 @@ async def main() -> None:
     sessions = get_sessionmaker()
     notifier = get_notifier(settings)
     activities = (LeadActivities(sessions, notifier).all() + SubscriptionActivities(sessions, get_gateway()).all()
-                  + MessageActivities(sessions, notifier).all())
-    workflows = [LeadNotificationWorkflow, SubscriptionWorkflow, TrialWorkflow, DeliverMessageWorkflow]
+                  + MessageActivities(sessions, notifier).all() + BookingActivities(sessions).all())
+    workflows = [LeadNotificationWorkflow, SubscriptionWorkflow, TrialWorkflow, DeliverMessageWorkflow, BookingFollowUpWorkflow]
     worker = Worker(client, task_queue=settings.temporal_task_queue, workflows=workflows, activities=activities)
     log.info("worker polling task queue %s", settings.temporal_task_queue)
     await worker.run()

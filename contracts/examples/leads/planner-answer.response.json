@@ -1,0 +1,23 @@
+{
+  "id": "lead-101",
+  "artist": {
+    "artistId": "art-005",
+    "slug": "the-raaga-collective",
+    "name": "The Raaga Collective",
+    "artistType": "band",
+    "profileImageUrl": "/artists/band.png"
+  },
+  "eventType": "birthday",
+  "eventTitle": "Birthday",
+  "eventDate": "2026-10-16",
+  "daysToEvent": 17,
+  "budgetMin": 25000,
+  "budgetMax": 50000,
+  "notes": "Live band, 2-hour set, outdoor lawn setup.",
+  "status": "confirmed",
+  "contactedAt": "2026-09-29T07:30:00Z",
+  "bookingConfirmed": true,
+  "plannerAnswer": "booked",
+  "canReview": false,
+  "reviewId": null
+}
