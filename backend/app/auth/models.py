@@ -1,4 +1,6 @@
-from sqlalchemy import String
+from datetime import datetime
+
+from sqlalchemy import BigInteger, DateTime, Index, String
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.db import Base
@@ -16,3 +18,17 @@ class User(Timestamps, Base):
     full_name: Mapped[str] = mapped_column(String(120))
     role: Mapped[str] = mapped_column(RoleEnum)
     avatar_url: Mapped[str | None] = mapped_column(String(500))
+
+
+class OtpRequest(Base):
+    """One row per OTP SMS requested — feeds the per-phone / per-IP rate limit."""
+
+    __tablename__ = "otp_requests"
+    __table_args__ = (
+        Index("ix_otp_requests_phone_created", "phone", "created_at"),
+        Index("ix_otp_requests_ip_created", "ip", "created_at"),
+    )
+    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
+    phone: Mapped[str] = mapped_column(String(80))
+    ip: Mapped[str] = mapped_column(String(64))
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))

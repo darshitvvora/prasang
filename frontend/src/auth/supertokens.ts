@@ -18,13 +18,19 @@ export function initSupertokens(): void {
 export const hasSession = (): Promise<boolean> => Session.doesSessionExist();
 export const endSession = (): Promise<void> => Session.signOut();
 
+/** SuperTokens "general errors" carry a user-facing message from our backend (e.g. OTP rate limits). */
+function asApiError(err: unknown, code: string): unknown {
+  const e = err as { isSuperTokensGeneralError?: boolean; message?: string };
+  return e?.isSuperTokensGeneralError ? new ApiError(429, code, e.message ?? 'Please try again later.') : err;
+}
+
 export async function sendOtp(phone10: string): Promise<void> {
-  const res = await createCode({ phoneNumber: `+91${phone10}` });
+  const res = await createCode({ phoneNumber: `+91${phone10}` }).catch((err) => { throw asApiError(err, 'otp_rate_limited'); });
   if (res.status === 'SIGN_IN_UP_NOT_ALLOWED') throw new ApiError(403, 'sign_in_not_allowed', res.reason);
 }
 
 export async function resendOtp(): Promise<'ok' | 'restart'> {
-  const res = await resendCode();
+  const res = await resendCode().catch((err) => { throw asApiError(err, 'otp_rate_limited'); });
   return res.status === 'OK' ? 'ok' : 'restart';
 }
 

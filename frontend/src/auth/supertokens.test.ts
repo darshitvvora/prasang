@@ -23,6 +23,11 @@ describe('phone OTP', () => {
     await expect(sendOtp('9820011001')).rejects.toMatchObject({ code: 'sign_in_not_allowed', message: 'Blocked (ERR_CODE_1)' });
   });
 
+  it('shows the server message when OTP requests are rate limited', async () => {
+    pw.createCode.mockRejectedValue({ isSuperTokensGeneralError: true, message: 'Too many codes requested. Please wait a while and try again.' });
+    await expect(sendOtp('9820011001')).rejects.toMatchObject({ code: 'otp_rate_limited', message: 'Too many codes requested. Please wait a while and try again.' });
+  });
+
   it.each([
     [{ status: 'OK' }, 'ok'],
     [{ status: 'INCORRECT_USER_INPUT_CODE_ERROR', failedCodeInputAttemptCount: 1, maximumCodeInputAttempts: 5 }, 'incorrect'],
