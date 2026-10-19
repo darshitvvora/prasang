@@ -33,6 +33,47 @@ class _OtpSms(SMSDeliveryInterface[PasswordlessLoginSMSTemplateVars]):
                          f"{template_vars.user_input_code} is your Prasang login code. It expires in {minutes} minutes.")
 
 
+def _client_ip(api_options) -> str:
+    st_request = api_options.request
+    forwarded = st_request.get_header("x-forwarded-for")  # set by our nginx in production
+    if forwarded:
+        return forwarded.split(",")[0].strip()[:64]
+    client = getattr(getattr(st_request, "request", None), "client", None)
+    return (client.host if client else "unknown")[:64]
+
+
+def _rate_limited_apis(original):
+    """Refuse OTP sends over the per-phone / per-IP limits before SuperTokens creates (and texts) a code."""
+    from supertokens_python.types.response import GeneralErrorResponse
+
+    from app.auth.otp_limits import check_and_record
+    from app.db import get_sessionmaker
+
+    create_code_post = original.create_code_post
+    resend_code_post = original.resend_code_post
+
+    async def create_code(email, phone_number, session, should_try_linking_with_session_user, tenant_id, api_options, user_context):
+        async with get_sessionmaker()() as db:
+            problem = await check_and_record(db, phone_number or email or "", _client_ip(api_options))
+        if problem:
+            return GeneralErrorResponse(problem)
+        return await create_code_post(email, phone_number, session, should_try_linking_with_session_user, tenant_id, api_options,
+                                      user_context)
+
+    async def resend_code(device_id, pre_auth_session_id, session, should_try_linking_with_session_user, tenant_id, api_options,
+                          user_context):
+        async with get_sessionmaker()() as db:
+            problem = await check_and_record(db, f"device:{device_id}", _client_ip(api_options))
+        if problem:
+            return GeneralErrorResponse(problem)
+        return await resend_code_post(device_id, pre_auth_session_id, session, should_try_linking_with_session_user, tenant_id,
+                                      api_options, user_context)
+
+    original.create_code_post = create_code
+    original.resend_code_post = resend_code
+    return original
+
+
 def google_enabled(settings: Settings) -> bool:
     return bool(settings.google_client_id and settings.google_client_secret)
 
@@ -51,6 +92,7 @@ def init_supertokens(settings: Settings, sms_sender: SmsSender = log_sms) -> Non
             contact_config=ContactPhoneOnlyConfig(),
             flow_type="USER_INPUT_CODE",
             sms_delivery=SMSDeliveryConfig(service=_OtpSms(sms_sender)),
+            override=passwordless.InputOverrideConfig(apis=_rate_limited_apis),
         ),
     ]
     if google_enabled(settings):
