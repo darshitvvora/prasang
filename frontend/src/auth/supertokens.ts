@@ -6,12 +6,13 @@ import Passwordless, { consumeCode, createCode, resendCode } from 'supertokens-w
 import ThirdParty, { getAuthorisationURLWithQueryParamsAndSetState, signInAndUp } from 'supertokens-web-js/recipe/thirdparty';
 import { ApiError } from '../api/client';
 
-export const AUTH_API_BASE_PATH = '/api/v1/auth';
+import { supertokensAppInfo, type AuthEnv } from './supertokensConfig';
 
 export function initSupertokens(): void {
+  const { appInfo, sessionTokenBackendDomain } = supertokensAppInfo(import.meta.env as AuthEnv, window.location.origin);
   SuperTokens.init({
-    appInfo: { appName: 'Prasang', apiDomain: window.location.origin, apiBasePath: AUTH_API_BASE_PATH },
-    recipeList: [Session.init(), Passwordless.init(), ThirdParty.init()],
+    appInfo,
+    recipeList: [Session.init(sessionTokenBackendDomain ? { sessionTokenBackendDomain } : undefined), Passwordless.init(), ThirdParty.init()],
   });
 }
 
