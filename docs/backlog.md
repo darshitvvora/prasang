@@ -35,7 +35,7 @@
 
 **S4 Artists & media**
 - [x] B6 Artist profile CRUD, public profile, Instagram/YouTube/Facebook post embeds + profile widgets (Facebook page timeline, Instagram profile, YouTube channel), daily stats, dashboard (🔑 optional YouTube Data API key for @handle channels)
-- [ ] B7 Media uploads to S3 (🔑 AWS dev bucket + credentials for uploads; embeds work without), quotas
+- [x] B7 Media uploads to S3 (🔑 AWS dev bucket + credentials for uploads; embeds work without), quotas
 
 **S5 Search (Elasticsearch read side)**
 - [ ] B8 Outbox projector → Elasticsearch; search, suggestions, featured, similar — all UI listing reads from ES
