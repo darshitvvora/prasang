@@ -50,6 +50,7 @@ class Settings(BaseSettings):
 
     # Public web origin used in links inside messages and share previews.
     public_web_url: str = "http://localhost:5173"
+    web_index_path: str | None = None  # built web app index.html; served with preview tags at /profile/{slug}
     support_email: str | None = None  # contact-form messages are emailed here
     support_phone: str | None = None
     business_address: str | None = None
