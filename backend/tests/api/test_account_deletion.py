@@ -93,7 +93,7 @@ async def test_artist_delete_cancels_billing_and_hides_profile(client, gateway, 
     await reindex_all(get_sessionmaker(), es)
     async with get_sessionmaker()() as s:
         artist = await _arjun(s)
-        s.add(Subscription(artist_id=artist.id, tier="basic", billing_cycle="monthly", status="active",
+        s.add(Subscription(artist_id=artist.id, tier="pro", billing_cycle="monthly", status="active",
                            gateway_subscription_id="sub_del", current_period_end=date.today() + timedelta(days=10)))
         s.add(ArtistMedia(artist_id=artist.id, kind="image", url="https://cdn/x.jpg", storage_key="artists/a/x.jpg", display_order=99))
         await s.commit()
@@ -156,7 +156,7 @@ async def test_payment_records_kept_without_contact(client, gateway, starter):
     await seed_demo()
     async with get_sessionmaker()() as s:
         artist = await _arjun(s)
-        sub = Subscription(artist_id=artist.id, tier="basic", billing_cycle="monthly", status="active", gateway_subscription_id="sub_k",
+        sub = Subscription(artist_id=artist.id, tier="pro", billing_cycle="monthly", status="active", gateway_subscription_id="sub_k",
                            current_period_end=date.today() + timedelta(days=10))
         s.add(sub)
         await s.flush()

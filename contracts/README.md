@@ -111,7 +111,7 @@ This folder is the contract between the React frontend and the FastAPI backend.
 
 ## Business rules the contract encodes
 
-- **Plans (2026-10-20):** Free — no uploads, Instagram/YouTube/Facebook as text links only (no embeds/widgets). Basic — 5 photos + 1 video, embeds, no badge. Pro — 20 photos + 3 videos, embeds, verified badge (after admin verification), search boost, not featured. Premium — 50 photos + 8 videos + 2 HD videos, embeds, badge, featured, top boost. Video caps: 40 MB (HD 200 MB). `isVerified`/`isFeatured` already reflect the plan.
+- **Plans (2026-10-20, three plans):** **Basic** (tier key `free`, ₹0) — no uploads, 3 leads/month, Instagram/YouTube/Facebook embeds + widgets. **Pro** (₹599) — 5 photos + 1 video, 15 leads/month, embeds, search boost, no badge, not featured. **Premium** (₹1,199) — 50 photos + 8 videos + 2 HD videos, unlimited leads, embeds, verified badge (after admin verification), featured, top placement. Video caps: 40 MB (HD 200 MB). `isVerified`/`isFeatured` already reflect the plan. Show plan **names** from `GET /subscriptions/plans`, never the tier key.
 - **Downgrades:** items beyond the new plan's limits (by the artist's display order; embeds on Free) are hidden at once and deleted after 7 days (`Media.deleteAfter`); upgrading earlier restores them. Quotas count visible items only.
 
 - Monthly lead caps (calendar month, IST): free 3, basic 15, pro/premium unlimited (`-1`). Leads over the cap are stored with `isLocked: true`; the artist sees `plannerPhone`/`plannerEmail` as `null` until upgrade. Planners always receive the artist's contact info.

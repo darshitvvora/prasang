@@ -27,8 +27,8 @@ YearMonth = Annotated[str, Field(pattern=r"^\d{4}-(0[1-9]|1[0-2])$")]
 
 ArtistType = Literal["magician", "dj", "singer", "comedian", "bubble_artist", "band", "body_double", "anchor", "other"]
 EventType = Literal["birthday", "wedding", "pre_wedding", "anniversary", "corporate", "house_party", "other"]
-SubscriptionTier = Literal["free", "basic", "pro", "premium"]
-PaidTier = Literal["basic", "pro", "premium"]
+SubscriptionTier = Literal["free", "pro", "premium"]  # "free" is shown as "Basic" (plan name)
+PaidTier = Literal["pro", "premium"]
 BudgetRange = Literal["5k_10k", "10k_15k", "15k_25k", "25k_50k", "50k_plus"]
 LeadStatus = Literal["new", "contacted", "converted", "declined", "expired"]
 InquiryStatus = Literal["pending", "responded", "confirmed", "declined"]

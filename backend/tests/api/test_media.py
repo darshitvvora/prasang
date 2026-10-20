@@ -60,7 +60,7 @@ async def test_presigned_upload_then_confirm(client, s3):
     assert media["url"] == f"{ENDPOINT}/{BUCKET}/{target['storageKey']}" and media["embedUrl"] is None and media["displayOrder"] == 4
     listing = (await client.get("/api/v1/artists/me/media", headers=ARTIST)).json()
     assert listing["quota"] == {"images": {"used": 5, "limit": 5}, "videos": {"used": 0, "limit": 1},
-                                "hdVideos": {"used": 0, "limit": 0}}  # Arjun is on Basic
+                                "hdVideos": {"used": 0, "limit": 0}}  # Arjun is on Pro (5 photos + 1 video)
 
 
 async def test_confirm_rejects_missing_or_foreign_keys(client, s3):
@@ -89,7 +89,7 @@ async def test_quota_exceeded_on_free_plan(client, s3):
     from tests.api.test_artists import EXAMPLE
     await client.post("/api/v1/artists", headers=NEW, json=EXAMPLE | {"name": "Free Artist"})
     res = await client.post("/api/v1/artists/me/media", headers=NEW, json={"kind": "youtube", "url": "https://youtu.be/aqz-KE-bp00"})
-    assert res.status_code == 409  # Free: no embedded posts (2026-10-20 plans)
+    assert res.status_code == 201  # Basic (free) has embeds but no uploads
     res = await client.post("/api/v1/artists/me/media/upload-url", headers=NEW, json={"kind": "video", "contentType": "video/mp4", "sizeBytes": 100})
     assert res.status_code == 409
     assert res.json()["error"] == {"code": "media_quota_exceeded", "message": res.json()["error"]["message"], "details": {"limit": 0, "used": 0}}

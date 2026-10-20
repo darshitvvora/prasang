@@ -125,8 +125,8 @@
     "expired": 1
   },
   "plan": {
-    "tier": "basic",
-    "name": "Basic",
+    "tier": "pro",
+    "name": "Pro",
     "status": "active",
     "leadLimitMonthly": 15,
     "leadsUsedThisMonth": 16,

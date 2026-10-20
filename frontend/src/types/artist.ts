@@ -9,7 +9,7 @@ export type ArtistType =
   | 'anchor'
   | 'other';
 
-export type SubscriptionTier = 'free' | 'basic' | 'pro' | 'premium';
+export type SubscriptionTier = 'free' | 'pro' | 'premium'; // 'free' is the plan named "Basic"
 
 export type EventType =
   | 'birthday'
