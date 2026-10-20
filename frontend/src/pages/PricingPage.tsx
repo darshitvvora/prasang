@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Check, X, Crown, Zap, Star, Sparkles } from 'lucide-react';
+import { Check, X, Crown, Zap, Sparkles } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import QueryState, { InlineError } from '../components/QueryState';
 import { useAuth } from '../auth/AuthProvider';
@@ -9,7 +9,7 @@ import { useCreateSubscription, useMySubscription, usePlans, useVerifyPayment } 
 import { getDowngradePreview } from '../api/endpoints';
 import { downgradeWarning } from './pricing/downgrade';
 
-const TIER_ORDER: SubscriptionTier[] = ['free', 'basic', 'pro', 'premium'];
+const TIER_ORDER: SubscriptionTier[] = ['free', 'pro', 'premium'];
 import type { Plan } from '../api/types';
 import type { SubscriptionTier } from '../types/artist';
 import { openCheckout } from '../payments/razorpay';
@@ -17,8 +17,7 @@ import { pricingCta } from './pricing/pricingCta';
 import './PricingPage.css';
 
 const TIER_STYLE: Record<SubscriptionTier, { icon: React.ReactNode; color: string }> = {
-  free: { icon: <Star size={22} />, color: '#888' },
-  basic: { icon: <Zap size={22} />, color: '#60a5fa' },
+  free: { icon: <Zap size={22} />, color: '#60a5fa' }, // the Basic plan
   pro: { icon: <Crown size={22} />, color: 'var(--color-accent)' },
   premium: { icon: <Sparkles size={22} />, color: '#a78bfa' },
 };

@@ -72,7 +72,7 @@ async def test_artist_leads_view(client):
     assert body["counts"]["all"] == body["total"] == 8
     locked = [lead for lead in body["items"] if lead["isLocked"]]
     assert len(locked) == 1 and locked[0]["plannerPhone"] is None and locked[0]["plannerEmail"] is None
-    assert body["plan"]["tier"] == "basic"
+    assert body["plan"]["tier"] == "pro"
     new_only = (await client.get("/api/v1/leads/artist?status=new", headers=ARTIST)).json()
     assert all(lead["status"] == "new" for lead in new_only["items"]) and new_only["total"] == body["counts"]["new"]
     assert (await client.get("/api/v1/leads/artist", headers=PLANNER)).status_code == 403

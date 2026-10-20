@@ -27,13 +27,13 @@ async def test_demo_seed_is_complete_and_idempotent():
         await seed(session, demo=True)
 
         assert await _count(session, select(func.count()).select_from(ArtistProfile)) == 12
-        assert await _count(session, select(func.count()).select_from(SubscriptionPlan)) == 4
+        assert await _count(session, select(func.count()).select_from(SubscriptionPlan)) == 3  # Basic (free), Pro, Premium
         mumbai_areas = select(func.count()).select_from(Locality).where(Locality.city == "Mumbai", Locality.area.is_not(None))
         mumbai = await _count(session, mumbai_areas)
         assert mumbai == 8
 
         arjun = (await session.execute(select(ArtistProfile).where(ArtistProfile.user_id == DEV_ARTIST_ID))).scalar_one()
-        assert (arjun.slug, arjun.subscription_tier, arjun.is_published) == ("arjun-malhotra-magic", "basic", True)
+        assert (arjun.slug, arjun.subscription_tier, arjun.is_published) == ("arjun-malhotra-magic", "pro", True)
         arjun_leads = (await session.execute(select(Lead).where(Lead.artist_id == arjun.id))).scalars().all()
         assert len(arjun_leads) == 8  # 7 from his dataset + Neha's inquiry to him
         assert sum(lead.is_locked for lead in arjun_leads) == 1
@@ -46,7 +46,7 @@ async def test_base_seed_has_no_demo_data():
     async with get_sessionmaker()() as session:
         await seed(session, demo=False)
         assert await _count(session, select(func.count()).select_from(ArtistProfile)) == 0
-        assert await _count(session, select(func.count()).select_from(SubscriptionPlan)) == 4
+        assert await _count(session, select(func.count()).select_from(SubscriptionPlan)) == 3  # Basic (free), Pro, Premium
 
 
 async def test_alembic_migration_matches_models():

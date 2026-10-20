@@ -34,9 +34,9 @@ async def test_trial_once(client):
     res = await client.post("/api/v1/subscriptions/trial", headers=NEW, json={"tier": "pro"})
     assert res.status_code == 200, res.text
     usage = res.json()
-    assert (usage["tier"], usage["status"], usage["leadsRemaining"]) == ("pro", "trial", None)
+    assert (usage["tier"], usage["status"], usage["leadsRemaining"]) == ("pro", "trial", 15)  # Pro is capped at 15 now
     assert usage["trialEndsAt"] == (date.today() + timedelta(days=7)).isoformat() or usage["trialEndsAt"]
-    again = await client.post("/api/v1/subscriptions/trial", headers=NEW, json={"tier": "basic"})
+    again = await client.post("/api/v1/subscriptions/trial", headers=NEW, json={"tier": "pro"})
     assert again.status_code == 409 and again.json()["error"]["code"] == "trial_used"
 
 
@@ -57,7 +57,7 @@ async def test_subscribe_verify_activates_and_unlocks(client):
     assert ok.status_code == 200
     assert ok.json()["status"] == "active" and ok.json()["plan"]["tier"] == "pro"
     arjun = await _arjun()
-    assert (arjun.subscription_tier, arjun.tier_source, arjun.search_boost_score) == ("pro", "paid", 25)
+    assert (arjun.subscription_tier, arjun.tier_source, arjun.search_boost_score) == ("pro", "paid", 10)
     leads = (await client.get("/api/v1/leads/artist", headers=ARTIST)).json()
     assert not any(lead["isLocked"] for lead in leads["items"])
 
@@ -90,7 +90,7 @@ async def test_webhooks(client, monkeypatch):
     from app.config import get_settings
     await seed_demo()
     monkeypatch.setattr(get_settings(), "razorpay_webhook_secret", "whsec")
-    checkout = (await client.post("/api/v1/subscriptions", headers=ARTIST, json={"tier": "basic", "billingCycle": "monthly"})).json()["checkout"]
+    checkout = (await client.post("/api/v1/subscriptions", headers=ARTIST, json={"tier": "pro", "billingCycle": "monthly"})).json()["checkout"]
     sub_id = checkout["razorpaySubscriptionId"]
     end = 1893456000  # 2030-01-01
     payload = {"event": "subscription.activated", "payload": {"subscription": {"entity": {"id": sub_id, "status": "active", "current_end": end}}}}

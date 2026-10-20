@@ -1,7 +1,7 @@
 // The warning shown before an artist moves to a plan that holds fewer photos/videos/embeds.
 import type { DowngradePreview } from '../../api/types';
 
-const NAME = { free: 'Free', basic: 'Basic', pro: 'Pro', premium: 'Premium' } as const;
+const NAME = { free: 'Basic', pro: 'Pro', premium: 'Premium' } as const; // tier key 'free' is the Basic plan
 const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
 
 export function downgradeWarning(p: DowngradePreview): string | null {

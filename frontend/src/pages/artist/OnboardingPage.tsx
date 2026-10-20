@@ -18,7 +18,7 @@ import {
 import './ArtistPages.css';
 
 const STEPS = ['Profile Setup', 'Social & Media', 'Choose Plan'];
-type PaidTier = 'basic' | 'pro' | 'premium';
+type PaidTier = 'pro' | 'premium';
 
 const ARTIST_TYPES: ArtistType[] = ['magician', 'dj', 'singer', 'comedian', 'band', 'bubble_artist', 'anchor', 'other'];
 
@@ -371,13 +371,12 @@ function OnboardingWizard({ initial, exists, published, avatarUrl }: { initial: 
         {step === 2 && (
           <div className="onboarding-form">
             <h2 className="onboarding-title">Choose your plan</h2>
-            <p className="onboarding-sub">Start free. Upgrade anytime. All plans include a 7-day trial.</p>
+            <p className="onboarding-sub">You're on Basic (free): your profile, Instagram/YouTube/Facebook embeds and 3 leads a month. Upgrade anytime — paid plans include a 7-day trial.</p>
 
             <div className="ob-plans">
               {([
-                { id: 'basic', name: 'Basic', price: 299, leads: '15 leads/mo', color: '#60a5fa' },
-                { id: 'pro', name: 'Pro', price: 599, leads: 'Unlimited leads', color: '#d4f53f', popular: true },
-                { id: 'premium', name: 'Premium', price: 1199, leads: 'Unlimited + Top 3 placement', color: '#a78bfa' },
+                { id: 'pro', name: 'Pro', price: 599, leads: '15 leads/mo · 5 photos + 1 video', color: '#d4f53f', popular: true },
+                { id: 'premium', name: 'Premium', price: 1199, leads: 'Unlimited leads · featured · verified badge', color: '#a78bfa' },
               ] as const).map((plan) => (
                 <button
                   key={plan.id}

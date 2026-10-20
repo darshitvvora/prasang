@@ -89,7 +89,7 @@
 - **Suspend** leaves billing running (temporary; refunds manually in Razorpay); **block** = suspend + cancel billing at Razorpay immediately *(recommended default — change here if you disagree)*
 - Account deletion immediate after OTP re-confirm; payment records kept without contact details
 - Production nginx/web image stay in ED/EG
-- **Plans (2026-10-20):** Free — no uploads, Instagram/YouTube/Facebook as text links only. Basic — 5 photos + 1 video, embeds, no badge. Pro — 20 photos + 3 videos, embeds, verified badge (after admin verify), search boost, not featured. Premium — 50 photos + 8 videos + 2 HD videos, embeds, badge, featured, top boost. Lead limits and prices unchanged
+- **Plans (2026-10-20, revised same day): three plans.** **Basic** = free (internal tier key `free`): no uploads, 3 leads/month, Instagram/YouTube/Facebook embeds + widgets. **Pro** ₹599: 5 photos + 1 video, 15 leads/month, embeds, boosted, no badge, not featured. **Premium** ₹1,199 unchanged: 50 photos + 8 videos + 2 HD, unlimited leads, badge, featured, top placement. Old Basic subscribers moved to Pro (migration 0014)
 - Videos are **not compressed**: caps of 40 MB (HD 200 MB, Premium only)
 - Downgrade: extras beyond the new limits (by the artist's display order; embeds on Free) are hidden at once and **deleted after 7 days** with SMS/email + warning; upgrading earlier restores them. The pricing page and the cancel dialog warn with exact counts first
 - [x] L1 Admin at launch = **CLI commands, no UI** (run on the server via SSM): verify/unverify, feature/unfeature, suspend/restore artist, grant plan for N days, hide/restore review, block user, sync subscription from Razorpay; each updates search via the outbox and writes an `admin_actions` log row
@@ -99,7 +99,7 @@
 - [x] L5 Lifecycle messages: welcome, trial ending, renewal reminder, payment failed/plan ended (SMS + email)
 - [x] L6 Account and data deletion (DPDP Act, Google sign-in policy)
 - [x] L7 About and Contact pages (contact form emails the team)
-- [x] L8 Plan entitlements: media limits per plan, video size caps + Premium HD slots, embeds only on paid plans, badge on Pro/Premium, featured only on Premium, downgrade warning + 7-day clean-up
+- [x] L8 Plan entitlements: three plans (Basic free / Pro / Premium), media limits, video size caps + Premium HD slots, embeds on all plans, badge + featured on Premium only, downgrade warning + 7-day clean-up
 
 ## EG — AWS simulation on LocalStack (Docker) `[ ]`
 **Goal:** rehearse the AWS deploy locally — same IaC, same S3/IAM/SSM wiring — before spending on a real account. Also makes photo/video uploads work locally with no AWS credentials.

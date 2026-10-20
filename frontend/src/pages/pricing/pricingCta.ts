@@ -2,8 +2,8 @@
 import type { Me, PlanUsage } from '../../api/types';
 import type { SubscriptionTier } from '../../types/artist';
 
-const ORDER: SubscriptionTier[] = ['free', 'basic', 'pro', 'premium'];
-const NAME: Record<SubscriptionTier, string> = { free: 'Free', basic: 'Basic', pro: 'Pro', premium: 'Premium' };
+const ORDER: SubscriptionTier[] = ['free', 'pro', 'premium'];
+const NAME: Record<SubscriptionTier, string> = { free: 'Basic', pro: 'Pro', premium: 'Premium' }; // 'free' = the Basic plan
 
 export type Cta =
   | { kind: 'link'; label: string; to: string }

@@ -1,4 +1,4 @@
-"""Plan entitlements (2026-10-20): media limits, video size caps, HD slots, embeds, badge, featured, downgrade clean-up."""
+"""Plan entitlements (2026-10-20, three plans): Basic (free, tier key `free`), Pro, Premium — limits, embeds, badge, featured, clean-up."""
 from datetime import UTC, datetime, timedelta
 
 import pytest
@@ -52,37 +52,29 @@ async def _detail(client) -> dict:
 async def test_plans_reflect_new_limits(client):
     await seed_demo()
     plans = {p["tier"]: p for p in (await client.get("/api/v1/subscriptions/plans")).json()["items"]}
-    assert [(plans[t]["maxImages"], plans[t]["maxVideos"], plans[t]["maxHdVideos"]) for t in ("free", "basic", "pro", "premium")] == [
-        (0, 0, 0), (5, 1, 0), (20, 3, 0), (50, 8, 2)]
+    assert list(plans) == ["free", "pro", "premium"]
+    assert [plans[t]["name"] for t in plans] == ["Basic", "Pro", "Premium"]
+    assert [(plans[t]["monthlyPrice"], plans[t]["leadLimitMonthly"], plans[t]["maxImages"], plans[t]["maxVideos"],
+             plans[t]["maxHdVideos"]) for t in plans] == [(0, 3, 0, 0, 0), (599, 15, 5, 1, 0), (1199, -1, 50, 8, 2)]
 
 
-async def test_free_profile_has_text_links_but_no_embeds(client):
-    await seed_demo()
-    await _replace_media(youtube=2)
-    await _set_tier("free")
-    body = await _detail(client)
-    assert [m for m in body["media"] if m["kind"] in ("youtube", "instagram", "facebook")] == []
-    assert body["socialWidgets"] == []
-    assert body["instagramHandle"]  # still shown as a text link
-
-
-async def test_basic_profile_shows_embeds_and_widgets(client):
+async def test_basic_free_profile_shows_embeds_and_widgets(client):
     await seed_demo()
     await _replace_media(youtube=1)
-    await _set_tier("basic")
+    await _set_tier("free")
     body = await _detail(client)
     assert [m["kind"] for m in body["media"]] == ["youtube"]
     assert body["socialWidgets"]
 
 
-async def test_badge_only_on_pro_and_premium(client):
+async def test_badge_only_on_premium(client):
     await seed_demo()
     async with get_sessionmaker()() as s:
         (await s.execute(select(ArtistProfile).where(ArtistProfile.slug == ARJUN))).scalar_one().is_verified = True
         await s.commit()
-    await _set_tier("basic")
-    assert (await _detail(client))["isVerified"] is False
     await _set_tier("pro")
+    assert (await _detail(client))["isVerified"] is False
+    await _set_tier("premium")
     assert (await _detail(client))["isVerified"] is True
 
 
@@ -141,8 +133,8 @@ async def test_free_cannot_upload(client, s3):  # noqa: F811
 async def test_downgrade_hides_extras_and_schedules_deletion(client):
     await seed_demo()
     await _replace_media(images=7, videos=2)
+    await _set_tier("premium")
     await _set_tier("pro")
-    await _set_tier("basic")
     async with get_sessionmaker()() as s:
         rows = await _arjun_media(s)
         hidden = [r for r in rows if r.hidden_at is not None]
@@ -157,21 +149,21 @@ async def test_downgrade_hides_extras_and_schedules_deletion(client):
     assert sum(1 for m in listing["items"] if m["deleteAfter"]) == 3
 
 
-async def test_free_downgrade_hides_embeds_too():
+async def test_basic_downgrade_hides_uploads_but_keeps_embeds():
     await seed_demo()
     await _replace_media(images=1, youtube=1)
-    await _set_tier("basic")
+    await _set_tier("pro")
     await _set_tier("free")
     async with get_sessionmaker()() as s:
         rows = await _arjun_media(s)
-        assert rows and all(r.hidden_at is not None for r in rows)
+        assert [(r.kind, r.hidden_at is not None) for r in rows] == [("image", True), ("youtube", False)]
 
 
 async def test_upgrade_restores_hidden_items():
     await seed_demo()
     await _replace_media(images=7)
-    await _set_tier("basic")
     await _set_tier("pro")
+    await _set_tier("premium")
     async with get_sessionmaker()() as s:
         assert all(r.hidden_at is None and r.delete_after is None for r in await _arjun_media(s))
 
@@ -187,7 +179,7 @@ async def test_purge_deletes_after_7_days(monkeypatch):
 
     await seed_demo()
     await _replace_media(images=7)
-    await _set_tier("basic")
+    await _set_tier("pro")
     async with get_sessionmaker()() as s:
         assert await purge_hidden_media(s, Starter()) == 0
         assert await purge_hidden_media(s, Starter(), now=datetime.now(UTC) + timedelta(days=8)) == 2
@@ -199,15 +191,15 @@ async def test_purge_deletes_after_7_days(monkeypatch):
 async def test_downgrade_preview(client):
     await seed_demo()
     await _replace_media(images=7, videos=2, youtube=1)
-    await _set_tier("pro")
-    res = await client.get("/api/v1/subscriptions/downgrade-preview?tier=basic", headers=ARTIST)
+    await _set_tier("premium")
+    res = await client.get("/api/v1/subscriptions/downgrade-preview?tier=pro", headers=ARTIST)
     assert res.status_code == 200
-    assert res.json() == {"tier": "basic", "photos": 2, "videos": 1, "hdVideos": 0, "embeds": 0}
+    assert res.json() == {"tier": "pro", "photos": 2, "videos": 1, "hdVideos": 0, "embeds": 0}
     res = await client.get("/api/v1/subscriptions/downgrade-preview?tier=free", headers=ARTIST)
-    assert res.json() == {"tier": "free", "photos": 7, "videos": 2, "hdVideos": 0, "embeds": 1}
+    assert res.json() == {"tier": "free", "photos": 7, "videos": 2, "hdVideos": 0, "embeds": 0}
 
 
-@pytest.mark.parametrize("tier", ["basic", "pro", "premium"])
+@pytest.mark.parametrize("tier", ["free", "pro", "premium"])
 async def test_search_card_badge_follows_plan(client, tier):
     from app.artists.views import to_card
 
@@ -216,17 +208,13 @@ async def test_search_card_badge_follows_plan(client, tier):
     async with get_sessionmaker()() as s:
         artist = (await s.execute(select(ArtistProfile).where(ArtistProfile.slug == ARJUN))).scalar_one()
         artist.is_verified = True
-        assert to_card(artist).is_verified is (tier != "basic")
+        assert to_card(artist).is_verified is (tier == "premium")
 
 
-async def test_free_cannot_add_embedded_posts(client):
+async def test_basic_can_add_embedded_posts(client):
     await seed_demo()
     await _replace_media()
     await _set_tier("free")
-    res = await client.post("/api/v1/artists/me/media", headers=ARTIST,
-                            json={"kind": "youtube", "url": "https://www.youtube.com/watch?v=aqz-KE-bpKQ"})
-    assert res.status_code == 409 and res.json()["error"]["code"] == "media_quota_exceeded"
-    await _set_tier("basic")
     res = await client.post("/api/v1/artists/me/media", headers=ARTIST,
                             json={"kind": "youtube", "url": "https://www.youtube.com/watch?v=aqz-KE-bpKQ"})
     assert res.status_code == 201

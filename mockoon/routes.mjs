@@ -189,8 +189,8 @@ export const routes = [
   { method: 'post', path: 'subscriptions/trial', responses: [
     unauth,
     { status: 200, rules: [NEW], body:
-      `{"tier": "{{body 'tier'}}", "name": "{{capitalize (body 'tier')}}", "status": "trial", "leadLimitMonthly": {{#if (eq (body 'tier') 'basic')}}15{{else}}-1{{/if}}, ` +
-      `"leadsUsedThisMonth": 0, "leadsRemaining": {{#if (eq (body 'tier') 'basic')}}15{{else}}null{{/if}}, "periodEnd": null, ` +
+      `{"tier": "{{body 'tier'}}", "name": "{{capitalize (body 'tier')}}", "status": "trial", "leadLimitMonthly": {{#if (eq (body 'tier') 'pro')}}15{{else}}-1{{/if}}, ` +
+      `"leadsUsedThisMonth": 0, "leadsRemaining": {{#if (eq (body 'tier') 'pro')}}15{{else}}null{{/if}}, "periodEnd": null, ` +
       `"trialEndsAt": "{{dateTimeShift date=(now) days=7 format='yyyy-MM-dd'}}", "trialAvailable": false}` },
     { status: 409, body: err('trial_used', 'You have already used your free trial') },
   ] },

@@ -2,8 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { leadBanner, usageNote, usagePct } from './planUsage';
 import type { PlanUsage } from '../../api/types';
 
-const basic: PlanUsage = { tier: 'basic', name: 'Basic', status: 'active', leadLimitMonthly: 15, leadsUsedThisMonth: 6, leadsRemaining: 9, periodEnd: '2026-10-24', trialEndsAt: null, trialAvailable: false };
-const pro: PlanUsage = { ...basic, tier: 'pro', name: 'Pro', leadLimitMonthly: -1, leadsUsedThisMonth: 40, leadsRemaining: null };
+const basic: PlanUsage = { tier: 'pro', name: 'Pro', status: 'active', leadLimitMonthly: 15, leadsUsedThisMonth: 6, leadsRemaining: 9, periodEnd: '2026-10-24', trialEndsAt: null, trialAvailable: false };
+const pro: PlanUsage = { ...basic, tier: 'premium', name: 'Premium', leadLimitMonthly: -1, leadsUsedThisMonth: 40, leadsRemaining: null };
 
 describe('usageNote', () => {
   it('shows used out of limit', () => expect(usageNote(basic)).toBe('15 leads/month · 6 used'));
@@ -18,7 +18,7 @@ describe('usagePct', () => {
 });
 
 describe('leadBanner', () => {
-  it('counts remaining leads', () => expect(leadBanner(basic)).toEqual({ strong: 'You have 9 leads remaining this month.', rest: 'Upgrade to Pro for unlimited leads.' }));
+  it('counts remaining leads', () => expect(leadBanner(basic)).toEqual({ strong: 'You have 9 leads remaining this month.', rest: 'Upgrade to Premium for unlimited leads.' }));
   it('explains locked leads at the cap', () =>
     expect(leadBanner({ ...basic, leadsUsedThisMonth: 16, leadsRemaining: 0 })).toEqual({ strong: "You've used all 15 leads this month.", rest: 'New leads are locked until you upgrade.' }));
   it('is null on unlimited plans', () => expect(leadBanner(pro)).toBeNull());

@@ -25,7 +25,7 @@ function Dashboard({ data }: { data: ArtistDashboard }) {
     { label: 'Leads This Month', value: String(metrics.leadsThisMonth.value), note: change(metrics.leadsThisMonth), up: (metrics.leadsThisMonth.changePct ?? 0) >= 0, icon: <TrendingUp size={20} /> },
     { label: 'Avg. Rating', value: metrics.averageRating.totalReviews ? metrics.averageRating.value.toFixed(1) : '–', note: `${metrics.averageRating.totalReviews} reviews`, up: true, icon: <Star size={20} /> },
   ];
-  const showUpgrade = data.plan.tier === 'free' || data.plan.tier === 'basic';
+  const showUpgrade = data.plan.tier !== 'premium';
 
   return (
     <>

@@ -11,14 +11,14 @@ class Entitlements:
     search_boost_score: int
     is_featured: bool
     whatsapp_notifications: bool
-    social_embeds: bool  # Instagram/YouTube/Facebook embeds + profile widgets (Free: text links only)
+    social_embeds: bool  # Instagram/YouTube/Facebook embeds + profile widgets
     verified_badge: bool  # badge shows when the plan allows it AND an admin verified the artist
 
 
+# Three plans. The free plan keeps the internal tier key "free" and is shown as "Basic".
 ENTITLEMENTS: dict[str, Entitlements] = {
-    "free": Entitlements(search_boost_score=0, is_featured=False, whatsapp_notifications=False, social_embeds=False, verified_badge=False),
-    "basic": Entitlements(search_boost_score=10, is_featured=False, whatsapp_notifications=True, social_embeds=True, verified_badge=False),
-    "pro": Entitlements(search_boost_score=25, is_featured=False, whatsapp_notifications=True, social_embeds=True, verified_badge=True),
+    "free": Entitlements(search_boost_score=0, is_featured=False, whatsapp_notifications=False, social_embeds=True, verified_badge=False),
+    "pro": Entitlements(search_boost_score=10, is_featured=False, whatsapp_notifications=True, social_embeds=True, verified_badge=False),
     "premium": Entitlements(search_boost_score=50, is_featured=True, whatsapp_notifications=True, social_embeds=True, verified_badge=True),
 }
 

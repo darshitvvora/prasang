@@ -59,7 +59,7 @@ function ArtistProfile({ artist }: { artist: ArtistDetail }) {
   const similarQuery = useSimilarArtists(artist.slug);
   const similar = (similarQuery.data?.items ?? []).filter((a) => a.artistId !== artist.artistId).slice(0, 3);
   const [contactOpen, setContactOpen] = useState(false);
-  const { tabs, initial } = profileTabs(artist.subscriptionTier);
+  const { tabs, initial } = profileTabs(artist.media.length > 0);
   const [chosenTab, setActiveTab] = useState<ProfileTab>(initial);
   const activeTab: ProfileTab = tabs.includes(chosenTab) ? chosenTab : initial;  // e.g. moving from a paid to a Free profile
   const media = artist.media.length > 0

@@ -128,7 +128,7 @@ async def test_failed_webhook_is_processed_when_razorpay_retries(client, gateway
 
 
 async def test_upgrade_to_capped_plan_unlocks_leads_within_new_limit(client, gateway):
-    """Important 2: Free (3) → Basic (15) must reveal locked leads that now fit the cap."""
+    """Important 2: Basic/free (3) → Pro (15) must reveal locked leads that now fit the cap."""
     await seed_demo()
     async with get_sessionmaker()() as s:
         a = await arjun()
@@ -137,7 +137,7 @@ async def test_upgrade_to_capped_plan_unlocks_leads_within_new_limit(client, gat
         await s.commit()
     locked_before = [lead for lead in (await client.get("/api/v1/leads/artist", headers=ARTIST)).json()["items"] if lead["isLocked"]]
     assert locked_before
-    sub = await checkout(client, "basic")
+    sub = await checkout(client, "pro")
     await client.post("/api/v1/subscriptions/verify", headers=ARTIST, json={
         "razorpayPaymentId": "p", "razorpaySubscriptionId": sub, "razorpaySignature": "mock-signature"})
     after = (await client.get("/api/v1/leads/artist", headers=ARTIST)).json()["items"]
@@ -157,6 +157,6 @@ async def test_trial_on_capped_plan_unlocks_within_limit(client, gateway):
     for i in range(5):
         await client.post("/api/v1/leads", headers=PLANNER, json=lead_body(created["artistId"], eventDate=(date.today() + timedelta(days=50 + i)).isoformat()))
     assert sum(lead["isLocked"] for lead in (await client.get("/api/v1/leads/artist", headers=NEW)).json()["items"]) == 2
-    await client.post("/api/v1/subscriptions/trial", headers=NEW, json={"tier": "basic"})
+    await client.post("/api/v1/subscriptions/trial", headers=NEW, json={"tier": "pro"})
     assert sum(lead["isLocked"] for lead in (await client.get("/api/v1/leads/artist", headers=NEW)).json()["items"]) == 0
     _ = datetime.now(UTC)

@@ -63,7 +63,7 @@ async def test_dashboard(client):
     assert d["greetingName"] == "Arjun" and d["isPublished"] is True
     assert d["metrics"]["profileViews"] == {"value": 150, "changePct": 50}
     assert d["metrics"]["contactClicks"] == {"value": 12, "changePct": None}
-    assert d["plan"]["tier"] == "basic" and d["plan"]["leadLimitMonthly"] == 15
+    assert d["plan"]["tier"] == "pro" and d["plan"]["leadLimitMonthly"] == 15
     assert len(d["recentLeads"]) == 3
     locked = [lead for lead in d["recentLeads"] if lead["isLocked"]]
     assert all(lead["plannerPhone"] is None and lead["plannerEmail"] is None for lead in locked)

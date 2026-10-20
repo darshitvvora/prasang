@@ -109,7 +109,7 @@ async def test_downgrade_queues_plan_ended():
         await s.commit()
         msg = (await s.execute(select(QueuedMessage).where(QueuedMessage.kind == "plan_ended"))).scalar_one()
     assert msg.user_id == "dev-artist-arjun"
-    assert msg.context == {"plan": "Basic"}
+    assert msg.context == {"plan": "Pro"}  # Arjun is on Pro (old Basic)
 
 
 async def test_halted_webhook_queues_payment_failed():
@@ -118,7 +118,7 @@ async def test_halted_webhook_queues_payment_failed():
         from app.subscriptions.service import handle_webhook
 
         artist = (await s.execute(select(ArtistProfile).where(ArtistProfile.slug == "arjun-malhotra-magic"))).scalar_one()
-        s.add(Subscription(artist_id=artist.id, tier="basic", billing_cycle="monthly", status="active",
+        s.add(Subscription(artist_id=artist.id, tier="pro", billing_cycle="monthly", status="active",
                            gateway_subscription_id="sub_h", current_period_end=date(2026, 11, 1)))
         await s.commit()
         await handle_webhook(s, "subscription.halted", {"id": "sub_h"})
@@ -202,8 +202,8 @@ async def test_payment_failed_sent_once_per_period_and_not_during_checkout():
     await seed_demo()
     async with get_sessionmaker()() as s:
         artist = (await s.execute(select(ArtistProfile).where(ArtistProfile.slug == "arjun-malhotra-magic"))).scalar_one()
-        s.add(Subscription(artist_id=artist.id, tier="basic", billing_cycle="monthly", status="created", gateway_subscription_id="sub_c"))
-        s.add(Subscription(artist_id=artist.id, tier="basic", billing_cycle="monthly", status="active",
+        s.add(Subscription(artist_id=artist.id, tier="pro", billing_cycle="monthly", status="created", gateway_subscription_id="sub_c"))
+        s.add(Subscription(artist_id=artist.id, tier="pro", billing_cycle="monthly", status="active",
                            gateway_subscription_id="sub_r", current_period_end=date(2026, 11, 1)))
         await s.commit()
         await handle_webhook(s, "payment.failed", {}, {"id": "pay_c1", "status": "failed", "subscription_id": "sub_c"})
