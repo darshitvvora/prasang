@@ -40,8 +40,6 @@ export default function Footer() {
               <Link to="/artist/onboarding" className="footer-link">List Your Profile</Link>
               <Link to="/pricing" className="footer-link">Pricing Plans</Link>
               <Link to="/artist/dashboard" className="footer-link">Artist Dashboard</Link>
-              <a href="#" className="footer-link">Success Stories</a>
-              <a href="#" className="footer-link">Referral Program</a>
             </nav>
           </div>
 
@@ -52,8 +50,7 @@ export default function Footer() {
               <Link to="/search" className="footer-link">Find Artists</Link>
               <Link to="/search" className="footer-link">Browse by Category</Link>
               <Link to="/search" className="footer-link">Browse by Location</Link>
-              <a href="#" className="footer-link">How It Works</a>
-              <a href="#" className="footer-link">FAQ</a>
+              <Link to="/about" className="footer-link">How It Works</Link>
             </nav>
           </div>
 
@@ -61,11 +58,11 @@ export default function Footer() {
           <div>
             <h3 className="footer-column-title">Company</h3>
             <nav className="footer-links" aria-label="Company links">
-              <a href="#" className="footer-link">About Us</a>
-              <a href="#" className="footer-link">Blog</a>
-              <a href="#" className="footer-link">Careers</a>
-              <a href="#" className="footer-link">Contact</a>
-              <a href="#" className="footer-link">Press</a>
+              <Link to="/about" className="footer-link">About Us</Link>
+              <Link to="/contact" className="footer-link">Contact</Link>
+              <Link to="/privacy-policy" className="footer-link">Privacy Policy</Link>
+              <Link to="/terms-of-service" className="footer-link">Terms of Service</Link>
+              <Link to="/cookie-policy" className="footer-link">Cookie Policy</Link>
             </nav>
           </div>
         </div>

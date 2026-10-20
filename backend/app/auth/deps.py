@@ -46,6 +46,10 @@ async def current_user(identity: AuthIdentity = Depends(current_identity), db: A
     user = await db.get(User, identity.user_id)
     if user is None:
         raise AppError(404, "profile_required", "Complete your profile to continue")
+    if user.deleted_at is not None:
+        raise unauthenticated("This account has been deleted.")
+    if user.blocked_at is not None:
+        raise AppError(403, "account_blocked", "This account has been blocked. Contact us if you think this is a mistake.")
     return user
 
 

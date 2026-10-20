@@ -85,3 +85,54 @@ class SubscriptionActivities:
 
     def all(self) -> list:
         return [self.expire_unpaid_subscription, self.lapse_subscription, self.end_trial]
+
+
+class MessageActivities:
+    def __init__(self, sessions: async_sessionmaker[AsyncSession], notifier: Notifier):
+        self.sessions, self.notifier = sessions, notifier
+
+    @activity.defn(name="deliver_message")
+    async def deliver_message(self, message_id: str) -> str:
+        from app.notifications.queue import deliver
+
+        async with self.sessions() as s:
+            return await deliver(s, self.notifier, message_id)
+
+    def all(self) -> list:
+        return [self.deliver_message]
+
+
+class BookingActivities:
+    def __init__(self, sessions: async_sessionmaker[AsyncSession]):
+        self.sessions = sessions
+
+    @activity.defn(name="booking_state")
+    async def booking_state(self, lead_id: str) -> str:
+        from app.leads.booking import booking_state
+
+        async with self.sessions() as s:
+            return await booking_state(s, lead_id)
+
+    @activity.defn(name="send_booking_check")
+    async def send_booking_check(self, lead_id: str, kind: str) -> None:
+        from app.leads.booking import queue_booking_check
+
+        async with self.sessions() as s:
+            await queue_booking_check(s, lead_id, kind)
+
+    def all(self) -> list:
+        return [self.booking_state, self.send_booking_check]
+
+
+class MediaActivities:
+    @activity.defn(name="delete_media_files")
+    async def delete_media_files(self, keys: list[str]) -> int:
+        from app.media.storage import get_storage
+
+        storage = get_storage()
+        for key in keys:
+            await storage.delete(key)
+        return len(keys)
+
+    def all(self) -> list:
+        return [self.delete_media_files]

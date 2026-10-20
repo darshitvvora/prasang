@@ -1,0 +1,24 @@
+{
+  "items": [
+    {
+      "id": "8d2b4c1e-6f3a-4b7d-9e21-5a0c3f7b9d11",
+      "paidAt": "2026-10-05T06:30:00Z",
+      "tier": "pro",
+      "billingCycle": "monthly",
+      "amount": 599,
+      "currency": "INR",
+      "status": "paid",
+      "receiptUrl": "https://rzp.io/i/inv_Pq7XyZ"
+    },
+    {
+      "id": "1a7e9c33-0b4d-4e5f-8a62-7c9d1e2f3a40",
+      "paidAt": "2026-09-05T06:30:00Z",
+      "tier": "pro",
+      "billingCycle": "monthly",
+      "amount": 599,
+      "currency": "INR",
+      "status": "failed",
+      "receiptUrl": null
+    }
+  ]
+}

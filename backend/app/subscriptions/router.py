@@ -8,12 +8,15 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.auth.deps import require_role
 from app.auth.models import User
 from app.contract import (
+    BillingHistoryResponse,
     CreateSubscriptionRequest,
     CreateSubscriptionResponse,
+    DowngradePreview,
     MySubscriptionResponse,
     PlanList,
     PlanUsage,
     StartTrialRequest,
+    SubscriptionTier,
     VerifyPaymentRequest,
     VerifyPaymentResponse,
 )
@@ -60,6 +63,16 @@ async def cancel(user: User = Depends(artist_only), db: AsyncSession = Depends(g
     return await service.cancel(db, user, get_gateway())
 
 
+@router.get("/downgrade-preview", response_model=DowngradePreview, **JSON)
+async def downgrade_preview(tier: SubscriptionTier, user: User = Depends(artist_only), db: AsyncSession = Depends(get_session)):
+    return await service.downgrade_preview(db, user, tier)
+
+
+@router.get("/me/payments", response_model=BillingHistoryResponse, **JSON)
+async def my_payments(user: User = Depends(artist_only), db: AsyncSession = Depends(get_session)):
+    return await service.payments(db, user)
+
+
 @router.post("/webhook")
 async def webhook(request: Request, db: AsyncSession = Depends(get_session)):
     body = await request.body()
@@ -68,15 +81,17 @@ async def webhook(request: Request, db: AsyncSession = Depends(get_session)):
     payload = await request.json()
     event_id = request.headers.get("x-razorpay-event-id") or hashlib.sha256(body).hexdigest()[:64]
     entity = payload.get("payload", {}).get("subscription", {}).get("entity", {})
+    payment = payload.get("payload", {}).get("payment", {}).get("entity")
+    gateway_sub_id = entity.get("id") or (payment or {}).get("subscription_id")
     await db.execute(insert(PaymentEvent).values(
-        id=event_id, event_type=payload.get("event", ""), gateway_subscription_id=entity.get("id"), payload=payload,
+        id=event_id, event_type=payload.get("event", ""), gateway_subscription_id=gateway_sub_id, payload=payload,
     ).on_conflict_do_nothing())
     await db.commit()
     record = await db.get(PaymentEvent, event_id)
     if record.processed_at is not None:
         return {"ok": True, "duplicate": True}
     # If processing fails we answer 500 and leave processed_at NULL, so Razorpay's retry applies it.
-    await service.handle_webhook(db, payload.get("event", ""), entity)
+    await service.handle_webhook(db, payload.get("event", ""), entity, payment)
     record = await db.get(PaymentEvent, event_id)
     record.processed_at = datetime.now(UTC)
     await db.commit()

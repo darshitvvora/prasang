@@ -74,6 +74,9 @@ class ArtistProfile(ArtistDetail):
     whatsapp_number: str | None
     is_published: bool
     completeness: ProfileCompleteness
+    suspended: bool
+    suspension_reason: str | None
+    google_place_url: str | None
 
 
 class ArtistProfileInput(ContractModel):
@@ -93,6 +96,7 @@ class ArtistProfileInput(ContractModel):
     facebook_url: str | None
     contact_phone: Phone
     whatsapp_number: Phone | None
+    google_place_url: str | None = Field(default=None, max_length=500)
 
 
 class ArtistProfilePatch(ContractModel):
@@ -113,6 +117,7 @@ class ArtistProfilePatch(ContractModel):
     contact_phone: Phone | None = None
     whatsapp_number: Phone | None = None
     is_published: bool | None = None
+    google_place_url: str | None = Field(default=None, max_length=500)
 
 
 class Metric(ContractModel):
@@ -156,6 +161,41 @@ class Review(ContractModel):
     event_month: YearMonth
     text: str
     created_at: UtcDatetime
+    verified: bool
+    artist_reply: str | None
+
+
+class CreateReviewRequest(ContractModel):
+    lead_id: str
+    rating: int = Field(ge=1, le=5)
+    text: str = Field(min_length=20, max_length=2000)
+
+
+class UpdateReviewRequest(ContractModel):
+    rating: int | None = Field(default=None, ge=1, le=5)
+    text: str | None = Field(default=None, min_length=20, max_length=2000)
+
+
+class ReviewReplyRequest(ContractModel):
+    text: str = Field(min_length=1, max_length=1000)
+
+
+class ReviewReportRequest(ContractModel):
+    reason: str = Field(min_length=10, max_length=1000)
 
 
 ReviewPage = Page[Review]
+
+
+class GoogleReviewItem(ContractModel):
+    author: str
+    rating: int
+    relative_time: str
+    text: str
+
+
+class GoogleReviewsResponse(ContractModel):
+    rating: float | None
+    count: int
+    maps_url: str | None
+    items: list[GoogleReviewItem]

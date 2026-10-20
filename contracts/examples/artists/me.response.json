@@ -38,7 +38,9 @@
       "embedUrl": null,
       "thumbnailUrl": null,
       "caption": "Arjun Malhotra live",
-      "displayOrder": 0
+      "displayOrder": 0,
+      "isHd": false,
+      "deleteAfter": null
     },
     {
       "id": "med-001-2",
@@ -47,7 +49,9 @@
       "embedUrl": null,
       "thumbnailUrl": null,
       "caption": null,
-      "displayOrder": 1
+      "displayOrder": 1,
+      "isHd": false,
+      "deleteAfter": null
     },
     {
       "id": "med-001-3",
@@ -56,7 +60,9 @@
       "embedUrl": null,
       "thumbnailUrl": null,
       "caption": null,
-      "displayOrder": 2
+      "displayOrder": 2,
+      "isHd": false,
+      "deleteAfter": null
     },
     {
       "id": "med-001-4",
@@ -65,7 +71,9 @@
       "embedUrl": null,
       "thumbnailUrl": null,
       "caption": null,
-      "displayOrder": 3
+      "displayOrder": 3,
+      "isHd": false,
+      "deleteAfter": null
     }
   ],
   "socialWidgets": [
@@ -122,5 +130,8 @@
         "done": false
       }
     ]
-  }
+  },
+  "suspended": false,
+  "suspensionReason": null,
+  "googlePlaceUrl": null
 }

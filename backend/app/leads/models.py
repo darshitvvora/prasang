@@ -30,3 +30,9 @@ class Lead(Timestamps, Base):
     is_locked: Mapped[bool] = mapped_column(default=False)
     # Set once the notification workflow was started; NULL rows are retried by the sweeper (Temporal was unreachable).
     notification_started_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    # Booking confirmation: the artist marking "converted" or the planner answering "booked" — whichever comes first.
+    booking_confirmed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    booking_confirmed_by: Mapped[str | None] = mapped_column(String(10))  # artist | planner
+    planner_answer: Mapped[str | None] = mapped_column(String(12))  # booked | not_booked | deciding
+    planner_answered_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    followup_started_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))  # NULL = sweeper starts it

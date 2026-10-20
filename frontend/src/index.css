@@ -7,7 +7,9 @@
 /* --- Design Tokens --- */
 :root {
   /* Colors — Core */
-  --color-bg-dark: #0f0f0f;
+  --color-bg-dark: #2b1838;          /* aubergine — replaces near-black */
+  --color-bg-dark-raised: #3a2549;   /* panels/cards on dark */
+  --color-bg-dark-elevated: #4a3359; /* borders, hover on dark */
   --color-bg-light: #f5f5f0;
   --color-bg-card: #ffffff;
   --color-accent: #d4f53f;
@@ -15,11 +17,11 @@
   --color-accent-dark: #b8d92a;
 
   /* Colors — Text */
-  --color-text-primary: #1a1a1a;
+  --color-text-primary: #2b1838;
   --color-text-secondary: #6b7280;
   --color-text-muted: #9ca3af;
   --color-text-on-dark: #ffffff;
-  --color-text-on-dark-secondary: #a1a1aa;
+  --color-text-on-dark-secondary: #c4b5d0;
 
   /* Colors — Semantic */
   --color-success: #25D366;
@@ -34,7 +36,7 @@
 
   /* Colors — UI */
   --color-border: #e5e7eb;
-  --color-border-dark: #27272a;
+  --color-border-dark: #4a3359;
   --color-shadow: rgba(0, 0, 0, 0.08);
   --color-shadow-hover: rgba(0, 0, 0, 0.15);
   --color-overlay: rgba(0, 0, 0, 0.5);

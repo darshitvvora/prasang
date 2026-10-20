@@ -4,7 +4,7 @@
 .planner-layout {
   display: flex;
   min-height: 100vh;
-  background: #0f0f0f;
+  background: var(--color-bg-dark);
   color: #ffffff;
   font-family: var(--font-body);
 }
@@ -106,7 +106,7 @@
   padding: 9px 12px;
   border-radius: 9px;
   background: var(--color-accent);
-  color: #0f0f0f;
+  color: var(--color-bg-dark);
   font-size: 12px;
   font-weight: 700;
   text-decoration: none;
@@ -174,7 +174,7 @@
 }
 
 .planner-metric-card {
-  background: #1a1a1a;
+  background: var(--color-bg-dark-raised);
   border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: 14px;
   padding: 20px;
@@ -265,7 +265,7 @@
 }
 
 .planner-dashboard-card {
-  background: #1a1a1a;
+  background: var(--color-bg-dark-raised);
   border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: 16px;
   padding: 24px;
@@ -421,7 +421,7 @@
 }
 
 .planner-inquiry-card {
-  background: #1a1a1a;
+  background: var(--color-bg-dark-raised);
   border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: 14px;
   padding: 20px;
@@ -543,7 +543,7 @@
 
 .planner-saved-card {
   display: block;
-  background: #1a1a1a;
+  background: var(--color-bg-dark-raised);
   border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: 16px;
   overflow: hidden;
@@ -611,7 +611,7 @@
 .planner-saved-card-type {
   font-size: 11px;
   font-weight: 700;
-  color: #0f0f0f;
+  color: var(--color-bg-dark);
   padding: 3px 9px;
   border-radius: 7px;
 }
@@ -637,7 +637,7 @@
   padding: 11px 22px;
   border-radius: 10px;
   background: var(--color-accent);
-  color: #0f0f0f;
+  color: var(--color-bg-dark);
   font-size: 14px;
   font-weight: 700;
   text-decoration: none;
@@ -713,3 +713,22 @@
 }
 
 a.planner-inquiry-preview-item { text-decoration: none; color: inherit; }
+
+.planner-booking-bar { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; margin: 0.6rem 0; font-size: 0.9rem; }
+.planner-booking-question { display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: center; }
+.planner-booking-question button { padding: 0.35rem 0.8rem; border-radius: 999px; border: 1px solid #d0d0c8; background: #fff; cursor: pointer; font-weight: 600; }
+.planner-booking-question button:first-of-type { background: var(--color-accent); border-color: var(--color-accent); }
+.planner-booking-label { padding: 0.2rem 0.6rem; border-radius: 999px; background: #eef9d0; font-weight: 600; }
+.planner-booking-review { font-weight: 700; color: var(--color-bg-dark); text-decoration: underline; }
+.planner-booking-hint { color: #6b6b66; }
+.planner-booking-error { color: #b42318; }
+
+.review-form { display: grid; gap: 0.75rem; max-width: 560px; background: #fff; padding: 1.25rem 1.5rem; border-radius: 14px; }
+.review-form label { display: grid; gap: 0.35rem; font-weight: 600; }
+.review-form textarea { font: inherit; font-weight: 400; padding: 0.65rem 0.75rem; border: 1px solid #d0d0c8; border-radius: 8px; }
+.review-form-stars { display: flex; gap: 0.25rem; }
+.review-form-stars button { background: none; border: 0; cursor: pointer; color: #c9c9c0; padding: 0.1rem; }
+.review-form-stars button.on { color: #f5b301; }
+.review-form-count { font-weight: 400; font-size: 0.8rem; color: #6b6b66; justify-self: end; }
+.review-form-error { color: #b42318; font-size: 0.9rem; }
+.review-form-submit { justify-self: start; padding: 0.7rem 1.4rem; border: 0; border-radius: 999px; font-weight: 700; background: var(--color-accent); cursor: pointer; }

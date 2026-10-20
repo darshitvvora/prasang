@@ -20,7 +20,7 @@
 
 .auth-card {
   position: relative;
-  background: #1a1a1a;
+  background: var(--color-bg-dark-raised);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 20px;
   padding: 40px;
@@ -97,7 +97,7 @@
 }
 
 .auth-tab.active {
-  background: #2a2a2a;
+  background: var(--color-bg-dark-elevated);
   color: #ffffff;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
 }
@@ -125,7 +125,7 @@
   border-radius: 12px;
   font-size: 15px;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--color-text-primary);
   cursor: pointer;
   transition: opacity 0.2s, transform 0.15s;
 }
@@ -292,7 +292,7 @@
   border-radius: 12px;
   font-size: 15px;
   font-weight: 700;
-  color: #0f0f0f;
+  color: var(--color-bg-dark);
   cursor: pointer;
   transition: background 0.2s, transform 0.15s, opacity 0.2s;
 }

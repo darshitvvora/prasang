@@ -29,7 +29,7 @@ async def test_search_filters(client, indexed):
     assert (await _total(client))["total"] == 12
     assert (await _total(client, "artistType=dj"))["total"] == 2
     assert (await _total(client, "city=Pune"))["total"] == 2
-    assert (await _total(client, "featuredOnly=true"))["total"] == 4
+    assert (await _total(client, "featuredOnly=true"))["total"] == 2  # only Premium artists are featured (2026-10-20 plans)
     assert all(a["averageRating"] >= 4.8 for a in (await _total(client, "minRating=4.8"))["items"])
     prices = [a["perEventRateMin"] for a in (await _total(client, "sort=price_low"))["items"]]
     assert prices == sorted(prices)

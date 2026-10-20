@@ -21,6 +21,12 @@ describe('validateProfileForm', () => {
     expect(validateProfileForm({ ...filled, facebook: 'https://www.facebook.com/arjunmagic' })).toEqual({}));
   it('rejects a non-Facebook URL in the Facebook field', () =>
     expect(validateProfileForm({ ...filled, facebook: 'https://evil.example/arjun' })).toHaveProperty('facebook'));
+  it('rejects a non-Google link in the Google Maps field', () =>
+    expect(validateProfileForm({ ...filled, googleMaps: 'https://evil.example/maps' })).toHaveProperty('googleMaps'));
+  it('accepts Google Maps share links', () => {
+    expect(validateProfileForm({ ...filled, googleMaps: 'https://maps.app.goo.gl/AbC' })).toEqual({});
+    expect(validateProfileForm({ ...filled, googleMaps: 'https://www.google.com/maps/place/Arjun+Magic' })).toEqual({});
+  });
   it('rejects a malformed WhatsApp number when given', () =>
     expect(validateProfileForm({ ...filled, whatsappNumber: '123' })).toHaveProperty('whatsappNumber'));
 });
@@ -31,7 +37,11 @@ describe('toProfileInput', () => {
       name: 'Arjun Malhotra', artistType: 'magician', locationCity: 'Mumbai', locationArea: 'Bandra West', bio: 'Close-up magician',
       experienceYears: 8, perEventRateMin: 15000, perEventRateMax: 25000, eventTypesSupported: ['wedding'], languagesSpoken: ['Hindi'],
       readyToTravel: true, instagramHandle: 'arjunmagic', youtubeChannel: null, facebookUrl: null, contactPhone: '9820011001', whatsappNumber: null,
+      googlePlaceUrl: null,
     });
+  });
+  it('keeps a trimmed Google Maps link', () => {
+    expect(toProfileInput({ ...filled, googleMaps: ' https://maps.app.goo.gl/AbC ' }).googlePlaceUrl).toBe('https://maps.app.goo.gl/AbC');
   });
 });
 

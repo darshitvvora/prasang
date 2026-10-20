@@ -20,18 +20,26 @@ export const keys = {
   plannerInquiries: (status: string) => ['leads', 'planner', status] as const,
   plans: ['plans'] as const,
   mySubscription: ['subscriptions', 'me'] as const,
+  siteInfo: ['site-info'] as const,
+  myPayments: ['subscriptions', 'me', 'payments'] as const,
+  myReviews: ['reviews', 'mine'] as const,
 };
 
 const STATIC = { staleTime: 60 * 60 * 1000 }; // locations/plans rarely change
 
 export const useAuthProviders = () => useQuery({ queryKey: keys.authProviders, queryFn: E.getAuthProviders, ...STATIC });
 export const useLocations = () => useQuery({ queryKey: keys.locations, queryFn: E.getLocations, ...STATIC });
+export const useMyReviews = () => useQuery({ queryKey: keys.myReviews, queryFn: () => E.getMyReviews() });
+export const useMyPayments = () => useQuery({ queryKey: keys.myPayments, queryFn: E.getMyPayments });
+export const useSiteInfo = () => useQuery({ queryKey: keys.siteInfo, queryFn: E.getSiteInfo, ...STATIC });
 export const usePlans = () => useQuery({ queryKey: keys.plans, queryFn: E.getPlans, ...STATIC });
 export const useSearchArtists = (params: T.SearchParams) =>
   useQuery({ queryKey: keys.search(params), queryFn: () => E.searchArtists(params), placeholderData: (prev) => prev });
 export const useFeaturedArtists = () => useQuery({ queryKey: keys.featured, queryFn: () => E.getFeaturedArtists() });
 export const useArtist = (slug: string) => useQuery({ queryKey: keys.artist(slug), queryFn: () => E.getArtist(slug) });
 export const useArtistReviews = (slug: string) => useQuery({ queryKey: keys.reviews(slug), queryFn: () => E.getArtistReviews(slug) });
+export const useGoogleReviews = (slug: string) =>
+  useQuery({ queryKey: ['artist', slug, 'google-reviews'], queryFn: () => E.getGoogleReviews(slug), staleTime: 60 * 60 * 1000 });
 export const useSimilarArtists = (slug: string) => useQuery({ queryKey: keys.similar(slug), queryFn: () => E.getSimilarArtists(slug) });
 
 export const useMyArtist = (enabled = true) => useQuery({ queryKey: keys.myArtist, queryFn: E.getMyArtist, enabled });
@@ -44,6 +52,32 @@ export const usePlannerInquiries = (status: string) =>
 export const useMySubscription = (enabled = true) => useQuery({ queryKey: keys.mySubscription, queryFn: E.getMySubscription, enabled });
 
 // ---- mutations ----
+export const useSendContactMessage = () => useMutation({ mutationFn: E.sendContactMessage });
+
+export function useCreateReview() {
+  const qc = useQueryClient();
+  return useMutation({ mutationFn: E.createReview, onSuccess: () => qc.invalidateQueries({ queryKey: ['leads', 'planner'] }) });
+}
+
+export function useReplyToReview() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, text }: { id: string; text: string }) => E.replyToReview(id, { text }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: keys.myReviews }),
+  });
+}
+
+export const useReportReview = () =>
+  useMutation({ mutationFn: ({ id, reason }: { id: string; reason: string }) => E.reportReview(id, { reason }) });
+
+export function useAnswerInquiry() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, answer }: { id: string } & T.PlannerAnswerRequest) => E.answerInquiry(id, { answer }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['leads', 'planner'] }),
+  });
+}
+
 export function useCreateLead() {
   const qc = useQueryClient();
   return useMutation({ mutationFn: E.createLead, onSuccess: () => qc.invalidateQueries({ queryKey: ['leads', 'planner'] }) });

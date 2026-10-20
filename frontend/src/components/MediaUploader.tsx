@@ -7,10 +7,7 @@ import { createMedia, deleteMedia, requestUploadUrl, uploadToUrl } from '../api/
 import { keys, useMyMedia } from '../api/queries';
 import { InlineError } from './QueryState';
 import { linkKind } from './embed';
-
-const MAX_IMAGE_BYTES = 10 * 1024 * 1024;
-const MAX_VIDEO_BYTES = 100 * 1024 * 1024;
-const limitText = (used: number, limit: number) => (limit < 0 ? `${used} (unlimited)` : `${used}/${limit}`);
+import { canUseHd, deletionNote, quotaSummary, uploadProblem } from './mediaLimits';
 
 export default function MediaUploader() {
   const qc = useQueryClient();
@@ -19,6 +16,7 @@ export default function MediaUploader() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<unknown>(null);
   const [linkUrl, setLinkUrl] = useState('');
+  const [hd, setHd] = useState(false);
 
   const refresh = () => {
     qc.invalidateQueries({ queryKey: keys.myMedia });
@@ -43,10 +41,10 @@ export default function MediaUploader() {
     run(async () => {
       for (const file of Array.from(files)) {
         const kind = file.type.startsWith('video/') ? 'video' : 'image';
-        if (file.size > (kind === 'video' ? MAX_VIDEO_BYTES : MAX_IMAGE_BYTES)) {
-          throw new Error(`${file.name} is too large (max ${kind === 'video' ? '100' : '10'} MB)`);
-        }
-        const target = await requestUploadUrl({ kind, contentType: file.type || 'application/octet-stream', sizeBytes: file.size });
+        const asHd = kind === 'video' && hd;
+        const problem = uploadProblem(file, kind, asHd);
+        if (problem) throw new Error(problem);
+        const target = await requestUploadUrl({ kind, contentType: file.type || 'application/octet-stream', sizeBytes: file.size, hd: asHd });
         await uploadToUrl(target, file);
         await createMedia({ kind, storageKey: target.storageKey });
       }
@@ -74,10 +72,14 @@ export default function MediaUploader() {
       <button type="button" className="ob-upload-box tall" onClick={() => fileInput.current?.click()} disabled={busy}>
         <Upload size={28} />
         <span>{busy ? 'Uploading…' : 'Upload photos & videos of your performances'}</span>
-        {quota && (
-          <span className="ob-hint">Photos {limitText(quota.images.used, quota.images.limit)} · Videos {limitText(quota.videos.used, quota.videos.limit)}</span>
-        )}
+        {quota && <span className="ob-hint">{quotaSummary(quota)} · videos up to 40 MB</span>}
       </button>
+      {quota && quota.hdVideos.limit !== 0 && (
+        <label className="ob-hd-toggle">
+          <input type="checkbox" checked={hd && canUseHd(quota)} disabled={!canUseHd(quota)} onChange={(e) => setHd(e.target.checked)} />
+          Upload the next video in HD (up to 200 MB){canUseHd(quota) ? '' : ' — HD slots used'}
+        </label>
+      )}
       <input ref={fileInput} type="file" accept="image/*,video/*" multiple hidden onChange={(e) => { handleFiles(e.target.files); e.target.value = ''; }} />
 
       <form className="ob-link-row" onSubmit={handleAddLink}>
@@ -94,6 +96,8 @@ export default function MediaUploader() {
               {m.kind === 'image' ? <img src={m.url} alt={m.caption ?? ''} /> : (
                 <div className="ob-media-link"><PlayCircle size={22} /> {m.kind === 'youtube' ? 'YouTube' : m.kind === 'instagram' ? 'Instagram' : m.kind === 'facebook' ? 'Facebook' : 'Video'}</div>
               )}
+              {m.isHd && <span className="ob-media-badge">HD</span>}
+              {deletionNote(m.deleteAfter) && <span className="ob-media-warning">{deletionNote(m.deleteAfter)}</span>}
               <button type="button" className="ob-media-delete" aria-label="Delete" disabled={busy}
                 onClick={() => run(() => deleteMedia(m.id))}>
                 <Trash2 size={14} />

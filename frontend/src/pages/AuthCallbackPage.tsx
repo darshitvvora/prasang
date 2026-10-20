@@ -1,6 +1,7 @@
 // Google sends the user back here (/auth/callback/google). Finish the SuperTokens sign-in, then route them on.
 import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { CONFIRM_DELETE_KEY } from './settings';
 import { useAuth } from '../auth/AuthProvider';
 import { homePathFor } from '../auth/paths';
 import FullPageSpinner from '../components/FullPageSpinner';
@@ -18,7 +19,10 @@ export default function AuthCallbackPage() {
     started.current = true;
     completeGoogleRedirect()
       .then((result) => {
-        if (result.status === 'signedIn') navigate(homePathFor(result.user), { replace: true });
+        if (result.status === 'signedIn') {
+          // Coming back from re-confirming before account deletion → straight back to settings.
+          navigate(sessionStorage.getItem(CONFIRM_DELETE_KEY) ? '/settings' : homePathFor(result.user), { replace: true });
+        }
         else if (result.status === 'needsProfile') navigate('/signup?step=profile', { replace: true });
         else setFailure(result.reason);
       })

@@ -47,9 +47,36 @@ Demo data: 12 artists (Mumbai, Pune, Delhi, Bengaluru), reviews, leads. For API 
 |---|---|
 | Phone OTP sign-in | OTP printed in API logs |
 | Lead notifications (Temporal) | WhatsApp/SMS/email printed in `docker compose logs worker` |
+| Welcome, trial-ending, renewal, payment-failed, plan-ended and "did you book?" messages | printed in `docker compose logs worker` |
+| Google reviews on profiles | Need `GOOGLE_PLACES_API_KEY`; otherwise hidden |
+| Contact form | Stored; emailed to `SUPPORT_EMAIL` when email is set up |
 | Paid plans | Fake gateway: checkout succeeds instantly; trial/renewal timers run in Temporal |
 | Instagram / YouTube / Facebook | Post embeds + profile widgets from links (YouTube `@handle` widgets need `YOUTUBE_API_KEY`) |
 | Photo / video uploads | Need `S3_BUCKET` + AWS credentials; otherwise the API answers `storage_not_configured` and links still work |
+
+### Admin (no admin UI yet — commands, each one audit-logged)
+
+```bash
+docker compose exec api python -m app.cli admin --help
+docker compose exec api python -m app.cli admin make-admin 9820012345              # by phone or user id
+docker compose exec api python -m app.cli admin verify <slug>                       # / unverify
+docker compose exec api python -m app.cli admin feature <slug>                      # / unfeature (home page, any plan)
+docker compose exec api python -m app.cli admin suspend <slug> --reason "…"         # hidden; billing keeps running / restore
+docker compose exec api python -m app.cli admin grant-plan <slug> pro --days 30 --reason "…"
+docker compose exec api python -m app.cli admin hide-review <review-id> --reason "…" # / restore-review
+docker compose exec api python -m app.cli admin block-user <phone> --reason "…"     # artists: also suspended + billing cancelled
+docker compose exec api python -m app.cli admin sync-subscription <slug>            # re-read Razorpay (missed webhook)
+docker compose exec api python -m app.cli admin clear-google-place <slug>
+docker compose exec api python -m app.cli admin reports                             # reported reviews + contact messages
+```
+
+In production run the same commands on the app server through an SSM session.
+
+### Link previews
+
+Shared profile links unfold with the artist's photo, name, type and city on WhatsApp/Instagram/Facebook. Check locally:
+`curl -s localhost:5173/profile/arjun-malhotra-magic | grep og:` — production nginx must route `/profile/*` to the API's
+`GET /profile/{slug}` (with `WEB_INDEX_PATH` pointing at the built `index.html`).
 
 ### Everyday commands
 

@@ -2,7 +2,7 @@ from typing import Annotated, Literal
 
 from pydantic import Field
 
-from app.contract.common import ContractModel, MediaKind, SocialKind
+from app.contract.common import ContractModel, MediaKind, SocialKind, UtcDatetime
 
 
 class Media(ContractModel):
@@ -13,6 +13,8 @@ class Media(ContractModel):
     thumbnail_url: str | None
     caption: str | None
     display_order: int
+    is_hd: bool
+    delete_after: UtcDatetime | None  # set when a downgrade put this item over the plan's limit
 
 
 class MediaItems(ContractModel):
@@ -27,6 +29,7 @@ class QuotaCount(ContractModel):
 class MediaQuota(ContractModel):
     images: QuotaCount
     videos: QuotaCount
+    hd_videos: QuotaCount
 
 
 class MediaListResponse(ContractModel):
@@ -38,6 +41,7 @@ class UploadUrlRequest(ContractModel):
     kind: Literal["image", "video", "avatar"]
     content_type: str
     size_bytes: int = Field(gt=0)
+    hd: bool = False  # Premium: use an HD video slot (up to 200 MB)
 
 
 class UploadUrlResponse(ContractModel):

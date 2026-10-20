@@ -1,0 +1,17 @@
+.site-contact-details { list-style: none; padding: 0; margin: 0 0 1.5rem; }
+.site-contact-details li { margin: 0.25rem 0; }
+.site-contact-form { display: grid; gap: 1rem; max-width: 560px; }
+.site-contact-form label { display: grid; gap: 0.35rem; font-weight: 600; }
+.site-contact-form input, .site-contact-form select, .site-contact-form textarea {
+  font: inherit; font-weight: 400; padding: 0.65rem 0.75rem; border: 1px solid #d0d0c8; border-radius: 8px; background: #fff;
+}
+.site-contact-submit {
+  justify-self: start; padding: 0.7rem 1.4rem; border: 0; border-radius: 999px; font-weight: 700;
+  background: var(--color-accent); color: var(--color-bg-dark); cursor: pointer;
+}
+.site-contact-submit:disabled { opacity: 0.6; cursor: wait; }
+.site-contact-success { padding: 1rem; border-radius: 8px; background: #eef9d0; }
+.site-contact-form .contact-form-error, .site-contact-form + .contact-form-error { color: #b42318; font-weight: 400; font-size: 0.9rem; }
+.settings-danger { background: #b42318; color: #fff; }
+.settings-confirm { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; }
+.settings-cancel { padding: 0.7rem 1.2rem; border-radius: 999px; border: 1px solid #d0d0c8; background: #fff; cursor: pointer; font-weight: 600; }

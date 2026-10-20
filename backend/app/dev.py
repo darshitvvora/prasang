@@ -20,7 +20,8 @@ async def reset(db: AsyncSession = Depends(get_session)):
     s = get_settings()
     if not s.dev_auth_header or s.env == "production":
         raise not_found("not_found", "Not found")
-    await db.execute(text("TRUNCATE leads, subscriptions, payment_events, outbox_events, artist_daily_stats"))
+    await db.execute(text("TRUNCATE review_reports, reviews, leads, subscription_payments, subscriptions, payment_events, "
+                          "outbox_events, artist_daily_stats, contact_messages"))
     await db.execute(delete(User).where(User.id == DEV_NEW_USER_ID))
     await db.commit()
     await seed(db, demo=True)

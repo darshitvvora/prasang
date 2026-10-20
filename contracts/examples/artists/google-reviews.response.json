@@ -1,0 +1,19 @@
+{
+  "rating": 4.7,
+  "count": 212,
+  "mapsUrl": "https://maps.google.com/?cid=1234567890",
+  "items": [
+    {
+      "author": "Priya S",
+      "rating": 5,
+      "relativeTime": "2 weeks ago",
+      "text": "Arjun was the highlight of my son's birthday!"
+    },
+    {
+      "author": "Rohan M",
+      "rating": 4,
+      "relativeTime": "a month ago",
+      "text": "Great tricks, kids loved it."
+    }
+  ]
+}

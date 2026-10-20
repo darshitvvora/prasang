@@ -29,6 +29,7 @@ class Settings(BaseSettings):
     google_client_id: str | None = None
     google_client_secret: str | None = None
     dev_auth_header: bool = False
+    google_places_api_key: str | None = None  # optional: shows Google reviews from the artist's listing
     youtube_api_key: str | None = None  # optional: resolves @handles to channel ids for the YouTube widget
 
     aws_region: str = "ap-south-1"
@@ -47,6 +48,13 @@ class Settings(BaseSettings):
     msg91_whatsapp_number: str | None = None
     resend_api_key: str | None = None
     email_sender: str = "Prasang <leads@prasang.in>"
+
+    # Public web origin used in links inside messages and share previews.
+    public_web_url: str = "http://localhost:5173"
+    web_index_path: str | None = None  # built web app index.html; served with preview tags at /profile/{slug}
+    support_email: str | None = None  # contact-form messages are emailed here
+    support_phone: str | None = None
+    business_address: str | None = None
 
     cors_origins: list[str] = ["http://localhost:5173"]
     # Repo root containing contracts/ and mockoon/data (seed datasets). Docker mounts them at /seed.

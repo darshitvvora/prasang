@@ -121,7 +121,10 @@ function OnboardingWizard({ initial, exists, published, avatarUrl }: { initial: 
   async function saveSocialStep() {
     const input = toProfileInput(form);
     const ok = await save(async () => {
-      await updateArtist.mutateAsync({ instagramHandle: input.instagramHandle, youtubeChannel: input.youtubeChannel, facebookUrl: input.facebookUrl });
+      await updateArtist.mutateAsync({
+        instagramHandle: input.instagramHandle, youtubeChannel: input.youtubeChannel, facebookUrl: input.facebookUrl,
+        googlePlaceUrl: input.googlePlaceUrl,
+      });
     });
     if (ok) setStep(2);
   }
@@ -344,6 +347,13 @@ function OnboardingWizard({ initial, exists, published, avatarUrl }: { initial: 
               <input className="ob-input" placeholder="facebook.com/yourpage" value={form.facebook} onChange={(e) => set('facebook', e.target.value)} />
               {fieldError('facebook')}
               <span className="ob-hint">Your Instagram, YouTube and Facebook appear as live widgets on your profile.</span>
+            </div>
+
+            <div className="ob-field">
+              <label><Globe size={15} /> Google Maps link to your business (optional)</label>
+              <input className="ob-input" placeholder="https://maps.app.goo.gl/…" value={form.googleMaps} onChange={(e) => set('googleMaps', e.target.value)} />
+              {fieldError('googleMaps')}
+              <span className="ob-hint">If you have a Google Business listing, we show your Google rating and recent Google reviews on your profile.</span>
             </div>
 
             <MediaUploader />

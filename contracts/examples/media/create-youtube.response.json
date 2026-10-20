@@ -5,5 +5,7 @@
   "embedUrl": "https://www.youtube-nocookie.com/embed/aqz-KE-bpKQ",
   "thumbnailUrl": "https://i.ytimg.com/vi/aqz-KE-bpKQ/hqdefault.jpg",
   "caption": "Showreel 2026",
-  "displayOrder": 5
+  "displayOrder": 5,
+  "isHd": false,
+  "deleteAfter": null
 }

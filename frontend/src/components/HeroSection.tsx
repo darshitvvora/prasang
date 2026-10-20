@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import './HeroSection.css';
 
 export default function HeroSection() {
@@ -36,13 +37,13 @@ export default function HeroSection() {
         </div>
 
         {/* Right Card */}
-        <div className="hero-card" role="presentation">
+        <Link to="/about" className="hero-card" aria-label="See how Prasang works">
           <div className="hero-card-text">
             See how
             <br />
             it&apos;s done
           </div>
-        </div>
+        </Link>
       </div>
     </section>
   );

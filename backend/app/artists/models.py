@@ -30,12 +30,18 @@ class ArtistProfile(Timestamps, Base):
     youtube_channel: Mapped[str | None] = mapped_column(String(200))
     youtube_channel_id: Mapped[str | None] = mapped_column(String(30))  # UC… id when known → channel widget
     facebook_url: Mapped[str | None] = mapped_column(String(300))
+    google_place_url: Mapped[str | None] = mapped_column(String(500))
+    google_place_id: Mapped[str | None] = mapped_column(String(300))  # only this is stored (Google terms)
     profile_image_url: Mapped[str | None] = mapped_column(String(500))
     contact_phone: Mapped[str] = mapped_column(String(10))
     whatsapp_number: Mapped[str | None] = mapped_column(String(10))
     is_published: Mapped[bool] = mapped_column(default=False)
     is_verified: Mapped[bool] = mapped_column(default=False)
     is_featured: Mapped[bool] = mapped_column(default=False)
+    featured_override: Mapped[bool] = mapped_column(default=False, server_default="false")  # set by admin; kept across plan changes
+    suspended_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    suspension_reason: Mapped[str | None] = mapped_column(Text)
+    grant_ends_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))  # tier_source == "grant"
     subscription_tier: Mapped[str] = mapped_column(TierEnum, default="free")
     tier_source: Mapped[str] = mapped_column(TierSourceEnum, default="free")
     trial_ends_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))

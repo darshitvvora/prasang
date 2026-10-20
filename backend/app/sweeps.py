@@ -10,8 +10,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.artists.models import ArtistProfile
 from app.artists.stats import today_ist
+from app.leads.booking import retry_booking_followups
 from app.leads.models import Lead
 from app.leads.service import expire_leads
+from app.notifications.queue import queue_due_reminders, retry_pending_messages
 from app.subscriptions.models import Subscription
 from app.workflows.starter import WorkflowStarter
 
@@ -48,6 +50,19 @@ async def end_overdue_trials(session: AsyncSession, now: datetime | None = None)
     return len(ids)
 
 
+async def end_overdue_grants(session: AsyncSession, now: datetime | None = None) -> int:
+    """Plans granted by an admin end here (5-minute precision is enough)."""
+    from app.subscriptions.service import downgrade_to_free
+
+    now = now or datetime.now(UTC)
+    artists = (await session.execute(select(ArtistProfile).where(
+        ArtistProfile.tier_source == "grant", ArtistProfile.grant_ends_at < now).with_for_update())).scalars().all()
+    for artist in artists:
+        await downgrade_to_free(session, artist)
+    await session.commit()
+    return len(artists)
+
+
 async def lapse_overdue_subscriptions(session: AsyncSession) -> int:
     from app.subscriptions.service import lapse
 
@@ -59,12 +74,38 @@ async def lapse_overdue_subscriptions(session: AsyncSession) -> int:
     return len(ids)
 
 
+async def purge_hidden_media(session: AsyncSession, starter: WorkflowStarter, now: datetime | None = None) -> int:
+    """Delete portfolio items whose 7-day grace after a downgrade has passed (rows now, files via a retrying workflow)."""
+    from app.media.models import ArtistMedia
+
+    now = now or datetime.now(UTC)
+    rows = (await session.execute(select(ArtistMedia, ArtistProfile.user_id).join(ArtistProfile, ArtistProfile.id == ArtistMedia.artist_id)
+                                  .where(ArtistMedia.delete_after < now).limit(500))).all()
+    keys_by_user: dict[str, list[str]] = {}
+    for media, user_id in rows:
+        if media.storage_key:
+            keys_by_user.setdefault(user_id, []).append(media.storage_key)
+        await session.delete(media)
+    await session.commit()
+    for user_id, keys in keys_by_user.items():
+        try:
+            await starter.start_media_deletion(f"{user_id}-{int(now.timestamp())}", keys)
+        except Exception as exc:
+            log.warning("sweep: could not start file deletion for %s: %s (keys: %s)", user_id, exc, keys)
+    return len(rows)
+
+
 async def run_sweeps(session: AsyncSession, starter: WorkflowStarter) -> dict[str, int]:
     result = {
         "lead_notifications": await retry_lead_notifications(session, starter),
         "trials_ended": await end_overdue_trials(session),
+        "grants_ended": await end_overdue_grants(session),
         "subscriptions_lapsed": await lapse_overdue_subscriptions(session),
         "leads_expired": await expire_leads(session),
+        "reminders_queued": await queue_due_reminders(session),
+        "messages_restarted": await retry_pending_messages(session, starter),
+        "booking_followups": await retry_booking_followups(session, starter),
+        "media_purged": await purge_hidden_media(session, starter),
     }
     if any(result.values()):
         log.info("sweep: %s", result)

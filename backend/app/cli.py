@@ -54,8 +54,10 @@ async def _expire_leads() -> None:
 async def _sweep(loop_seconds: int | None) -> None:
     from app.sweeps import run_sweeps
     from app.workflows.client import TemporalStarter
+    from app.workflows.starter import set_starter
 
     starter = TemporalStarter()
+    set_starter(starter)  # messages queued by the sweep start delivery on commit
     while True:
         try:
             async with get_sessionmaker()() as session:
@@ -68,6 +70,12 @@ async def _sweep(loop_seconds: int | None) -> None:
 
 
 def main(argv: list[str] | None = None) -> None:
+    argv = sys.argv[1:] if argv is None else argv
+    if argv[:1] == ["admin"]:
+        from app.admin.cli import main as admin_main
+
+        admin_main(argv[1:])
+        return
     parser = argparse.ArgumentParser(prog="app.cli")
     sub = parser.add_subparsers(dest="command", required=True)
     sub.add_parser("migrate", help="alembic upgrade head")
@@ -79,6 +87,7 @@ def main(argv: list[str] | None = None) -> None:
     sub.add_parser("expire-leads", help="mark past-dated new leads as expired")
     sweep = sub.add_parser("sweep", help="retry missed lead notifications, end overdue trials, lapse overdue subscriptions")
     sweep.add_argument("--loop", type=int, default=0, help="repeat every N seconds")
+    sub.add_parser("admin", help="admin actions — see `admin --help`")
     args = parser.parse_args(argv)
 
     if args.command == "migrate":

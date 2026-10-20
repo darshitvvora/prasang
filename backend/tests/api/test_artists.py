@@ -28,7 +28,8 @@ async def test_create_profile(client):
     assert body["slug"] == "tanvi-rao-live"
     assert (body["isPublished"], body["subscriptionTier"], body["contactPhone"]) == (False, "free", "9820011001")
     assert body["completeness"]["percent"] > 0
-    assert [w["platform"] for w in body["socialWidgets"]] == ["instagram", "youtube"]
+    assert body["socialWidgets"] == []  # new artists start on Free: social links are plain text (2026-10-20 plans)
+    assert body["instagramHandle"] and body["youtubeChannel"]
     assert await _outbox(body["artistId"]) == ["artist.upserted"]
 
     me = await client.get("/api/v1/me", headers=NEW)

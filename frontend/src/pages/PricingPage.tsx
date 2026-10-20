@@ -6,6 +6,10 @@ import QueryState, { InlineError } from '../components/QueryState';
 import { useAuth } from '../auth/AuthProvider';
 import { ApiError } from '../api/client';
 import { useCreateSubscription, useMySubscription, usePlans, useVerifyPayment } from '../api/queries';
+import { getDowngradePreview } from '../api/endpoints';
+import { downgradeWarning } from './pricing/downgrade';
+
+const TIER_ORDER: SubscriptionTier[] = ['free', 'basic', 'pro', 'premium'];
 import type { Plan } from '../api/types';
 import type { SubscriptionTier } from '../types/artist';
 import { openCheckout } from '../payments/razorpay';
@@ -47,6 +51,11 @@ export default function PricingPage() {
     setError(null);
     setSuccess(null);
     try {
+      const current = subscription.data?.plan.tier;
+      if (current && TIER_ORDER.indexOf(tier) < TIER_ORDER.indexOf(current)) {
+        const warning = downgradeWarning(await getDowngradePreview(tier));
+        if (warning && !window.confirm(`${warning}\n\nContinue?`)) return;
+      }
       const { checkout } = await createSubscription.mutateAsync({ tier, billingCycle: annual ? 'annual' : 'monthly' });
       const payment = await openCheckout(checkout);
       const result = await verifyPayment.mutateAsync(payment);

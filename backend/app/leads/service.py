@@ -22,10 +22,12 @@ from app.contract import (
 )
 from app.errors import AppError, conflict, not_found
 from app.labels import EVENT_TYPE_LABELS
+from app.leads.booking import REOPEN_FROM, confirm, signal_settled
 from app.leads.budgets import BUDGETS
 from app.leads.models import Lead
 from app.leads.usage import month_bounds_ist
 from app.leads.views import to_artist_lead
+from app.reviews.models import Review
 from app.subscriptions.models import SubscriptionPlan
 
 DAILY_PLANNER_LIMIT = 10
@@ -51,6 +53,9 @@ async def create_lead(session: AsyncSession, planner: User, data: CreateLeadRequ
             ArtistProfile.id == artist_id, ArtistProfile.is_published.is_(True)).with_for_update())).scalar_one_or_none()
     if artist is None:
         raise not_found("artist_not_found", "No artist found for this link")
+    if artist.suspended_at is not None:
+        await session.rollback()
+        raise conflict("artist_suspended", "This artist isn't taking enquiries on Prasang right now")
 
     existing = (await session.execute(select(Lead).where(
         Lead.artist_id == artist.id, Lead.planner_id == planner.id,
@@ -109,8 +114,46 @@ async def update_status(session: AsyncSession, user: User, lead_id: str, status:
     if status not in TRANSITIONS.get(lead.status, set()):
         raise conflict("invalid_transition", f"A {lead.status} lead can't be marked {status}")
     lead.status = status
+    confirmed = status == "converted" and confirm(lead, "artist")
     await session.commit()
+    if confirmed:
+        await signal_settled(str(lead.id))
     return to_artist_lead(lead)
+
+
+def can_review(lead: Lead, today: date) -> bool:
+    return lead.booking_confirmed_at is not None and (lead.event_date is None or lead.event_date < today)
+
+
+def to_inquiry(lead: Lead, a: ArtistProfile, today: date, review_id: str | None = None) -> PlannerInquiry:
+    return PlannerInquiry(
+        id=str(lead.id), artist=InquiryArtist(artist_id=str(a.id), slug=a.slug, name=a.stage_name, artist_type=a.artist_type,
+                                              profile_image_url=a.profile_image_url),
+        event_type=lead.event_type, event_title=EVENT_TYPE_LABELS[lead.event_type], event_date=lead.event_date,
+        days_to_event=(lead.event_date - today).days if lead.event_date else None, budget_min=lead.budget_min,
+        budget_max=lead.budget_max, notes=lead.notes, status=TO_INQUIRY[lead.status], contacted_at=lead.created_at,
+        booking_confirmed=lead.booking_confirmed_at is not None, planner_answer=lead.planner_answer,
+        can_review=review_id is None and can_review(lead, today), review_id=review_id,
+    )
+
+
+async def planner_answer(session: AsyncSession, user: User, lead_id: str, answer: str, today: date | None = None) -> PlannerInquiry:
+    lid = _uuid(lead_id)
+    lead = await session.get(Lead, lid, with_for_update=True) if lid else None
+    if lead is None or lead.planner_id != user.id:
+        raise not_found("lead_not_found", "That inquiry doesn't exist")
+    now = datetime.now(UTC)
+    lead.planner_answer, lead.planner_answered_at = answer, now
+    if answer == "booked":
+        confirm(lead, "planner", now)
+        if lead.status in REOPEN_FROM:
+            lead.status = "converted"
+    await session.commit()
+    if answer in ("booked", "not_booked"):
+        await signal_settled(str(lead.id))
+    review_id = (await session.execute(select(Review.id).where(Review.lead_id == lead.id))).scalar()
+    return to_inquiry(lead, await session.get(ArtistProfile, lead.artist_id), today or today_ist(),
+                      str(review_id) if review_id else None)
 
 
 async def planner_inquiries(session: AsyncSession, user: User, status: str | None, page: int, size: int,
@@ -123,13 +166,10 @@ async def planner_inquiries(session: AsyncSession, user: User, status: str | Non
     total = (await session.execute(select(func.count()).select_from(Lead).where(where))).scalar_one()
     rows = (await session.execute(select(Lead, ArtistProfile).join(ArtistProfile, ArtistProfile.id == Lead.artist_id).where(where)
                                   .order_by(Lead.created_at.desc()).offset((page - 1) * size).limit(size))).all()
-    items = [PlannerInquiry(
-        id=str(lead.id), artist=InquiryArtist(artist_id=str(a.id), slug=a.slug, name=a.stage_name, artist_type=a.artist_type,
-                                              profile_image_url=a.profile_image_url),
-        event_type=lead.event_type, event_title=EVENT_TYPE_LABELS[lead.event_type], event_date=lead.event_date,
-        days_to_event=(lead.event_date - today).days if lead.event_date else None, budget_min=lead.budget_min,
-        budget_max=lead.budget_max, notes=lead.notes, status=TO_INQUIRY[lead.status], contacted_at=lead.created_at,
-    ) for lead, a in rows]
+    rows = list(rows)
+    reviewed = dict((await session.execute(select(Review.lead_id, Review.id).where(
+        Review.lead_id.in_([lead.id for lead, _ in rows])))).all()) if rows else {}
+    items = [to_inquiry(lead, a, today, str(reviewed[lead.id]) if lead.id in reviewed else None) for lead, a in rows]
 
     artists_contacted = (await session.execute(select(func.count(func.distinct(Lead.artist_id))).where(base))).scalar_one()
     upcoming_row = (await session.execute(select(Lead, ArtistProfile).join(ArtistProfile, ArtistProfile.id == Lead.artist_id).where(

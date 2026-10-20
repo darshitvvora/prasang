@@ -86,6 +86,15 @@ export const routes = [
 
   // ---------- auth providers (which sign-in methods the UI should offer) ----------
   { method: 'get', path: 'auth/providers', responses: [{ status: 200, file: 'auth/providers.response.json' }] },
+  { method: 'get', path: 'artists/:slug/google-reviews', responses: [{ status: 200, rules: [{ target: 'params', modifier: 'slug', value: '^arjun-malhotra-magic$', operator: 'regex' }], file: 'artists/google-reviews.response.json' }, { status: 204 }] },
+  { method: 'get', path: 'reviews/mine', responses: [unauth, forbidden([PLANNER]), { status: 200, file: 'reviews/mine.response.json' }] },
+  { method: 'post', path: 'reviews', responses: [unauth, forbidden([ARTIST]), { status: 201, file: 'reviews/create.response.json' }] },
+  { method: 'patch', path: 'reviews/:id', responses: [unauth, forbidden([ARTIST]), { status: 200, file: 'reviews/create.response.json' }] },
+  { method: 'put', path: 'reviews/:id/reply', responses: [unauth, forbidden([PLANNER]), { status: 200, file: 'reviews/reply.response.json' }] },
+  { method: 'post', path: 'reviews/:id/report', responses: [unauth, forbidden([PLANNER]), { status: 204 }] },
+  { method: 'delete', path: 'me', responses: [unauth, { status: 204 }] },
+  { method: 'get', path: 'site-info', responses: [{ status: 200, file: 'site/info.response.json' }] },
+  { method: 'post', path: 'contact', responses: [{ status: 201, file: 'site/contact.response.json' }] },
 
   // ---------- public ----------
   { method: 'get', path: 'locations', responses: [{ status: 200, body: `{{{stringify (dataRaw 'locations')}}}` }] },
@@ -159,6 +168,7 @@ export const routes = [
   { method: 'get', path: 'leads/artist', responses: [unauth, forbidden([PLANNER]), NO_USER_404, NO_USER_404_UNSET, NO_PROFILE_404, NO_PROFILE_404_UNSET, { status: 200, body:
     `{{setVar 'list' (dataRaw 'artist-leads' 'items')}}${filterBy('status', 'status')}` +
     pageOf(`, "counts": {{{stringify (dataRaw 'artist-leads' 'counts')}}} , "plan": {{{stringify (dataRaw 'artist-leads' 'plan')}}} `) }] },
+  { method: 'patch', path: 'leads/:id/planner-answer', responses: [unauth, forbidden([ARTIST]), { status: 200, file: 'leads/planner-answer.response.json' }] },
   { method: 'patch', path: 'leads/:id', responses: [unauth, { status: 200, body:
     `{{setVar 'l' (find (dataRaw 'artist-leads' 'items') (object id=(urlParam 'id')))}}` +
     `{{{replace (stringify @l) (concat '"status": "' @l.status '"') (concat '"status": "' (body 'status') '"')}}}` }] },
@@ -168,6 +178,8 @@ export const routes = [
 
   // ---------- subscriptions ----------
   { method: 'get', path: 'subscriptions/plans', responses: [{ status: 200, body: `{"items": {{{stringify (dataRaw 'plans')}}} }` }] },
+  { method: 'get', path: 'subscriptions/downgrade-preview', responses: [unauth, forbidden([PLANNER]), { status: 200, file: 'subscriptions/downgrade-preview.response.json' }] },
+  { method: 'get', path: 'subscriptions/me/payments', responses: [unauth, forbidden([PLANNER]), { status: 200, file: 'subscriptions/payments.response.json' }] },
   { method: 'get', path: 'subscriptions/me', responses: [
     unauth,
     { status: 200, rules: [NEW], body:

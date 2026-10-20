@@ -63,7 +63,7 @@
 }
 
 .toggle-btn.active {
-  background: #2a2a2a;
+  background: var(--color-bg-dark-elevated);
   color: #ffffff;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
 }
@@ -89,7 +89,7 @@
 
 .pricing-card {
   position: relative;
-  background: #1a1a1a;
+  background: var(--color-bg-dark-raised);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 20px;
   padding: 28px 24px;
@@ -106,7 +106,7 @@
 
 .pricing-card.popular {
   border-color: var(--color-accent);
-  background: linear-gradient(135deg, #1e2a0a 0%, #1a1a1a 100%);
+  background: linear-gradient(135deg, var(--color-bg-dark-elevated) 0%, var(--color-bg-dark-raised) 100%);
 }
 
 .popular-badge {
@@ -115,7 +115,7 @@
   left: 50%;
   transform: translateX(-50%);
   background: var(--color-accent);
-  color: #0f0f0f;
+  color: var(--color-bg-dark);
   font-size: 11px;
   font-weight: 700;
   padding: 4px 14px;
@@ -216,7 +216,7 @@
 .plan-cta.primary {
   background: var(--color-accent);
   border-color: var(--color-accent);
-  color: #0f0f0f;
+  color: var(--color-bg-dark);
 }
 
 .plan-cta.primary:hover {
@@ -284,7 +284,7 @@
 }
 
 .comparison-table thead {
-  background: #1a1a1a;
+  background: var(--color-bg-dark-raised);
 }
 
 .comparison-table th {
@@ -356,7 +356,7 @@
 }
 
 .faq-item {
-  background: #1a1a1a;
+  background: var(--color-bg-dark-raised);
   border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: 14px;
   padding: 24px;
@@ -402,7 +402,7 @@
   border-radius: 14px;
   font-size: 16px;
   font-weight: 700;
-  color: #0f0f0f;
+  color: var(--color-bg-dark);
   text-decoration: none;
   transition: background 0.2s, transform 0.15s;
 }

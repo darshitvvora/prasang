@@ -6,4 +6,5 @@ from app.contract.locations import *  # noqa: F403
 from app.contract.me import *  # noqa: F403
 from app.contract.media import *  # noqa: F403
 from app.contract.search import *  # noqa: F403
+from app.contract.site import *  # noqa: F403
 from app.contract.subscriptions import *  # noqa: F403

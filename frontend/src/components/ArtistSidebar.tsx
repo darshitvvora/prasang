@@ -1,11 +1,11 @@
 // Sidebar shared by the artist dashboard and leads pages, with live plan usage.
 import { Link } from 'react-router-dom';
-import { ArrowRight, Crown, MessageCircle, Star, TrendingUp } from 'lucide-react';
+import { ArrowRight, Crown, CreditCard, MessageCircle, MessageSquare, Star, TrendingUp } from 'lucide-react';
 import { useMySubscription } from '../api/queries';
 import { usageNote, usagePct } from '../pages/artist/planUsage';
 import '../pages/artist/ArtistPages.css';
 
-type Active = 'dashboard' | 'leads' | 'profile';
+type Active = 'dashboard' | 'leads' | 'profile' | 'subscription' | 'reviews';
 
 const NEXT_TIER: Record<string, string | null> = { free: 'Basic', basic: 'Pro', pro: 'Premium', premium: null };
 
@@ -27,6 +27,8 @@ export default function ArtistSidebar({ active }: { active: Active }) {
         {link('/artist/dashboard', 'dashboard', <TrendingUp size={18} />, 'Dashboard')}
         {link('/artist/leads', 'leads', <MessageCircle size={18} />, 'Leads')}
         {link('/artist/onboarding', 'profile', <Star size={18} />, 'My Profile')}
+        {link('/artist/reviews', 'reviews', <MessageSquare size={18} />, 'Reviews')}
+        {link('/artist/subscription', 'subscription', <CreditCard size={18} />, 'My Plan')}
         <Link to="/pricing" className="sidebar-link"><Crown size={18} /> Upgrade</Link>
       </nav>
       {plan && (

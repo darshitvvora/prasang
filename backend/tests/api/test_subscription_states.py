@@ -109,11 +109,11 @@ async def test_failed_webhook_is_processed_when_razorpay_retries(client, gateway
     real = service.handle_webhook
     calls = {"n": 0}
 
-    async def flaky(session, event, entity):
+    async def flaky(session, event, entity, payment=None):
         calls["n"] += 1
         if calls["n"] == 1:
             raise RuntimeError("db blip")
-        await real(session, event, entity)
+        await real(session, event, entity, payment)
 
     monkeypatch.setattr(service, "handle_webhook", flaky)
     from httpx import ASGITransport, AsyncClient

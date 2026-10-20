@@ -18,6 +18,7 @@ from app.leads.models import Lead
 from app.locations.models import Locality
 from app.media.models import ArtistMedia
 from app.reviews.models import Review
+from app.subscriptions.entitlements import for_tier
 from app.subscriptions.models import SubscriptionPlan
 
 NS = uuid.UUID("6f1c2b8e-5d4a-4c3b-9a21-7e0f3d5b8c10")
@@ -25,12 +26,6 @@ DEV_ARTIST_ID = "dev-artist-arjun"
 DEV_PLANNER_ID = "dev-planner-neha"
 DEV_NEW_USER_ID = "dev-new-user"
 
-PLAN_EXTRAS = {  # not shown on the pricing page but drive ranking/notifications
-    "free": {"search_boost_score": 0, "is_featured": False, "whatsapp_notifications": False},
-    "basic": {"search_boost_score": 10, "is_featured": False, "whatsapp_notifications": True},
-    "pro": {"search_boost_score": 25, "is_featured": True, "whatsapp_notifications": True},
-    "premium": {"search_boost_score": 50, "is_featured": True, "whatsapp_notifications": True},
-}
 INQUIRY_TO_LEAD_STATUS = {"pending": "new", "responded": "contacted", "confirmed": "converted", "declined": "declined"}
 
 
@@ -67,7 +62,8 @@ async def _seed_plans(session: AsyncSession) -> None:
             tier=p["tier"], name=p["name"], tagline=p["tagline"], monthly_price=p["monthlyPrice"], annual_price=p["annualPrice"],
             annual_monthly_equivalent=p["annualMonthlyEquivalent"], lead_limit_monthly=p["leadLimitMonthly"],
             max_images=p["maxImages"], max_videos=p["maxVideos"], popular=p["popular"], features=p["features"],
-            sort_order=i, **PLAN_EXTRAS[p["tier"]],
+            max_hd_videos=p["maxHdVideos"], sort_order=i, search_boost_score=for_tier(p["tier"]).search_boost_score,
+            is_featured=for_tier(p["tier"]).is_featured, whatsapp_notifications=for_tier(p["tier"]).whatsapp_notifications,
         ))
 
 
@@ -94,8 +90,8 @@ async def _seed_demo(session: AsyncSession) -> None:
             event_types_supported=a["eventTypesSupported"], languages_spoken=a["languagesSpoken"], ready_to_travel=a["readyToTravel"],
             instagram_handle=a["instagramHandle"], youtube_channel=a["youtubeChannel"], facebook_url=a.get("facebookUrl"),
             profile_image_url=a["profileImageUrl"], contact_phone=a["contactPhone"], whatsapp_number=a["whatsappNumber"],
-            is_published=True, is_verified=a["isVerified"], is_featured=a["isFeatured"], subscription_tier=tier,
-            tier_source="free" if tier == "free" else "paid", search_boost_score=PLAN_EXTRAS[tier]["search_boost_score"],
+            is_published=True, is_verified=a["isVerified"], is_featured=for_tier(tier).is_featured, subscription_tier=tier,
+            tier_source="free" if tier == "free" else "paid", search_boost_score=for_tier(tier).search_boost_score,
             average_rating=a["averageRating"], total_reviews=a["totalReviews"],
             media=[ArtistMedia(id=sid("media", m["id"]), kind=m["kind"], url=m["url"], embed_url=m.get("embedUrl"),
                                thumbnail_url=m["thumbnailUrl"], caption=m["caption"], display_order=m["displayOrder"])
@@ -127,6 +123,7 @@ async def _seed_artist_leads(session: AsyncSession, artist_id: uuid.UUID) -> Non
             budget_range=budget, budget_min=BUDGETS[budget][0], budget_max=BUDGETS[budget][1], notes=item["notes"],
             source="profile", status=item["status"], is_locked=item["isLocked"],
             created_at=_ts(item["createdAt"]) + shift, notification_started_at=_ts(item["createdAt"]) + shift,
+            followup_started_at=_ts(item["createdAt"]) + shift,
         ))
 
 
@@ -140,4 +137,5 @@ async def _seed_planner_inquiries(session: AsyncSession, artist_ids: dict[str, u
             event_city="Mumbai", budget_range=budget, budget_min=BUDGETS[budget][0], budget_max=BUDGETS[budget][1],
             notes=item["notes"], source="search", status=INQUIRY_TO_LEAD_STATUS[item["status"]], is_locked=False,
             created_at=_ts(item["contactedAt"]), notification_started_at=_ts(item["contactedAt"]),
+            followup_started_at=_ts(item["contactedAt"]),
         ))

@@ -18,6 +18,8 @@ class User(Timestamps, Base):
     full_name: Mapped[str] = mapped_column(String(120))
     role: Mapped[str] = mapped_column(RoleEnum)
     avatar_url: Mapped[str | None] = mapped_column(String(500))
+    blocked_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    deleted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 
 
 class OtpRequest(Base):

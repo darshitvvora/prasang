@@ -37,6 +37,7 @@ This folder is the contract between the React frontend and the FastAPI backend.
 | GET | /me | any | – | 200 Me · 401 `unauthenticated` · 404 `profile_required` |
 | POST | /me | signed-in, no profile | CreateMeRequest | 201 Me · 409 `profile_exists` |
 | PATCH | /me | user | UpdateMeRequest | 200 Me |
+| DELETE | /me | any (fresh sign-in ≤10 min) | – | 204 — deletes the account now: artist profile hidden and anonymised, billing cancelled, media removed; planners' inquiries/reviews anonymised; payment records kept · 403 `reauth_required` with `details: {method: 'phone', phone} \| {method: 'google', email}` |
 | GET | /auth/providers | public | – | AuthProvidersResponse — which sign-in methods are configured |
 | * | /auth/* | – | SuperTokens SDK routes (phone OTP `signinup/code`, `signinup/code/consume`, Google `authorisationurl`, `signinup`, `session/refresh`, `signout`) | managed by `supertokens-web-js` / `supertokens-react-native` |
 | GET | /locations | public | – | LocationsResponse |
@@ -45,6 +46,12 @@ This folder is the contract between the React frontend and the FastAPI backend.
 | GET | /artists/featured?size= | public | – | `{items: ArtistCard[]}` |
 | GET | /artists/{slug} | public | – | ArtistDetail · 404 `artist_not_found` |
 | GET | /artists/{slug}/reviews | public | page,size | Page<Review> |
+| GET | /reviews/mine?page&size | artist | – | Page<Review> — reviews about the signed-in artist (hidden ones excluded) |
+| POST | /reviews | planner | CreateReviewRequest | 201 Review · 404 `lead_not_found` · 403 `review_not_allowed` (booking not confirmed or event not over) · 409 `review_exists` |
+| PATCH | /reviews/{id} | planner (author) | UpdateReviewRequest | Review · 409 `review_locked` after 7 days |
+| PUT | /reviews/{id}/reply | artist (reviewed) | `{text}` | Review — one public reply, editable |
+| POST | /reviews/{id}/report | artist (reviewed) | `{reason}` | 204 — one open report per review; Prasang decides |
+| GET | /artists/{slug}/google-reviews | public | – | GoogleReviewsResponse (≤5 reviews, show with Google attribution) · 204 when the artist has no Google listing or the server has no Places key |
 | GET | /artists/{slug}/similar?size= | public | – | `{items: ArtistCard[]}` |
 | POST | /artists/{slug}/contact-click | public | – | 204 |
 | POST | /artists | artist | ArtistProfileInput | 201 ArtistProfile · 409 `artist_exists` · 422 |
@@ -52,7 +59,7 @@ This folder is the contract between the React frontend and the FastAPI backend.
 | PATCH | /artists/me | artist | Partial<ArtistProfileInput> & {isPublished?} | ArtistProfile |
 | GET | /artists/me/dashboard | artist | – | ArtistDashboard |
 | GET | /artists/me/media | artist | – | MediaListResponse |
-| POST | /artists/me/media/upload-url | artist | UploadUrlRequest | UploadUrlResponse · 409 `media_quota_exceeded` |
+| POST | /artists/me/media/upload-url | artist | UploadUrlRequest (`hd: true` = Premium HD slot) | UploadUrlResponse · 409 `media_quota_exceeded` (incl. no HD slots / Free plan) · 422 `fields.sizeBytes` — photos ≤10 MB, videos ≤40 MB, HD ≤200 MB (no compression) |
 | POST | /artists/me/media | artist | CreateMediaRequest | 201 Media · 422 `fields.url` for unsupported links · 503 `storage_not_configured` for uploads without S3 |
 | POST | /artists/me/avatar | artist | `{storageKey}` | `{profileImageUrl}` |
 | DELETE | /artists/me/media/{id} | artist | – | 204 |
@@ -61,12 +68,17 @@ This folder is the contract between the React frontend and the FastAPI backend.
 | GET | /leads/artist?status&page&size | artist | – | ArtistLeadsResponse |
 | PATCH | /leads/{id} | artist | UpdateLeadRequest | ArtistLead · 409 `invalid_transition` |
 | GET | /leads/planner?status&page&size | planner | – | PlannerInquiriesResponse |
+| PATCH | /leads/{id}/planner-answer | planner (own inquiry) | `{answer: 'booked'\|'not_booked'\|'deciding'}` | PlannerInquiry · 404 `lead_not_found` — `booked` confirms the booking (and converts new/contacted/expired leads); either side's confirmation opens the review |
 | GET | /subscriptions/plans | public | – | `{items: Plan[]}` |
 | GET | /subscriptions/me | artist | – | MySubscriptionResponse |
 | POST | /subscriptions/trial | artist | StartTrialRequest | PlanUsage · 409 `trial_used` |
 | POST | /subscriptions | artist | CreateSubscriptionRequest | 201 CreateSubscriptionResponse (also used to upgrade/switch; see rules) |
 | POST | /subscriptions/verify | artist | VerifyPaymentRequest | VerifyPaymentResponse · 400 `invalid_signature` |
 | POST | /subscriptions/cancel | artist | – | MySubscriptionResponse |
+| GET | /site-info | public | – | SiteInfo — support email/phone and business address (nulls when not configured) |
+| POST | /contact | public | ContactRequest | 201 `{id}` · 429 `contact_rate_limited` (5 per IP per hour) |
+| GET | /subscriptions/downgrade-preview?tier= | artist | – | DowngradePreview — how many photos/videos/HD videos/embeds a move to `tier` would remove (hidden at once, deleted after 7 days) |
+| GET | /subscriptions/me/payments | artist | – | BillingHistoryResponse — newest first; `receiptUrl` is the gateway's hosted invoice (null for failed payments) |
 | POST | /subscriptions/webhook | Razorpay HMAC | Razorpay event | 200 |
 
 ## Error codes
@@ -88,9 +100,19 @@ This folder is the contract between the React frontend and the FastAPI backend.
 | `invalid_signature` | 400 | Razorpay signature mismatch |
 | `search_unavailable` | 503 | Elasticsearch is unreachable; retry shortly |
 | `storage_not_configured` | 503 | Photo/video uploads are not set up on this server (social links still work) |
+| `artist_suspended` | 409 | The artist is suspended and not taking enquiries |
+| `account_blocked` | 403 | The signed-in account has been blocked by Prasang |
+| `review_not_allowed` | 403 | Reviews need a confirmed booking whose event date has passed |
+| `review_exists` | 409 | This booking already has a review |
+| `review_locked` | 409 | Reviews can be edited for 7 days only |
+| `reauth_required` | 403 | Deleting the account needs a sign-in from the last 10 minutes; `details.method` says how |
+| `contact_rate_limited` | 429 | More than 5 contact messages from one IP in an hour |
 | `internal_error` | 500 | Unexpected server error |
 
 ## Business rules the contract encodes
+
+- **Plans (2026-10-20):** Free — no uploads, Instagram/YouTube/Facebook as text links only (no embeds/widgets). Basic — 5 photos + 1 video, embeds, no badge. Pro — 20 photos + 3 videos, embeds, verified badge (after admin verification), search boost, not featured. Premium — 50 photos + 8 videos + 2 HD videos, embeds, badge, featured, top boost. Video caps: 40 MB (HD 200 MB). `isVerified`/`isFeatured` already reflect the plan.
+- **Downgrades:** items beyond the new plan's limits (by the artist's display order; embeds on Free) are hidden at once and deleted after 7 days (`Media.deleteAfter`); upgrading earlier restores them. Quotas count visible items only.
 
 - Monthly lead caps (calendar month, IST): free 3, basic 15, pro/premium unlimited (`-1`). Leads over the cap are stored with `isLocked: true`; the artist sees `plannerPhone`/`plannerEmail` as `null` until upgrade. Planners always receive the artist's contact info.
 - `POST /leads` requires a signed-in planner. A second lead by the same planner for the same artist and event date returns `200` with the existing `leadId`.

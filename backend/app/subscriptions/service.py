@@ -5,14 +5,18 @@ from datetime import UTC, date, datetime, timedelta
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.admin.models import AdminAction
 from app.artists.models import ArtistProfile
 from app.artists.service import get_own, usage_for
-from app.artists.stats import IST
+from app.artists.stats import IST, today_ist
 from app.auth.models import User
 from app.contract import (
+    BillingHistoryResponse,
+    BillingItem,
     Checkout,
     CheckoutPrefill,
     CreateSubscriptionResponse,
+    DowngradePreview,
     MySubscriptionResponse,
     Plan,
     PlanFeature,
@@ -21,9 +25,12 @@ from app.contract import (
 )
 from app.errors import AppError, conflict, not_found
 from app.leads.service import unlock_month
+from app.media.limits import overflow, reconcile
+from app.notifications.queue import queue_message
 from app.outbox.emit import artist_changed
 from app.subscriptions.gateway import PaymentGateway, get_gateway
 from app.subscriptions.models import Subscription, SubscriptionPlan
+from app.subscriptions.payments import billing_history, record_payment
 from app.workflows.starter import get_starter
 
 log = logging.getLogger(__name__)
@@ -35,7 +42,7 @@ TOTAL_COUNT = {"monthly": 120, "annual": 10}  # Razorpay needs a finite billing 
 def to_plan(p: SubscriptionPlan) -> Plan:
     return Plan(tier=p.tier, name=p.name, tagline=p.tagline, monthly_price=p.monthly_price, annual_price=p.annual_price,
                 annual_monthly_equivalent=p.annual_monthly_equivalent, lead_limit_monthly=p.lead_limit_monthly,
-                max_images=p.max_images, max_videos=p.max_videos, popular=p.popular,
+                max_images=p.max_images, max_videos=p.max_videos, max_hd_videos=p.max_hd_videos, popular=p.popular,
                 features=[PlanFeature(**f) for f in p.features])
 
 
@@ -48,7 +55,7 @@ def period_end_iso(d: date) -> str:
     return datetime.combine(d + timedelta(days=1), datetime.min.time(), tzinfo=IST).isoformat()
 
 
-async def _current(session: AsyncSession, artist_id) -> Subscription | None:
+async def current_subscription(session: AsyncSession, artist_id) -> Subscription | None:
     """The artist's live subscription; active wins over halted, newest first (never raises on duplicates)."""
     rows = (await session.execute(select(Subscription).where(
         Subscription.artist_id == artist_id, Subscription.status.in_(("active", "halted")))
@@ -71,20 +78,41 @@ async def my_subscription(session: AsyncSession, user: User) -> MySubscriptionRe
             tier="free", name=free.name, status="free", lead_limit_monthly=free.lead_limit_monthly, leads_used_this_month=0,
             leads_remaining=max(free.lead_limit_monthly, 0), period_end=None, trial_ends_at=None, trial_available=True), subscription=None)
     return MySubscriptionResponse(plan=await usage_for(session, artist, datetime.now(UTC)),
-                                  subscription=_summary(await _current(session, artist.id)))
+                                  subscription=_summary(await current_subscription(session, artist.id)))
 
 
-async def _apply_tier(session: AsyncSession, artist: ArtistProfile, tier: str, source: str) -> None:
+async def apply_tier(session: AsyncSession, artist: ArtistProfile, tier: str, source: str) -> None:
     plan = await session.get(SubscriptionPlan, tier)
     artist.subscription_tier, artist.tier_source = tier, source
     artist.search_boost_score = plan.search_boost_score
-    artist.is_featured = plan.is_featured
+    artist.is_featured = plan.is_featured or artist.featured_override
+    if source != "grant":
+        artist.grant_ends_at = None
     await unlock_month(session, artist.id, datetime.now(UTC), plan.lead_limit_monthly)
+    hidden, delete_after = await reconcile(session, artist, tier)
+    if hidden:
+        await queue_message(session, artist.user_id, "media_removal", delete_after.isoformat(),
+                            {"count": hidden, "date": _day(delete_after.astimezone(IST).date())})
     artist_changed(session, artist.id)
 
 
+def _day(d: date) -> str:
+    return f"{d.day} {d:%b %Y}"
+
+
+async def downgrade_preview(session: AsyncSession, user: User, tier: str) -> DowngradePreview:
+    """How many items a move to `tier` would remove — shown before the artist confirms."""
+    artist = await get_own(session, user)
+    o = await overflow(session, artist, tier)
+    return DowngradePreview(tier=tier, photos=len(o.photos), videos=len(o.videos), hd_videos=len(o.hd_videos), embeds=len(o.embeds))
+
+
 async def downgrade_to_free(session: AsyncSession, artist: ArtistProfile) -> None:
-    await _apply_tier(session, artist, "free", "free")
+    previous, source = artist.subscription_tier, artist.tier_source
+    await apply_tier(session, artist, "free", "free")
+    if previous != "free":
+        plan = await session.get(SubscriptionPlan, previous)
+        await queue_message(session, artist.user_id, "plan_ended", f"{source}-{today_ist().isoformat()}", {"plan": plan.name})
 
 
 async def start_trial(session: AsyncSession, user: User, tier: str):
@@ -93,7 +121,7 @@ async def start_trial(session: AsyncSession, user: User, tier: str):
         raise conflict("trial_used", "You have already used your free trial")
     now = datetime.now(UTC)
     artist.trial_used, artist.trial_ends_at = True, now + timedelta(days=TRIAL_DAYS)
-    await _apply_tier(session, artist, tier, "trial")
+    await apply_tier(session, artist, tier, "trial")
     await session.commit()
     try:
         await get_starter().start_trial(str(artist.id), artist.trial_ends_at.isoformat())
@@ -151,7 +179,7 @@ async def activate(session: AsyncSession, sub: Subscription, period_end: date) -
         await _signal(previous, "ended", "cancelled")
     await session.flush()
     sub.status, sub.current_period_end, sub.cancel_at_period_end = "active", period_end, False
-    await _apply_tier(session, artist, sub.tier, "paid")
+    await apply_tier(session, artist, sub.tier, "paid")
     await session.commit()
     await _signal(sub, "activated", period_end_iso(period_end))
 
@@ -162,13 +190,18 @@ async def record_charge(session: AsyncSession, sub: Subscription, period_end: da
     await _signal(sub, "charged", period_end_iso(period_end))
 
 
-async def end(session: AsyncSession, sub: Subscription, status: str) -> None:
+async def end(session: AsyncSession, sub: Subscription, status: str, commit: bool = True) -> None:
     sub.status = status
     artist = await session.get(ArtistProfile, sub.artist_id)
-    if artist.tier_source == "paid" and await _current(session, artist.id) is None:
+    if artist.tier_source == "paid" and await current_subscription(session, artist.id) is None:
         await downgrade_to_free(session, artist)
-    await session.commit()
-    await _signal(sub, "ended", status)
+    if commit:
+        await session.commit()
+        await signal_ended(sub)
+
+
+async def signal_ended(sub: Subscription) -> None:
+    await _signal(sub, "ended", sub.status)
 
 
 async def _signal(sub: Subscription, name: str, arg: str) -> None:
@@ -187,18 +220,29 @@ async def verify(session: AsyncSession, user: User, payment_id: str, gateway_sub
         raise not_found("subscription_not_found", "That subscription doesn't exist")
     if sub.status == "created":
         await activate(session, sub, date.today() + timedelta(days=CYCLE_DAYS[sub.billing_cycle]))
+    plan = await session.get(SubscriptionPlan, sub.tier)
+    price = plan.annual_price if sub.billing_cycle == "annual" else plan.monthly_price
+    await record_payment(session, sub, {"id": payment_id, "status": "captured"}, gateway, fallback_amount=price * 100)
+    await session.commit()
     return await usage_for(session, artist, datetime.now(UTC))
 
 
 async def cancel(session: AsyncSession, user: User, gateway: PaymentGateway) -> MySubscriptionResponse:
     artist = await get_own(session, user)
-    sub = await _current(session, artist.id)
+    sub = await current_subscription(session, artist.id)
     if sub is None:
         raise not_found("subscription_not_found", "You don't have an active subscription")
     await gateway.cancel_subscription(sub.gateway_subscription_id, at_cycle_end=True)
     sub.cancel_at_period_end = True
     await session.commit()
     return await my_subscription(session, user)
+
+
+async def payments(session: AsyncSession, user: User) -> BillingHistoryResponse:
+    artist = await get_own(session, user)
+    return BillingHistoryResponse(items=[BillingItem(
+        id=str(p.id), paid_at=p.paid_at, tier=sub.tier, billing_cycle=sub.billing_cycle, amount=p.amount // 100,
+        currency=p.currency, status=p.status, receipt_url=p.receipt_url) for p, sub in await billing_history(session, artist.id)])
 
 
 async def expire_unpaid(session: AsyncSession, subscription_id: str, gateway: PaymentGateway) -> None:
@@ -222,8 +266,32 @@ LIVE = ("active", "halted")
 TERMINAL = ("cancelled", "expired", "completed")
 
 
+async def cancel_or_flag(session: AsyncSession, sub: Subscription, why: str) -> bool:
+    """Stop billing now. If the gateway refuses, keep the real status and flag it for `admin reports` (never hide it)."""
+    try:
+        await get_gateway().cancel_subscription(sub.gateway_subscription_id, at_cycle_end=False)
+    except Exception:
+        log.exception("could not cancel %s at the gateway (%s) — flagged for manual cancellation", sub.gateway_subscription_id, why)
+        session.add(AdminAction(actor="system", action="manual_cancel_needed", target_type="subscription",
+                                target_id=sub.gateway_subscription_id or str(sub.id), reason=why))
+        return False
+    sub.status = "cancelled"
+    return True
+
+
+async def _owner_removed(session: AsyncSession, sub: Subscription) -> bool:
+    artist = await session.get(ArtistProfile, sub.artist_id)
+    owner = await session.get(User, artist.user_id) if artist else None
+    return owner is None or owner.deleted_at is not None or owner.blocked_at is not None
+
+
 async def _paid(session: AsyncSession, sub: Subscription, period_end: date) -> None:
     """A payment arrived for `sub` (activated/charged). Every state must end with the artist on what they paid for."""
+    if await _owner_removed(session, sub):  # deleted or blocked account: never restore a plan, stop the billing
+        log.error("payment on %s for a deleted/blocked account — cancelling; refund manually", sub.gateway_subscription_id)
+        await cancel_or_flag(session, sub, "payment received for a deleted or blocked account — refund manually")
+        await session.commit()
+        return
     if sub.status == "active":
         await record_charge(session, sub, period_end)
         return
@@ -231,7 +299,7 @@ async def _paid(session: AsyncSession, sub: Subscription, period_end: date) -> N
         await activate(session, sub, period_end)
         return
     # Terminal (replaced checkout, lapsed, cancelled): money was taken anyway.
-    other = await _current(session, sub.artist_id)
+    other = await current_subscription(session, sub.artist_id)
     if other is None:
         await activate(session, sub, period_end)  # restore the plan they are paying for
         return
@@ -243,18 +311,38 @@ async def _paid(session: AsyncSession, sub: Subscription, period_end: date) -> N
         log.exception("could not cancel %s", sub.gateway_subscription_id)
 
 
-async def handle_webhook(session: AsyncSession, event: str, entity: dict) -> None:
-    sub = await _by_gateway_id(session, entity.get("id", ""))
+async def _queue_payment_failed(session: AsyncSession, sub: Subscription) -> None:
+    """Once per billing period, and never during first checkout (the artist is right there retrying their card)."""
+    if sub.status == "created":
+        return
+    artist = await session.get(ArtistProfile, sub.artist_id)
+    plan = await session.get(SubscriptionPlan, sub.tier)
+    await queue_message(session, artist.user_id, "payment_failed", f"{sub.id}-{sub.current_period_end}", {"plan": plan.name})
+
+
+async def handle_webhook(session: AsyncSession, event: str, entity: dict, payment: dict | None = None) -> None:
+    gateway_id = entity.get("id") or (payment or {}).get("subscription_id") or ""
+    sub = await _by_gateway_id(session, gateway_id)
     if sub is None:
-        log.warning("webhook %s for unknown subscription %s", event, entity.get("id"))
+        log.warning("webhook %s for unknown subscription %s", event, gateway_id)
+        return
+    if event == "payment.failed":
+        if payment:
+            await record_payment(session, sub, payment, get_gateway())
+            await _queue_payment_failed(session, sub)
+            await session.commit()
         return
     current_end = entity.get("current_end")
     period_end = datetime.fromtimestamp(current_end, IST).date() if current_end else None
     if event in ("subscription.activated", "subscription.charged") and period_end:
         await _paid(session, sub, period_end)
+        if payment:
+            await record_payment(session, sub, payment, get_gateway())
+            await session.commit()
     elif event == "subscription.halted":
         if sub.status == "active":
             sub.status = "halted"
+            await _queue_payment_failed(session, sub)
             await session.commit()
     elif event in ("subscription.cancelled", "subscription.completed"):
         if sub.status not in TERMINAL:
