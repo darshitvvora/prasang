@@ -2,7 +2,7 @@
 .artist-layout {
   display: flex;
   min-height: 100vh;
-  background: #0f0f0f;
+  background: var(--color-bg-dark);
   color: #ffffff;
   font-family: var(--font-body);
 }
@@ -234,7 +234,7 @@
   border-radius: 9px;
   font-size: 13px;
   font-weight: 700;
-  color: #0f0f0f;
+  color: var(--color-bg-dark);
   text-decoration: none;
   white-space: nowrap;
   transition: background 0.2s;
@@ -251,7 +251,7 @@
 }
 
 .metric-card {
-  background: #1a1a1a;
+  background: var(--color-bg-dark-raised);
   border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: 14px;
   padding: 20px;
@@ -300,7 +300,7 @@
 }
 
 .dashboard-card {
-  background: #1a1a1a;
+  background: var(--color-bg-dark-raised);
   border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: 16px;
   padding: 24px;
@@ -408,7 +408,7 @@
 
 /* Profile completeness */
 .profile-completeness {
-  background: #1a1a1a;
+  background: var(--color-bg-dark-raised);
   border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: 16px;
   padding: 24px;
@@ -524,7 +524,7 @@
 }
 
 .lead-card {
-  background: #1a1a1a;
+  background: var(--color-bg-dark-raised);
   border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: 14px;
   padding: 20px;
@@ -719,7 +719,7 @@
 .onboarding-step.done .step-circle {
   background: var(--color-accent);
   border-color: var(--color-accent);
-  color: #0f0f0f;
+  color: var(--color-bg-dark);
 }
 
 .onboarding-step.active .step-circle {
@@ -1023,7 +1023,7 @@
   left: 50%;
   transform: translateX(-50%);
   background: var(--color-accent);
-  color: #0f0f0f;
+  color: var(--color-bg-dark);
   font-size: 10px;
   font-weight: 700;
   padding: 3px 10px;
@@ -1108,7 +1108,7 @@
   border-radius: 12px;
   border: none;
   background: var(--color-accent);
-  color: #0f0f0f;
+  color: var(--color-bg-dark);
   font-size: 14px;
   font-weight: 700;
   cursor: pointer;
@@ -1231,7 +1231,7 @@ button.ob-upload-box { width: 100%; font: inherit; cursor: pointer; }
   padding: 7px 14px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.15);
   background: transparent; color: rgba(255, 255, 255, 0.85); font-size: 13px; font-weight: 600; cursor: pointer;
 }
-.lead-status-btn.primary { background: var(--color-accent); color: #111; border-color: var(--color-accent); }
+.lead-status-btn.primary { background: var(--color-accent); color: var(--color-bg-dark); border-color: var(--color-accent); }
 .lead-status-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
 .artist-suspension-banner { margin: 0 0 1.25rem; padding: 0.9rem 1rem; border-radius: 10px; background: #fff1f0; color: #8a1c13; border: 1px solid #f5c2bd; }

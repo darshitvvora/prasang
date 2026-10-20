@@ -4,7 +4,7 @@
 .planner-layout {
   display: flex;
   min-height: 100vh;
-  background: #0f0f0f;
+  background: var(--color-bg-dark);
   color: #ffffff;
   font-family: var(--font-body);
 }
@@ -106,7 +106,7 @@
   padding: 9px 12px;
   border-radius: 9px;
   background: var(--color-accent);
-  color: #0f0f0f;
+  color: var(--color-bg-dark);
   font-size: 12px;
   font-weight: 700;
   text-decoration: none;
@@ -174,7 +174,7 @@
 }
 
 .planner-metric-card {
-  background: #1a1a1a;
+  background: var(--color-bg-dark-raised);
   border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: 14px;
   padding: 20px;
@@ -265,7 +265,7 @@
 }
 
 .planner-dashboard-card {
-  background: #1a1a1a;
+  background: var(--color-bg-dark-raised);
   border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: 16px;
   padding: 24px;
@@ -421,7 +421,7 @@
 }
 
 .planner-inquiry-card {
-  background: #1a1a1a;
+  background: var(--color-bg-dark-raised);
   border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: 14px;
   padding: 20px;
@@ -543,7 +543,7 @@
 
 .planner-saved-card {
   display: block;
-  background: #1a1a1a;
+  background: var(--color-bg-dark-raised);
   border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: 16px;
   overflow: hidden;
@@ -611,7 +611,7 @@
 .planner-saved-card-type {
   font-size: 11px;
   font-weight: 700;
-  color: #0f0f0f;
+  color: var(--color-bg-dark);
   padding: 3px 9px;
   border-radius: 7px;
 }
@@ -637,7 +637,7 @@
   padding: 11px 22px;
   border-radius: 10px;
   background: var(--color-accent);
-  color: #0f0f0f;
+  color: var(--color-bg-dark);
   font-size: 14px;
   font-weight: 700;
   text-decoration: none;
