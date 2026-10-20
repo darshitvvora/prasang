@@ -33,6 +33,7 @@ class Plan(ContractModel):
     lead_limit_monthly: int
     max_images: int
     max_videos: int
+    max_hd_videos: int
     popular: bool
     features: list[PlanFeature]
 
@@ -115,3 +116,11 @@ class BillingItem(ContractModel):
 
 class BillingHistoryResponse(ContractModel):
     items: list[BillingItem]
+
+
+class DowngradePreview(ContractModel):
+    tier: SubscriptionTier
+    photos: int
+    videos: int
+    hd_videos: int
+    embeds: int

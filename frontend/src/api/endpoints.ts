@@ -26,6 +26,10 @@ export const reportReview = (id: string, body: T.ReviewReportRequest) =>
 export const answerInquiry = (id: string, body: T.PlannerAnswerRequest) =>
   api<T.PlannerInquiry>(`/leads/${encodeURIComponent(id)}/planner-answer`, { method: 'PATCH', body });
 
+// ---- plan changes ----
+export const getDowngradePreview = (tier: T.PlanUsage['tier']) =>
+  api<T.DowngradePreview>('/subscriptions/downgrade-preview', { query: { tier } });
+
 // ---- billing ----
 export const getMyPayments = () => api<T.BillingHistoryResponse>('/subscriptions/me/payments');
 

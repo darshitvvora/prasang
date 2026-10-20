@@ -19,10 +19,12 @@ from app.errors import conflict, not_found, validation
 from app.media.models import ArtistMedia
 from app.media.storage import Storage
 from app.outbox.emit import artist_changed
+from app.subscriptions.entitlements import for_tier
 from app.subscriptions.models import SubscriptionPlan
 
 MB = 1024 * 1024
-LIMITS = {"image": 10 * MB, "video": 100 * MB, "avatar": 5 * MB}
+LIMITS = {"image": 10 * MB, "video": 40 * MB, "hd": 200 * MB, "avatar": 5 * MB}  # videos are not compressed; caps instead
+HD_PREFIX = "hd-"
 TYPES = {
     "image": {"image/jpeg": "jpg", "image/png": "png", "image/webp": "webp"},
     "avatar": {"image/jpeg": "jpg", "image/png": "png", "image/webp": "webp"},
@@ -35,17 +37,22 @@ def _prefix(artist: ArtistProfile) -> str:
 
 
 async def quota(session: AsyncSession, artist: ArtistProfile) -> MediaQuota:
+    """Counts only visible items (ones hidden after a downgrade are on their way out)."""
     plan = await session.get(SubscriptionPlan, artist.subscription_tier)
-    rows = dict((await session.execute(select(ArtistMedia.kind, func.count()).where(
-        ArtistMedia.artist_id == artist.id, ArtistMedia.kind.in_(("image", "video"))).group_by(ArtistMedia.kind))).all())
-    return MediaQuota(images=QuotaCount(used=rows.get("image", 0), limit=plan.max_images),
-                      videos=QuotaCount(used=rows.get("video", 0), limit=plan.max_videos))
+    counted = await session.execute(select(ArtistMedia.kind, ArtistMedia.is_hd, func.count()).where(
+        ArtistMedia.artist_id == artist.id, ArtistMedia.kind.in_(("image", "video")), ArtistMedia.hidden_at.is_(None))
+        .group_by(ArtistMedia.kind, ArtistMedia.is_hd))
+    rows = {(kind, bool(hd)): n for kind, hd, n in counted.all()}
+    images = sum(n for (k, _), n in rows.items() if k == "image")
+    return MediaQuota(images=QuotaCount(used=images, limit=plan.max_images),
+                      videos=QuotaCount(used=rows.get(("video", False), 0), limit=plan.max_videos),
+                      hd_videos=QuotaCount(used=rows.get(("video", True), 0), limit=plan.max_hd_videos))
 
 
-def _check_quota(q: MediaQuota, kind: str) -> None:
-    count = q.images if kind == "image" else q.videos
+def _check_quota(q: MediaQuota, kind: str, hd: bool = False) -> None:
+    count = q.images if kind == "image" else q.hd_videos if hd else q.videos
     if count.limit >= 0 and count.used >= count.limit:
-        noun = "photos" if kind == "image" else "videos"
+        noun = "photos" if kind == "image" else "HD videos" if hd else "videos"
         raise conflict("media_quota_exceeded", f"Your plan allows {count.limit} {noun}. Upgrade to add more.",
                        {"limit": count.limit, "used": count.used})
 
@@ -59,11 +66,14 @@ async def upload_url(session: AsyncSession, artist: ArtistProfile, req: UploadUr
     ext = TYPES[req.kind].get(req.content_type)
     if ext is None:
         raise validation({"contentType": f"Upload {', '.join(TYPES[req.kind])}"})
-    if req.size_bytes > LIMITS[req.kind]:
-        raise validation({"sizeBytes": f"Max {LIMITS[req.kind] // MB} MB"})
+    hd = req.kind == "video" and req.hd
+    limit = LIMITS["hd" if hd else req.kind]
+    if req.size_bytes > limit:
+        hint = " (HD videos up to 200 MB on Premium)" if req.kind == "video" and not hd else ""
+        raise validation({"sizeBytes": f"Max {limit // MB} MB{hint}"})
     if req.kind != "avatar":
-        _check_quota(await quota(session, artist), req.kind)
-    name = f"avatar-{uuid.uuid4().hex}" if req.kind == "avatar" else uuid.uuid4().hex
+        _check_quota(await quota(session, artist), req.kind, hd)
+    name = f"avatar-{uuid.uuid4().hex}" if req.kind == "avatar" else f"{HD_PREFIX if hd else ''}{uuid.uuid4().hex}"
     key = f"{_prefix(artist)}{name}.{ext}"
     url, expires = await storage.presign_put(key, req.content_type, req.size_bytes)
     return UploadUrlResponse(upload_url=url, storage_key=key, expires_at=expires.strftime("%Y-%m-%dT%H:%M:%SZ"),
@@ -82,9 +92,10 @@ async def _require_uploaded(artist: ArtistProfile, key: str, storage: Storage, k
     if meta is None:
         raise validation({"storageKey": "Upload the file first, then save it"})
     size, content_type = meta
-    if size > LIMITS[kind] or content_type not in TYPES[kind]:
+    limit = LIMITS["hd" if kind == "video" and name.startswith(HD_PREFIX) else kind]
+    if size > limit or content_type not in TYPES[kind]:
         await storage.delete(key)
-        raise validation({"storageKey": f"That file is too large or not a supported type (max {LIMITS[kind] // MB or 1} MB)"})
+        raise validation({"storageKey": f"That file is too large or not a supported type (max {limit // MB or 1} MB)"})
 
 
 def _next_order(artist: ArtistProfile) -> int:
@@ -93,15 +104,19 @@ def _next_order(artist: ArtistProfile) -> int:
 
 async def add_upload(session: AsyncSession, artist: ArtistProfile, req: CreateMediaUploadRequest, storage: Storage) -> ArtistMedia:
     await _require_uploaded(artist, req.storage_key, storage, req.kind)
-    _check_quota(await quota(session, artist), req.kind)
+    hd = req.kind == "video" and req.storage_key.rsplit("/", 1)[-1].startswith(HD_PREFIX)
+    _check_quota(await quota(session, artist), req.kind, hd)
     media = ArtistMedia(artist_id=artist.id, kind=req.kind, url=storage.public_url(req.storage_key), storage_key=req.storage_key,
-                        caption=req.caption, display_order=_next_order(artist))
+                        caption=req.caption, display_order=_next_order(artist), is_hd=hd)
     session.add(media)
     await session.commit()
     return media
 
 
 async def add_link(session: AsyncSession, artist: ArtistProfile, req: CreateMediaLinkRequest) -> ArtistMedia:
+    if not for_tier(artist.subscription_tier).social_embeds:
+        raise conflict("media_quota_exceeded", "Embedding Instagram, YouTube or Facebook posts needs the Basic plan or higher.",
+                       {"limit": 0, "used": 0})
     embed = parse_embed(req.kind, req.url)
     thumb = None
     if embed.kind == "youtube":

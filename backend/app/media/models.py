@@ -1,6 +1,7 @@
 import uuid
+from datetime import datetime
 
-from sqlalchemy import ForeignKey, String
+from sqlalchemy import DateTime, ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db import Base
@@ -19,5 +20,9 @@ class ArtistMedia(Timestamps, Base):
     thumbnail_url: Mapped[str | None] = mapped_column(String(1000))
     caption: Mapped[str | None] = mapped_column(String(300))
     display_order: Mapped[int] = mapped_column(default=0)
+    is_hd: Mapped[bool] = mapped_column(default=False, server_default="false")  # Premium HD video slot (≤200 MB)
+    # Over the plan's limit after a downgrade: hidden now, deleted at delete_after unless the artist upgrades first.
+    hidden_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    delete_after: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), index=True)
 
     artist: Mapped["ArtistProfile"] = relationship(back_populates="media")  # noqa: F821

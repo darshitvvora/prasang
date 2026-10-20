@@ -107,8 +107,8 @@ async def test_downgrade_queues_plan_ended():
         artist = (await s.execute(select(ArtistProfile).where(ArtistProfile.slug == "arjun-malhotra-magic"))).scalar_one()
         await downgrade_to_free(s, artist)
         await s.commit()
-        msg = (await s.execute(select(QueuedMessage))).scalar_one()
-    assert msg.kind == "plan_ended" and msg.user_id == "dev-artist-arjun"
+        msg = (await s.execute(select(QueuedMessage).where(QueuedMessage.kind == "plan_ended"))).scalar_one()
+    assert msg.user_id == "dev-artist-arjun"
     assert msg.context == {"plan": "Basic"}
 
 

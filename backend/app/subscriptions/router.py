@@ -11,10 +11,12 @@ from app.contract import (
     BillingHistoryResponse,
     CreateSubscriptionRequest,
     CreateSubscriptionResponse,
+    DowngradePreview,
     MySubscriptionResponse,
     PlanList,
     PlanUsage,
     StartTrialRequest,
+    SubscriptionTier,
     VerifyPaymentRequest,
     VerifyPaymentResponse,
 )
@@ -59,6 +61,11 @@ async def verify(body: VerifyPaymentRequest, user: User = Depends(artist_only), 
 @router.post("/cancel", response_model=MySubscriptionResponse, **JSON)
 async def cancel(user: User = Depends(artist_only), db: AsyncSession = Depends(get_session)):
     return await service.cancel(db, user, get_gateway())
+
+
+@router.get("/downgrade-preview", response_model=DowngradePreview, **JSON)
+async def downgrade_preview(tier: SubscriptionTier, user: User = Depends(artist_only), db: AsyncSession = Depends(get_session)):
+    return await service.downgrade_preview(db, user, tier)
 
 
 @router.get("/me/payments", response_model=BillingHistoryResponse, **JSON)

@@ -7,8 +7,9 @@
     "annualPrice": 0,
     "annualMonthlyEquivalent": 0,
     "leadLimitMonthly": 3,
-    "maxImages": 5,
+    "maxImages": 0,
     "maxVideos": 0,
+    "maxHdVideos": 0,
     "popular": false,
     "features": [
       {
@@ -24,16 +25,20 @@
         "value": "3"
       },
       {
-        "label": "Media uploads",
-        "value": "5 photos"
+        "label": "Photo & video uploads",
+        "value": "None"
+      },
+      {
+        "label": "Video size",
+        "value": false
       },
       {
         "label": "Profile views shown",
         "value": false
       },
       {
-        "label": "Instagram / YouTube link",
-        "value": true
+        "label": "Instagram / YouTube / Facebook embeds",
+        "value": "Links only"
       },
       {
         "label": "Verified badge",
@@ -69,8 +74,9 @@
     "annualPrice": 2988,
     "annualMonthlyEquivalent": 249,
     "leadLimitMonthly": 15,
-    "maxImages": 20,
-    "maxVideos": 3,
+    "maxImages": 5,
+    "maxVideos": 1,
+    "maxHdVideos": 0,
     "popular": false,
     "features": [
       {
@@ -86,20 +92,24 @@
         "value": "15"
       },
       {
-        "label": "Media uploads",
-        "value": "20 photos + 3 videos"
+        "label": "Photo & video uploads",
+        "value": "5 photos + 1 video"
+      },
+      {
+        "label": "Video size",
+        "value": "Up to 40 MB each"
       },
       {
         "label": "Profile views shown",
         "value": true
       },
       {
-        "label": "Instagram / YouTube link",
+        "label": "Instagram / YouTube / Facebook embeds",
         "value": true
       },
       {
         "label": "Verified badge",
-        "value": true
+        "value": false
       },
       {
         "label": "Featured in search",
@@ -107,7 +117,7 @@
       },
       {
         "label": "Priority in search results",
-        "value": false
+        "value": "Boosted"
       },
       {
         "label": "WhatsApp lead notifications",
@@ -131,8 +141,9 @@
     "annualPrice": 5988,
     "annualMonthlyEquivalent": 499,
     "leadLimitMonthly": -1,
-    "maxImages": 100,
-    "maxVideos": 20,
+    "maxImages": 20,
+    "maxVideos": 3,
+    "maxHdVideos": 0,
     "popular": true,
     "features": [
       {
@@ -148,15 +159,19 @@
         "value": "Unlimited"
       },
       {
-        "label": "Media uploads",
-        "value": "100 photos + 20 videos"
+        "label": "Photo & video uploads",
+        "value": "20 photos + 3 videos"
+      },
+      {
+        "label": "Video size",
+        "value": "Up to 40 MB each"
       },
       {
         "label": "Profile views shown",
         "value": true
       },
       {
-        "label": "Instagram / YouTube link",
+        "label": "Instagram / YouTube / Facebook embeds",
         "value": true
       },
       {
@@ -165,11 +180,11 @@
       },
       {
         "label": "Featured in search",
-        "value": true
+        "value": false
       },
       {
         "label": "Priority in search results",
-        "value": true
+        "value": "Higher boost"
       },
       {
         "label": "WhatsApp lead notifications",
@@ -193,8 +208,9 @@
     "annualPrice": 11988,
     "annualMonthlyEquivalent": 999,
     "leadLimitMonthly": -1,
-    "maxImages": -1,
-    "maxVideos": -1,
+    "maxImages": 50,
+    "maxVideos": 8,
+    "maxHdVideos": 2,
     "popular": false,
     "features": [
       {
@@ -210,15 +226,19 @@
         "value": "Unlimited"
       },
       {
-        "label": "Media uploads",
-        "value": "Unlimited"
+        "label": "Photo & video uploads",
+        "value": "50 photos + 8 videos + 2 HD videos"
+      },
+      {
+        "label": "Video size",
+        "value": "40 MB each, HD up to 200 MB"
       },
       {
         "label": "Profile views shown",
         "value": true
       },
       {
-        "label": "Instagram / YouTube link",
+        "label": "Instagram / YouTube / Facebook embeds",
         "value": true
       },
       {
@@ -231,7 +251,7 @@
       },
       {
         "label": "Priority in search results",
-        "value": "Top 3 placement"
+        "value": "Top placement"
       },
       {
         "label": "WhatsApp lead notifications",

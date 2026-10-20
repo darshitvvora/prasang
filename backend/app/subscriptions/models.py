@@ -21,6 +21,7 @@ class SubscriptionPlan(Base):
     lead_limit_monthly: Mapped[int]
     max_images: Mapped[int]
     max_videos: Mapped[int]
+    max_hd_videos: Mapped[int] = mapped_column(default=0, server_default="0")
     popular: Mapped[bool] = mapped_column(default=False)
     search_boost_score: Mapped[int] = mapped_column(default=0)
     is_featured: Mapped[bool] = mapped_column(default=False)

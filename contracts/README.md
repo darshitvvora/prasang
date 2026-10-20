@@ -59,7 +59,7 @@ This folder is the contract between the React frontend and the FastAPI backend.
 | PATCH | /artists/me | artist | Partial<ArtistProfileInput> & {isPublished?} | ArtistProfile |
 | GET | /artists/me/dashboard | artist | – | ArtistDashboard |
 | GET | /artists/me/media | artist | – | MediaListResponse |
-| POST | /artists/me/media/upload-url | artist | UploadUrlRequest | UploadUrlResponse · 409 `media_quota_exceeded` |
+| POST | /artists/me/media/upload-url | artist | UploadUrlRequest (`hd: true` = Premium HD slot) | UploadUrlResponse · 409 `media_quota_exceeded` (incl. no HD slots / Free plan) · 422 `fields.sizeBytes` — photos ≤10 MB, videos ≤40 MB, HD ≤200 MB (no compression) |
 | POST | /artists/me/media | artist | CreateMediaRequest | 201 Media · 422 `fields.url` for unsupported links · 503 `storage_not_configured` for uploads without S3 |
 | POST | /artists/me/avatar | artist | `{storageKey}` | `{profileImageUrl}` |
 | DELETE | /artists/me/media/{id} | artist | – | 204 |
@@ -77,6 +77,7 @@ This folder is the contract between the React frontend and the FastAPI backend.
 | POST | /subscriptions/cancel | artist | – | MySubscriptionResponse |
 | GET | /site-info | public | – | SiteInfo — support email/phone and business address (nulls when not configured) |
 | POST | /contact | public | ContactRequest | 201 `{id}` · 429 `contact_rate_limited` (5 per IP per hour) |
+| GET | /subscriptions/downgrade-preview?tier= | artist | – | DowngradePreview — how many photos/videos/HD videos/embeds a move to `tier` would remove (hidden at once, deleted after 7 days) |
 | GET | /subscriptions/me/payments | artist | – | BillingHistoryResponse — newest first; `receiptUrl` is the gateway's hosted invoice (null for failed payments) |
 | POST | /subscriptions/webhook | Razorpay HMAC | Razorpay event | 200 |
 
@@ -109,6 +110,9 @@ This folder is the contract between the React frontend and the FastAPI backend.
 | `internal_error` | 500 | Unexpected server error |
 
 ## Business rules the contract encodes
+
+- **Plans (2026-10-20):** Free — no uploads, Instagram/YouTube/Facebook as text links only (no embeds/widgets). Basic — 5 photos + 1 video, embeds, no badge. Pro — 20 photos + 3 videos, embeds, verified badge (after admin verification), search boost, not featured. Premium — 50 photos + 8 videos + 2 HD videos, embeds, badge, featured, top boost. Video caps: 40 MB (HD 200 MB). `isVerified`/`isFeatured` already reflect the plan.
+- **Downgrades:** items beyond the new plan's limits (by the artist's display order; embeds on Free) are hidden at once and deleted after 7 days (`Media.deleteAfter`); upgrading earlier restores them. Quotas count visible items only.
 
 - Monthly lead caps (calendar month, IST): free 3, basic 15, pro/premium unlimited (`-1`). Leads over the cap are stored with `isLocked: true`; the artist sees `plannerPhone`/`plannerEmail` as `null` until upgrade. Planners always receive the artist's contact info.
 - `POST /leads` requires a signed-in planner. A second lead by the same planner for the same artist and event date returns `200` with the existing `leadId`.

@@ -12,8 +12,8 @@
     "perEventRateMax": 25000,
     "averageRating": 4.9,
     "totalReviews": 127,
-    "isVerified": true,
-    "isFeatured": true,
+    "isVerified": false,
+    "isFeatured": false,
     "subscriptionTier": "basic",
     "instagramHandle": "arjunmagic",
     "youtubeChannel": "ArjunMalhotraMagic",
@@ -39,7 +39,9 @@
         "embedUrl": null,
         "thumbnailUrl": null,
         "caption": "Arjun Malhotra live",
-        "displayOrder": 0
+        "displayOrder": 0,
+        "isHd": false,
+        "deleteAfter": null
       },
       {
         "id": "med-001-2",
@@ -48,7 +50,9 @@
         "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
-        "displayOrder": 1
+        "displayOrder": 1,
+        "isHd": false,
+        "deleteAfter": null
       },
       {
         "id": "med-001-3",
@@ -57,7 +61,9 @@
         "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
-        "displayOrder": 2
+        "displayOrder": 2,
+        "isHd": false,
+        "deleteAfter": null
       },
       {
         "id": "med-001-4",
@@ -66,7 +72,9 @@
         "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
-        "displayOrder": 3
+        "displayOrder": 3,
+        "isHd": false,
+        "deleteAfter": null
       }
     ],
     "contactPhone": "9820011001",
@@ -103,7 +111,7 @@
     "averageRating": 4.7,
     "totalReviews": 89,
     "isVerified": true,
-    "isFeatured": true,
+    "isFeatured": false,
     "subscriptionTier": "pro",
     "instagramHandle": "djkrish_official",
     "youtubeChannel": "DJKrishOfficial",
@@ -130,7 +138,9 @@
         "embedUrl": null,
         "thumbnailUrl": null,
         "caption": "DJ Krish live",
-        "displayOrder": 0
+        "displayOrder": 0,
+        "isHd": false,
+        "deleteAfter": null
       },
       {
         "id": "med-002-2",
@@ -139,7 +149,9 @@
         "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
-        "displayOrder": 1
+        "displayOrder": 1,
+        "isHd": false,
+        "deleteAfter": null
       },
       {
         "id": "med-002-3",
@@ -148,7 +160,9 @@
         "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
-        "displayOrder": 2
+        "displayOrder": 2,
+        "isHd": false,
+        "deleteAfter": null
       },
       {
         "id": "med-002-4",
@@ -157,7 +171,9 @@
         "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
-        "displayOrder": 3
+        "displayOrder": 3,
+        "isHd": false,
+        "deleteAfter": null
       }
     ],
     "contactPhone": "9820011002",
@@ -215,7 +231,9 @@
         "embedUrl": null,
         "thumbnailUrl": null,
         "caption": "Priya Sharma live",
-        "displayOrder": 0
+        "displayOrder": 0,
+        "isHd": false,
+        "deleteAfter": null
       },
       {
         "id": "med-003-2",
@@ -224,7 +242,9 @@
         "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
-        "displayOrder": 1
+        "displayOrder": 1,
+        "isHd": false,
+        "deleteAfter": null
       },
       {
         "id": "med-003-3",
@@ -233,7 +253,9 @@
         "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
-        "displayOrder": 2
+        "displayOrder": 2,
+        "isHd": false,
+        "deleteAfter": null
       },
       {
         "id": "med-003-4",
@@ -242,7 +264,9 @@
         "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
-        "displayOrder": 3
+        "displayOrder": 3,
+        "isHd": false,
+        "deleteAfter": null
       }
     ],
     "contactPhone": "9820011003",
@@ -274,7 +298,7 @@
     "averageRating": 4.6,
     "totalReviews": 72,
     "isVerified": true,
-    "isFeatured": false,
+    "isFeatured": true,
     "subscriptionTier": "premium",
     "instagramHandle": "rohandesaicomedy",
     "youtubeChannel": "RohanDesaiComedy",
@@ -300,7 +324,9 @@
         "embedUrl": null,
         "thumbnailUrl": null,
         "caption": "Rohan Desai live",
-        "displayOrder": 0
+        "displayOrder": 0,
+        "isHd": false,
+        "deleteAfter": null
       },
       {
         "id": "med-004-2",
@@ -309,7 +335,9 @@
         "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
-        "displayOrder": 1
+        "displayOrder": 1,
+        "isHd": false,
+        "deleteAfter": null
       },
       {
         "id": "med-004-3",
@@ -318,7 +346,9 @@
         "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
-        "displayOrder": 2
+        "displayOrder": 2,
+        "isHd": false,
+        "deleteAfter": null
       },
       {
         "id": "med-004-4",
@@ -327,7 +357,9 @@
         "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
-        "displayOrder": 3
+        "displayOrder": 3,
+        "isHd": false,
+        "deleteAfter": null
       }
     ],
     "contactPhone": "9820011004",
@@ -385,7 +417,9 @@
         "embedUrl": null,
         "thumbnailUrl": null,
         "caption": "The Raaga Collective live",
-        "displayOrder": 0
+        "displayOrder": 0,
+        "isHd": false,
+        "deleteAfter": null
       },
       {
         "id": "med-005-2",
@@ -394,7 +428,9 @@
         "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
-        "displayOrder": 1
+        "displayOrder": 1,
+        "isHd": false,
+        "deleteAfter": null
       },
       {
         "id": "med-005-3",
@@ -403,7 +439,9 @@
         "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
-        "displayOrder": 2
+        "displayOrder": 2,
+        "isHd": false,
+        "deleteAfter": null
       },
       {
         "id": "med-005-4",
@@ -412,7 +450,9 @@
         "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
-        "displayOrder": 3
+        "displayOrder": 3,
+        "isHd": false,
+        "deleteAfter": null
       }
     ],
     "contactPhone": "9820011005",
@@ -469,7 +509,9 @@
         "embedUrl": null,
         "thumbnailUrl": null,
         "caption": "Meera Kapoor live",
-        "displayOrder": 0
+        "displayOrder": 0,
+        "isHd": false,
+        "deleteAfter": null
       },
       {
         "id": "med-006-2",
@@ -478,7 +520,9 @@
         "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
-        "displayOrder": 1
+        "displayOrder": 1,
+        "isHd": false,
+        "deleteAfter": null
       },
       {
         "id": "med-006-3",
@@ -487,7 +531,9 @@
         "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
-        "displayOrder": 2
+        "displayOrder": 2,
+        "isHd": false,
+        "deleteAfter": null
       },
       {
         "id": "med-006-4",
@@ -496,7 +542,9 @@
         "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
-        "displayOrder": 3
+        "displayOrder": 3,
+        "isHd": false,
+        "deleteAfter": null
       }
     ],
     "contactPhone": "9820011006",
@@ -550,7 +598,9 @@
         "embedUrl": null,
         "thumbnailUrl": null,
         "caption": "Vikram Bubbles live",
-        "displayOrder": 0
+        "displayOrder": 0,
+        "isHd": false,
+        "deleteAfter": null
       },
       {
         "id": "med-007-2",
@@ -559,7 +609,9 @@
         "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
-        "displayOrder": 1
+        "displayOrder": 1,
+        "isHd": false,
+        "deleteAfter": null
       },
       {
         "id": "med-007-3",
@@ -568,7 +620,9 @@
         "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
-        "displayOrder": 2
+        "displayOrder": 2,
+        "isHd": false,
+        "deleteAfter": null
       },
       {
         "id": "med-007-4",
@@ -577,7 +631,9 @@
         "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
-        "displayOrder": 3
+        "displayOrder": 3,
+        "isHd": false,
+        "deleteAfter": null
       }
     ],
     "contactPhone": "9820011007",
@@ -635,7 +691,9 @@
         "embedUrl": null,
         "thumbnailUrl": null,
         "caption": "Aditya Naik live",
-        "displayOrder": 0
+        "displayOrder": 0,
+        "isHd": false,
+        "deleteAfter": null
       },
       {
         "id": "med-008-2",
@@ -644,7 +702,9 @@
         "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
-        "displayOrder": 1
+        "displayOrder": 1,
+        "isHd": false,
+        "deleteAfter": null
       },
       {
         "id": "med-008-3",
@@ -653,7 +713,9 @@
         "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
-        "displayOrder": 2
+        "displayOrder": 2,
+        "isHd": false,
+        "deleteAfter": null
       },
       {
         "id": "med-008-4",
@@ -662,7 +724,9 @@
         "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
-        "displayOrder": 3
+        "displayOrder": 3,
+        "isHd": false,
+        "deleteAfter": null
       }
     ],
     "contactPhone": "9820011008",
@@ -688,7 +752,7 @@
     "perEventRateMax": 22000,
     "averageRating": 4.6,
     "totalReviews": 38,
-    "isVerified": true,
+    "isVerified": false,
     "isFeatured": false,
     "subscriptionTier": "basic",
     "instagramHandle": "djnikhilpune",
@@ -716,7 +780,9 @@
         "embedUrl": null,
         "thumbnailUrl": null,
         "caption": "DJ Nikhil live",
-        "displayOrder": 0
+        "displayOrder": 0,
+        "isHd": false,
+        "deleteAfter": null
       },
       {
         "id": "med-009-2",
@@ -725,7 +791,9 @@
         "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
-        "displayOrder": 1
+        "displayOrder": 1,
+        "isHd": false,
+        "deleteAfter": null
       },
       {
         "id": "med-009-3",
@@ -734,7 +802,9 @@
         "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
-        "displayOrder": 2
+        "displayOrder": 2,
+        "isHd": false,
+        "deleteAfter": null
       },
       {
         "id": "med-009-4",
@@ -743,7 +813,9 @@
         "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
-        "displayOrder": 3
+        "displayOrder": 3,
+        "isHd": false,
+        "deleteAfter": null
       }
     ],
     "contactPhone": "9820011009",
@@ -770,7 +842,7 @@
     "averageRating": 4.8,
     "totalReviews": 51,
     "isVerified": true,
-    "isFeatured": true,
+    "isFeatured": false,
     "subscriptionTier": "pro",
     "instagramHandle": "sanaqureshilive",
     "youtubeChannel": "SanaQureshiLive",
@@ -796,7 +868,9 @@
         "embedUrl": null,
         "thumbnailUrl": null,
         "caption": "Sana Qureshi live",
-        "displayOrder": 0
+        "displayOrder": 0,
+        "isHd": false,
+        "deleteAfter": null
       },
       {
         "id": "med-010-2",
@@ -805,7 +879,9 @@
         "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
-        "displayOrder": 1
+        "displayOrder": 1,
+        "isHd": false,
+        "deleteAfter": null
       },
       {
         "id": "med-010-3",
@@ -814,7 +890,9 @@
         "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
-        "displayOrder": 2
+        "displayOrder": 2,
+        "isHd": false,
+        "deleteAfter": null
       },
       {
         "id": "med-010-4",
@@ -823,7 +901,9 @@
         "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
-        "displayOrder": 3
+        "displayOrder": 3,
+        "isHd": false,
+        "deleteAfter": null
       }
     ],
     "contactPhone": "9820011010",
@@ -880,7 +960,9 @@
         "embedUrl": null,
         "thumbnailUrl": null,
         "caption": "Kabir the Mentalist live",
-        "displayOrder": 0
+        "displayOrder": 0,
+        "isHd": false,
+        "deleteAfter": null
       },
       {
         "id": "med-011-2",
@@ -889,7 +971,9 @@
         "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
-        "displayOrder": 1
+        "displayOrder": 1,
+        "isHd": false,
+        "deleteAfter": null
       },
       {
         "id": "med-011-3",
@@ -898,7 +982,9 @@
         "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
-        "displayOrder": 2
+        "displayOrder": 2,
+        "isHd": false,
+        "deleteAfter": null
       },
       {
         "id": "med-011-4",
@@ -907,7 +993,9 @@
         "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
-        "displayOrder": 3
+        "displayOrder": 3,
+        "isHd": false,
+        "deleteAfter": null
       }
     ],
     "contactPhone": "9820011011",
@@ -958,7 +1046,9 @@
         "embedUrl": null,
         "thumbnailUrl": null,
         "caption": "Ravi Laugh Riot live",
-        "displayOrder": 0
+        "displayOrder": 0,
+        "isHd": false,
+        "deleteAfter": null
       },
       {
         "id": "med-012-2",
@@ -967,7 +1057,9 @@
         "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
-        "displayOrder": 1
+        "displayOrder": 1,
+        "isHd": false,
+        "deleteAfter": null
       },
       {
         "id": "med-012-3",
@@ -976,7 +1068,9 @@
         "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
-        "displayOrder": 2
+        "displayOrder": 2,
+        "isHd": false,
+        "deleteAfter": null
       },
       {
         "id": "med-012-4",
@@ -985,7 +1079,9 @@
         "embedUrl": null,
         "thumbnailUrl": null,
         "caption": null,
-        "displayOrder": 3
+        "displayOrder": 3,
+        "isHd": false,
+        "deleteAfter": null
       }
     ],
     "contactPhone": "9820011012",

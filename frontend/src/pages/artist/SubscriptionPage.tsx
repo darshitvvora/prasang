@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import ArtistSidebar from '../../components/ArtistSidebar';
 import QueryState from '../../components/QueryState';
@@ -6,12 +6,19 @@ import { useCancelSubscription, useMyPayments, useMySubscription } from '../../a
 import { formatDate } from '../../api/format';
 import type { MySubscriptionResponse } from '../../api/types';
 import { formatBillingRow } from './billing';
+import { getDowngradePreview } from '../../api/endpoints';
+import { downgradeWarning } from '../pricing/downgrade';
 import './ArtistPages.css';
 
 function PlanCard({ data }: { data: MySubscriptionResponse }) {
   const cancel = useCancelSubscription();
   const [confirming, setConfirming] = useState(false);
+  const [loss, setLoss] = useState<string | null>(null);
   const { plan, subscription } = data;
+  useEffect(() => {
+    if (!confirming) return;
+    getDowngradePreview('free').then((p) => setLoss(downgradeWarning(p))).catch(() => setLoss(null));
+  }, [confirming]);
   const canCancel = subscription?.status === 'active' && !subscription.cancelAtPeriodEnd;
   return (
     <div className="subscription-card">
@@ -30,6 +37,7 @@ function PlanCard({ data }: { data: MySubscriptionResponse }) {
       {confirming && (
         <div className="subscription-confirm" role="dialog" aria-label="Cancel plan">
           <p>You'll keep {plan.name} until the end of this billing period, then move to Free. Cancel?</p>
+          {loss && <p className="subscription-warning">{loss}</p>}
           <button type="button" className="subscription-cancel" disabled={cancel.isPending}
             onClick={() => cancel.mutate(undefined, { onSuccess: () => setConfirming(false) })}>
             {cancel.isPending ? 'Cancelling…' : 'Yes, cancel'}

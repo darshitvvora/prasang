@@ -19,6 +19,7 @@ import reviewReplyRes from '../../../../contracts/examples/reviews/reply.respons
 import reviewReportReq from '../../../../contracts/examples/reviews/report.request.json';
 import reviewsMine from '../../../../contracts/examples/reviews/mine.response.json';
 import googleReviews from '../../../../contracts/examples/artists/google-reviews.response.json';
+import downgradePreview from '../../../../contracts/examples/subscriptions/downgrade-preview.response.json';
 import meGet from '../../../../contracts/examples/me/get.response.json';
 import mePostReq from '../../../../contracts/examples/me/post.request.json';
 import mePostRes from '../../../../contracts/examples/me/post.response.json';
@@ -129,3 +130,4 @@ check<T.Review>()(reviewReplyRes);
 check<T.ReviewReportRequest>()(reviewReportReq);
 check<T.Page<T.Review>>()(reviewsMine);
 check<T.GoogleReviewsResponse>()(googleReviews);
+check<T.DowngradePreview>()(downgradePreview);

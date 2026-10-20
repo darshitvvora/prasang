@@ -2,7 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { linkKind, mediaIsEmbed } from './embed';
 import type { Media } from '../api/types';
 
-const m = (kind: Media['kind'], embedUrl: string | null): Media => ({ id: '1', kind, url: 'u', embedUrl, thumbnailUrl: null, caption: null, displayOrder: 0 });
+const m = (kind: Media['kind'], embedUrl: string | null): Media => ({ id: '1', kind, url: 'u', embedUrl, thumbnailUrl: null, caption: null, displayOrder: 0,
+  isHd: false, deleteAfter: null });
 
 describe('embeds', () => {
   it('treats social items with an embed URL as iframes', () => {

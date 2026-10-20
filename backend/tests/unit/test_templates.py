@@ -17,6 +17,8 @@ USER = SimpleNamespace(full_name="Arjun Malhotra")
     ("payment_failed", {"plan": "Pro"},
      "We couldn't charge your Prasang Pro plan. Update payment to keep it: https://prasang.in/artist/subscription"),
     ("plan_ended", {"plan": "Pro"}, "Your Prasang Pro plan has ended and you're now on Free. Upgrade: https://prasang.in/pricing"),
+    ("media_removal", {"count": 3, "date": "27 Oct 2026"},
+     "Your Prasang plan changed: 3 photos/videos are hidden and will be deleted on 27 Oct 2026. Upgrade to keep them: https://prasang.in/pricing"),
     ("booking_check_1", {"artist": "Arjun Malhotra", "event": "wedding"},
      "Did you book Arjun Malhotra for your wedding? Tell us: https://prasang.in/planner/inquiries"),
     ("booking_check_2_reminder", {"artist": "Arjun Malhotra", "event": "wedding"},

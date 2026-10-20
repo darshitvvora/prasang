@@ -178,6 +178,7 @@ export const routes = [
 
   // ---------- subscriptions ----------
   { method: 'get', path: 'subscriptions/plans', responses: [{ status: 200, body: `{"items": {{{stringify (dataRaw 'plans')}}} }` }] },
+  { method: 'get', path: 'subscriptions/downgrade-preview', responses: [unauth, forbidden([PLANNER]), { status: 200, file: 'subscriptions/downgrade-preview.response.json' }] },
   { method: 'get', path: 'subscriptions/me/payments', responses: [unauth, forbidden([PLANNER]), { status: 200, file: 'subscriptions/payments.response.json' }] },
   { method: 'get', path: 'subscriptions/me', responses: [
     unauth,

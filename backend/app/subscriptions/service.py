@@ -16,6 +16,7 @@ from app.contract import (
     Checkout,
     CheckoutPrefill,
     CreateSubscriptionResponse,
+    DowngradePreview,
     MySubscriptionResponse,
     Plan,
     PlanFeature,
@@ -24,6 +25,7 @@ from app.contract import (
 )
 from app.errors import AppError, conflict, not_found
 from app.leads.service import unlock_month
+from app.media.limits import overflow, reconcile
 from app.notifications.queue import queue_message
 from app.outbox.emit import artist_changed
 from app.subscriptions.gateway import PaymentGateway, get_gateway
@@ -40,7 +42,7 @@ TOTAL_COUNT = {"monthly": 120, "annual": 10}  # Razorpay needs a finite billing 
 def to_plan(p: SubscriptionPlan) -> Plan:
     return Plan(tier=p.tier, name=p.name, tagline=p.tagline, monthly_price=p.monthly_price, annual_price=p.annual_price,
                 annual_monthly_equivalent=p.annual_monthly_equivalent, lead_limit_monthly=p.lead_limit_monthly,
-                max_images=p.max_images, max_videos=p.max_videos, popular=p.popular,
+                max_images=p.max_images, max_videos=p.max_videos, max_hd_videos=p.max_hd_videos, popular=p.popular,
                 features=[PlanFeature(**f) for f in p.features])
 
 
@@ -87,7 +89,22 @@ async def apply_tier(session: AsyncSession, artist: ArtistProfile, tier: str, so
     if source != "grant":
         artist.grant_ends_at = None
     await unlock_month(session, artist.id, datetime.now(UTC), plan.lead_limit_monthly)
+    hidden, delete_after = await reconcile(session, artist, tier)
+    if hidden:
+        await queue_message(session, artist.user_id, "media_removal", delete_after.isoformat(),
+                            {"count": hidden, "date": _day(delete_after.astimezone(IST).date())})
     artist_changed(session, artist.id)
+
+
+def _day(d: date) -> str:
+    return f"{d.day} {d:%b %Y}"
+
+
+async def downgrade_preview(session: AsyncSession, user: User, tier: str) -> DowngradePreview:
+    """How many items a move to `tier` would remove — shown before the artist confirms."""
+    artist = await get_own(session, user)
+    o = await overflow(session, artist, tier)
+    return DowngradePreview(tier=tier, photos=len(o.photos), videos=len(o.videos), hd_videos=len(o.hd_videos), embeds=len(o.embeds))
 
 
 async def downgrade_to_free(session: AsyncSession, artist: ArtistProfile) -> None:

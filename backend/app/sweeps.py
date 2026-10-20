@@ -74,6 +74,27 @@ async def lapse_overdue_subscriptions(session: AsyncSession) -> int:
     return len(ids)
 
 
+async def purge_hidden_media(session: AsyncSession, starter: WorkflowStarter, now: datetime | None = None) -> int:
+    """Delete portfolio items whose 7-day grace after a downgrade has passed (rows now, files via a retrying workflow)."""
+    from app.media.models import ArtistMedia
+
+    now = now or datetime.now(UTC)
+    rows = (await session.execute(select(ArtistMedia, ArtistProfile.user_id).join(ArtistProfile, ArtistProfile.id == ArtistMedia.artist_id)
+                                  .where(ArtistMedia.delete_after < now).limit(500))).all()
+    keys_by_user: dict[str, list[str]] = {}
+    for media, user_id in rows:
+        if media.storage_key:
+            keys_by_user.setdefault(user_id, []).append(media.storage_key)
+        await session.delete(media)
+    await session.commit()
+    for user_id, keys in keys_by_user.items():
+        try:
+            await starter.start_media_deletion(f"{user_id}-{int(now.timestamp())}", keys)
+        except Exception as exc:
+            log.warning("sweep: could not start file deletion for %s: %s (keys: %s)", user_id, exc, keys)
+    return len(rows)
+
+
 async def run_sweeps(session: AsyncSession, starter: WorkflowStarter) -> dict[str, int]:
     result = {
         "lead_notifications": await retry_lead_notifications(session, starter),
@@ -84,6 +105,7 @@ async def run_sweeps(session: AsyncSession, starter: WorkflowStarter) -> dict[st
         "reminders_queued": await queue_due_reminders(session),
         "messages_restarted": await retry_pending_messages(session, starter),
         "booking_followups": await retry_booking_followups(session, starter),
+        "media_purged": await purge_hidden_media(session, starter),
     }
     if any(result.values()):
         log.info("sweep: %s", result)

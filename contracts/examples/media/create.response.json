@@ -5,5 +5,7 @@
   "embedUrl": null,
   "thumbnailUrl": null,
   "caption": "Sangeet at Taj Lands End",
-  "displayOrder": 4
+  "displayOrder": 4,
+  "isHd": false,
+  "deleteAfter": null
 }

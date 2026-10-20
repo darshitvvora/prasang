@@ -4,7 +4,7 @@ from typing import Literal
 
 MessageKind = Literal[
     "welcome_artist", "welcome_planner", "trial_ending", "renewal_reminder", "payment_failed", "plan_ended",
-    "booking_check_1", "booking_check_1_reminder", "booking_check_2", "booking_check_2_reminder",
+    "booking_check_1", "booking_check_1_reminder", "booking_check_2", "booking_check_2_reminder", "media_removal",
 ]
 
 
@@ -53,6 +53,14 @@ def render(kind: str, user, context: dict, base_url: str) -> RenderedMessage:
         return RenderedMessage(sms, f"Your {c['plan']} plan has ended",
                                f"Hi {first},\n\nYour Prasang {c['plan']} plan has ended and your profile is now on the Free "
                                f"plan. Upgrade any time:\n{link}\n\nTeam Prasang")
+    if kind == "media_removal":
+        link = f"{url}/pricing"
+        sms = (f"Your Prasang plan changed: {c['count']} photos/videos are hidden and will be deleted on {c['date']}. "
+               f"Upgrade to keep them: {link}")
+        return RenderedMessage(sms, f"{c['count']} photos/videos will be deleted on {c['date']}",
+                               f"Hi {first},\n\nYour Prasang plan now allows fewer photos, videos or embeds, so {c['count']} items "
+                               f"are hidden from your profile and will be deleted on {c['date']}. Upgrade before then to keep "
+                               f"them, or reorder your media to choose what stays:\n{link}\n\nTeam Prasang")
     if kind.startswith("booking_check_"):
         link = f"{url}/planner/inquiries"
         sms = f"Did you book {c['artist']} for your {c['event']}? Tell us: {link}"

@@ -13,6 +13,7 @@ EXAMPLES = Path(__file__).resolve().parents[3] / "contracts" / "examples"
 TABLE: dict[str, object] = {
     "auth/providers.response.json": C.AuthProvidersResponse,
     "site/info.response.json": C.SiteInfo,
+    "subscriptions/downgrade-preview.response.json": C.DowngradePreview,
     "artists/google-reviews.response.json": C.GoogleReviewsResponse,
     "reviews/create.request.json": C.CreateReviewRequest,
     "reviews/create.response.json": C.Review,

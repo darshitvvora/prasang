@@ -89,6 +89,9 @@
 - **Suspend** leaves billing running (temporary; refunds manually in Razorpay); **block** = suspend + cancel billing at Razorpay immediately *(recommended default — change here if you disagree)*
 - Account deletion immediate after OTP re-confirm; payment records kept without contact details
 - Production nginx/web image stay in ED/EG
+- **Plans (2026-10-20):** Free — no uploads, Instagram/YouTube/Facebook as text links only. Basic — 5 photos + 1 video, embeds, no badge. Pro — 20 photos + 3 videos, embeds, verified badge (after admin verify), search boost, not featured. Premium — 50 photos + 8 videos + 2 HD videos, embeds, badge, featured, top boost. Lead limits and prices unchanged
+- Videos are **not compressed**: caps of 40 MB (HD 200 MB, Premium only)
+- Downgrade: extras beyond the new limits (by the artist's display order; embeds on Free) are hidden at once and **deleted after 7 days** with SMS/email + warning; upgrading earlier restores them. The pricing page and the cancel dialog warn with exact counts first
 - [x] L1 Admin at launch = **CLI commands, no UI** (run on the server via SSM): verify/unverify, feature/unfeature, suspend/restore artist, grant plan for N days, hide/restore review, block user, sync subscription from Razorpay; each updates search via the outbox and writes an `admin_actions` log row
 - [x] L2 Link previews for shared profiles (Open Graph/Twitter tags: photo, name, type, city) for Instagram/WhatsApp
 - [x] L3 Reviews: only for confirmed bookings (artist marks booked **or** planner says yes); planner nudged 3 days after inquiry and again the day after the event if still unmarked (Temporal); review form opens after the event; artist reply + report; Google reviews shown separately with attribution (🔑 Google Places API key)
@@ -96,6 +99,7 @@
 - [x] L5 Lifecycle messages: welcome, trial ending, renewal reminder, payment failed/plan ended (SMS + email)
 - [x] L6 Account and data deletion (DPDP Act, Google sign-in policy)
 - [x] L7 About and Contact pages (contact form emails the team)
+- [x] L8 Plan entitlements: media limits per plan, video size caps + Premium HD slots, embeds only on paid plans, badge on Pro/Premium, featured only on Premium, downgrade warning + 7-day clean-up
 
 ## EG — AWS simulation on LocalStack (Docker) `[ ]`
 **Goal:** rehearse the AWS deploy locally — same IaC, same S3/IAM/SSM wiring — before spending on a real account. Also makes photo/video uploads work locally with no AWS credentials.
@@ -122,7 +126,7 @@
 - [ ] C5 Store builds via EAS, internal testing tracks
 
 ## Post-launch
-Admin web UI (overview counts, artist/payment/review screens, activity log viewer); favourites/shortlist, compare, recently viewed; locality pages, trending/new/top-rated, map/nearby; referrals; AI bio + semantic search; Instagram/Facebook/YouTube feed auto-import (Graph/Data APIs; 🔑 Meta app review); full analytics page; blog; Spotify embeds; ticketing (tixcraft/Insider).
+Server-side video compression (720p transcode; HD 1080p); admin web UI (overview counts, artist/payment/review screens, activity log viewer); favourites/shortlist, compare, recently viewed; locality pages, trending/new/top-rated, map/nearby; referrals; AI bio + semantic search; Instagram/Facebook/YouTube feed auto-import (Graph/Data APIs; 🔑 Meta app review); full analytics page; blog; Spotify embeds; ticketing (tixcraft/Insider).
 
 ## EH — AI event-planning copilot (post-launch, direction of the product) `[ ]`
 **Vision (2026-10-19):** Prasang grows from a directory into a **personal agent for event booking** — an AI copilot that helps a planner plan and run an event end to end, available **on WhatsApp and in our app** (web + React Native).
