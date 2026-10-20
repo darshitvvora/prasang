@@ -80,7 +80,9 @@
 /* Cards grid */
 .pricing-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  /* Fits however many plans the API returns and keeps the row centred (3 plans since 2026-10-20). */
+  grid-template-columns: repeat(auto-fit, minmax(260px, 340px));
+  justify-content: center;
   gap: 20px;
   max-width: 1200px;
   margin: 0 auto;
@@ -413,12 +415,6 @@
 }
 
 /* Responsive */
-@media (max-width: 1024px) {
-  .pricing-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
 @media (max-width: 640px) {
   .pricing-hero { padding: 48px 20px 40px; }
 
