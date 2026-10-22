@@ -51,4 +51,4 @@ The new-user journey is stateful inside Mockoon; restart `npm run mock` (or `POS
 | `src/api/__contract__/` | Compile-time check that `contracts/examples/**` match the types |
 | `src/auth/` | `AuthProvider` (session + `GET /me`), `RequireRole` guard, pure routing rules |
 | `src/components/` | Shared UI incl. `ContactModal` (lead capture), `MediaUploader`, sidebars, `QueryState` |
-| `src/payments/razorpay.ts` | Razorpay Checkout (mocked when key id is `rzp_test_mock`) |
+| `src/payments/` | PhonePe payment-link panel ("Pay with PhonePe" + "I've paid"); `mock://phonepe/…` links count as paid at once |

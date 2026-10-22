@@ -17,7 +17,7 @@ from app.config import get_settings
 from app.notifications.models import QueuedMessage
 from app.notifications.notifier import NotificationRejected, Notifier
 from app.notifications.templates import MessageKind, render
-from app.subscriptions.models import Subscription, SubscriptionPlan
+from app.subscriptions.models import SubscriptionPlan
 from app.workflows.starter import WorkflowStarter, get_starter
 
 log = logging.getLogger(__name__)
@@ -88,7 +88,7 @@ async def deliver(session: AsyncSession, notifier: Notifier, message_id: str) ->
     phone, sent, errors, rejected = await _phone(session, user), 0, [], 0
     channels = []
     if phone:
-        channels.append(("sms", lambda: notifier.send_sms(phone, rendered.sms)))
+        channels.append(("text", lambda: notifier.send_text(phone, rendered.sms)))  # WhatsApp or SMS
     if user.email:
         channels.append(("email", lambda: notifier.send_email(user.email, rendered.email_subject, rendered.email_text)))
     for channel, send in channels:
@@ -134,7 +134,7 @@ def _day(d) -> str:
 
 
 async def queue_due_reminders(session: AsyncSession, now: datetime | None = None) -> int:
-    """Trial ending within 48 hours; annual renewal within 7 days. Idempotent through the unique period key."""
+    """Trial ending within 48 hours (renewal links are sent by subscriptions.create_due_renewals). Idempotent per period."""
     now = now or datetime.now(UTC)
     queued = 0
     trials = (await session.execute(select(ArtistProfile).where(
@@ -144,16 +144,6 @@ async def queue_due_reminders(session: AsyncSession, now: datetime | None = None
         plan = await session.get(SubscriptionPlan, artist.subscription_tier)
         end = artist.trial_ends_at.astimezone(IST).date()
         if await queue_message(session, artist.user_id, "trial_ending", end.isoformat(), {"plan": plan.name, "date": _day(end)}):
-            queued += 1
-    today = now.astimezone(IST).date()
-    renewals = (await session.execute(select(Subscription, ArtistProfile).join(
-        ArtistProfile, ArtistProfile.id == Subscription.artist_id).where(
-        Subscription.status == "active", Subscription.billing_cycle == "annual", Subscription.cancel_at_period_end.is_(False),
-        Subscription.current_period_end >= today, Subscription.current_period_end <= today + timedelta(days=7)))).all()
-    for sub, artist in renewals:
-        plan = await session.get(SubscriptionPlan, sub.tier)
-        key = sub.current_period_end.isoformat()
-        if await queue_message(session, artist.user_id, "renewal_reminder", key, {"plan": plan.name, "date": _day(sub.current_period_end)}):
             queued += 1
     await session.commit()
     return queued

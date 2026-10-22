@@ -1,0 +1,17 @@
+.payment-link-panel {
+  display: grid; gap: 0.6rem; justify-items: start;
+  max-width: 720px; margin: 0 auto 1.5rem; padding: 1.1rem 1.25rem; border-radius: 14px;
+  background: var(--color-bg-card); color: var(--color-text-primary); border: 1px solid #ecece6;
+}
+.payment-link-title { margin: 0; font-weight: 700; font-size: 1.05rem; }
+.payment-link-pay {
+  display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.7rem 1.2rem; border-radius: 999px;
+  background: var(--color-accent); color: var(--color-text-primary); font-weight: 700; text-decoration: none;
+}
+.payment-link-pay:hover { background: var(--color-accent-hover); }
+.payment-link-note { margin: 0; color: var(--color-text-secondary); font-size: 0.9rem; }
+.payment-link-check {
+  padding: 0.5rem 1rem; border-radius: 999px; border: 1px solid #d0d0c8; background: #fff; cursor: pointer; font-weight: 600;
+}
+.payment-link-check:disabled { opacity: 0.6; cursor: default; }
+.payment-link-error { margin: 0; color: #8a1c13; }

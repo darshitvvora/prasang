@@ -35,7 +35,7 @@ def build_parser() -> argparse.ArgumentParser:
     cmd("restore-review", "show a hidden review again", "review_id")
     cmd("block-user", "block a user (artists are also suspended and billing cancelled)", "user", reason=True)
     cmd("unblock-user", "undo a block", "user")
-    cmd("sync-subscription", "re-read the artist's subscription from Razorpay and apply it", "slug")
+    cmd("sync-subscription", "re-read the artist's newest payment link from PhonePe and apply it", "slug")
     cmd("clear-google-place", "remove a wrong or abusive Google listing from a profile", "slug")
     cmd("reports", "list reported reviews and the latest contact messages")
     return parser
@@ -67,8 +67,8 @@ async def _run(args: argparse.Namespace) -> str:
             data = await actions.open_reports(session)
         reviews = [f"  {r['review_id']}  {r['rating']}★  reason: {r['reason']}\n      {r['text']}" for r in data["reviews"]]
         contact = [f"  {m['at'][:16]}  [{m['topic']}] {m['from']}: {m['message']}" for m in data["contact"]]
-        billing = [f"  {b['at'][:16]}  {b['gateway_subscription_id']}: {b['why']}" for b in data["billing"]]
-        lines = ["Subscriptions to cancel by hand in Razorpay:", *(billing or ["  none"]),
+        billing = [f"  {b['at'][:16]}  [{b['action']}] {b['gateway_subscription_id']}: {b['why']}" for b in data["billing"]]
+        lines = ["Payments to handle by hand on the PhonePe dashboard (cancel link / refund):", *(billing or ["  none"]),
                  "Reported reviews:", *(reviews or ["  none"]), "Latest contact messages:", *(contact or ["  none"])]
         return "\n".join(lines)
     async with get_sessionmaker()() as session:

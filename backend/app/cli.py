@@ -88,8 +88,14 @@ def main(argv: list[str] | None = None) -> None:
     sweep = sub.add_parser("sweep", help="retry missed lead notifications, end overdue trials, lapse overdue subscriptions")
     sweep.add_argument("--loop", type=int, default=0, help="repeat every N seconds")
     sub.add_parser("admin", help="admin actions — see `admin --help`")
+    sub.add_parser("msg91-templates", help="SMS/WhatsApp templates to register on DLT + MSG91, and which env vars are set")
     args = parser.parse_args(argv)
 
+    if args.command == "msg91-templates":
+        from app.config import get_settings
+        from app.notifications.texts import template_report
+
+        print(template_report(get_settings()))
     if args.command == "migrate":
         sys.exit(subprocess.call(["alembic", "upgrade", "head"]))
     if args.command == "seed":

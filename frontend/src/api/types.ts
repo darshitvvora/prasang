@@ -102,10 +102,15 @@ export interface Plan {
   leadLimitMonthly: number; maxImages: number; maxVideos: number; maxHdVideos: number; popular: boolean; features: PlanFeature[];
 }
 export interface SubscriptionSummary { id: string; tier: SubscriptionTier; billingCycle: BillingCycle; status: 'created' | 'active' | 'halted' | 'cancelled' | 'completed' | 'expired'; currentPeriodEnd: string | null; cancelAtPeriodEnd: boolean }
-export interface MySubscriptionResponse { plan: PlanUsage; subscription: SubscriptionSummary | null }
+/** A PhonePe payment link (also emailed + texted to the artist). `amount` is in rupees. */
+export interface PaymentLinkInfo { url: string; expiresAt: string; amount: number }
+/** An unpaid link: a renewal (sent 5 days before the period ends) or a purchase not paid yet. */
+export interface PendingPayment { subscriptionId: string; tier: Exclude<SubscriptionTier, 'free'>; billingCycle: BillingCycle; renewal: boolean; payment: PaymentLinkInfo }
+export interface MySubscriptionResponse { plan: PlanUsage; subscription: SubscriptionSummary | null; pendingPayment: PendingPayment | null }
 export interface CreateSubscriptionRequest { tier: Exclude<SubscriptionTier, 'free'>; billingCycle: BillingCycle }
-export interface CreateSubscriptionResponse { subscriptionId: string; checkout: { keyId: string; razorpaySubscriptionId: string; name: string; description: string; prefill: { name: string; email: string | null; contact: string | null } } }
-export interface VerifyPaymentRequest { razorpayPaymentId: string; razorpaySubscriptionId: string; razorpaySignature: string }
+export interface CreateSubscriptionResponse { subscriptionId: string; payment: PaymentLinkInfo }
+/** "I've paid": the server asks PhonePe for the link's status. */
+export interface VerifyPaymentRequest { subscriptionId: string }
 export interface VerifyPaymentResponse { status: 'active' | 'pending_activation'; plan: PlanUsage }
 export interface BillingItem {
   id: string; paidAt: string; tier: Exclude<SubscriptionTier, 'free'>; billingCycle: BillingCycle; amount: number; currency: string;

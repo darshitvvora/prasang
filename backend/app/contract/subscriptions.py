@@ -51,9 +51,28 @@ class SubscriptionSummary(ContractModel):
     cancel_at_period_end: bool
 
 
+class PaymentLinkInfo(ContractModel):
+    """A PhonePe payment link (also emailed and texted to the artist). Pay once; the plan starts when PhonePe confirms."""
+
+    url: str
+    expires_at: UtcDatetime
+    amount: int  # rupees
+
+
+class PendingPayment(ContractModel):
+    """An unpaid link: a renewal (sent 5 days before the period ends) or a purchase/plan change not paid yet."""
+
+    subscription_id: str
+    tier: PaidTier
+    billing_cycle: BillingCycle
+    renewal: bool
+    payment: PaymentLinkInfo
+
+
 class MySubscriptionResponse(ContractModel):
     plan: PlanUsage
     subscription: SubscriptionSummary | None
+    pending_payment: PendingPayment | None
 
 
 class CreateSubscriptionRequest(ContractModel):
@@ -61,29 +80,15 @@ class CreateSubscriptionRequest(ContractModel):
     billing_cycle: BillingCycle
 
 
-class CheckoutPrefill(ContractModel):
-    name: str
-    email: str | None
-    contact: str | None
-
-
-class Checkout(ContractModel):
-    key_id: str
-    razorpay_subscription_id: str
-    name: str
-    description: str
-    prefill: CheckoutPrefill
-
-
 class CreateSubscriptionResponse(ContractModel):
     subscription_id: str
-    checkout: Checkout
+    payment: PaymentLinkInfo
 
 
 class VerifyPaymentRequest(ContractModel):
-    razorpay_payment_id: str
-    razorpay_subscription_id: str
-    razorpay_signature: str
+    """The artist says they paid: the server asks PhonePe for the link's status (the webhook usually got there first)."""
+
+    subscription_id: str
 
 
 class VerifyPaymentResponse(ContractModel):
@@ -95,8 +100,8 @@ class StartTrialRequest(ContractModel):
     tier: PaidTier
 
 
-class RazorpayWebhookEvent(ContractModel):
-    """Razorpay's own payload — only the fields we route on are declared; the rest is kept as-is."""
+class PhonePeWebhookEvent(ContractModel):
+    """PhonePe's own payload (`paylink.order.completed` / `paylink.order.failed`) — only the routing fields are declared."""
 
     model_config = ConfigDict(extra="allow")
     event: str

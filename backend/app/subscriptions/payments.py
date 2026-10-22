@@ -1,4 +1,4 @@
-"""Billing history rows from gateway payment entities (webhooks, verify, admin sync). Idempotent per payment id."""
+"""Billing history rows from PhonePe payment attempts (webhooks, "I've paid", sweeps, admin sync). Idempotent per payment id."""
 import logging
 from datetime import UTC, datetime
 
@@ -11,19 +11,13 @@ from app.subscriptions.models import Subscription, SubscriptionPayment
 log = logging.getLogger(__name__)
 
 
-async def record_payment(session: AsyncSession, sub: Subscription, payment: dict, gateway,
+async def record_payment(session: AsyncSession, sub: Subscription, payment: dict,
                          fallback_amount: int | None = None) -> SubscriptionPayment | None:
-    """Store (or complete) one payment row; the caller commits."""
+    """Store one payment row; the caller commits. PhonePe links have no hosted receipt (the email is the receipt)."""
     payment_id = payment.get("id")
     if not payment_id:
         return None
-    invoice_id = payment.get("invoice_id")
-    receipt_url = None
-    if invoice_id and payment.get("status") != "failed":
-        try:
-            receipt_url = await gateway.invoice_url(invoice_id)
-        except Exception:
-            log.warning("could not resolve receipt for invoice %s", invoice_id, exc_info=True)
+    invoice_id, receipt_url = payment.get("invoice_id"), payment.get("receipt_url")
     created = payment.get("created_at")
     row = {
         "subscription_id": sub.id, "gateway_payment_id": payment_id, "gateway_invoice_id": invoice_id,
@@ -32,7 +26,7 @@ async def record_payment(session: AsyncSession, sub: Subscription, payment: dict
         "paid_at": datetime.fromtimestamp(created, UTC) if created else datetime.now(UTC), "receipt_url": receipt_url,
     }
     stmt = insert(SubscriptionPayment).values(**row)
-    # A payment first seen on verify (no invoice yet) gains its receipt when the charged webhook arrives.
+    # The same attempt arrives from the webhook, "I've paid" and the sweeper: keep the first row, fill gaps only.
     stmt = stmt.on_conflict_do_update(index_elements=["gateway_payment_id"], set_={
         "gateway_invoice_id": func.coalesce(SubscriptionPayment.gateway_invoice_id, stmt.excluded.gateway_invoice_id),
         "receipt_url": func.coalesce(SubscriptionPayment.receipt_url, stmt.excluded.receipt_url),

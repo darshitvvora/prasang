@@ -81,3 +81,13 @@ async def test_whatsapp_failure_falls_back_to_sms():
 async def test_artist_without_email_still_gets_a_text():
     await _run(ctx(artist_email=None, whatsapp_enabled=False))
     assert SENT == [("sms", "9820011001")]
+
+
+def test_lead_texts_fill_their_msg91_templates():
+    from app.notifications.texts import TextMessage
+    from app.workflows.lead_notification import lead_text_message
+
+    open_lead = TextMessage(*lead_text_message(ctx()))
+    assert open_lead.kind == "lead" and "9920012345" in open_lead.text and "12 Dec 2026" in open_lead.text
+    locked = TextMessage(*lead_text_message(ctx(is_locked=True, event_date=None)))
+    assert locked.kind == "lead_locked" and "9920012345" not in locked.text  # over the limit: no planner details

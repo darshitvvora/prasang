@@ -189,16 +189,15 @@ export const routes = [
   { method: 'post', path: 'subscriptions/trial', responses: [
     unauth,
     { status: 200, rules: [NEW], body:
-      `{"tier": "{{body 'tier'}}", "name": "{{capitalize (body 'tier')}}", "status": "trial", "leadLimitMonthly": {{#if (eq (body 'tier') 'basic')}}15{{else}}-1{{/if}}, ` +
-      `"leadsUsedThisMonth": 0, "leadsRemaining": {{#if (eq (body 'tier') 'basic')}}15{{else}}null{{/if}}, "periodEnd": null, ` +
+      `{"tier": "{{body 'tier'}}", "name": "{{capitalize (body 'tier')}}", "status": "trial", "leadLimitMonthly": {{#if (eq (body 'tier') 'pro')}}15{{else}}-1{{/if}}, ` +
+      `"leadsUsedThisMonth": 0, "leadsRemaining": {{#if (eq (body 'tier') 'pro')}}15{{else}}null{{/if}}, "periodEnd": null, ` +
       `"trialEndsAt": "{{dateTimeShift date=(now) days=7 format='yyyy-MM-dd'}}", "trialAvailable": false}` },
     { status: 409, body: err('trial_used', 'You have already used your free trial') },
   ] },
   { method: 'post', path: 'subscriptions', responses: [unauth, { status: 201, body:
-    `{"subscriptionId": "sub-{{faker 'string.alphanumeric' 4}}", "checkout": {"keyId": "rzp_test_mock", ` +
-    `"razorpaySubscriptionId": "sub_mock{{faker 'string.alphanumeric' 10}}", "name": "Prasang", ` +
-    `"description": "{{capitalize (body 'tier')}} plan — {{body 'billingCycle'}}", ` +
-    `"prefill": {"name": "Arjun Malhotra", "email": "arjun.malhotra@gmail.com", "contact": "9820011001"} } }` }] },
+    `{"subscriptionId": "{{faker 'string.uuid'}}", "payment": {"url": "mock://phonepe/PRS-{{faker 'string.alphanumeric' 12}}", ` +
+    `"expiresAt": "{{dateTimeShift date=(now) days=1 format="yyyy-MM-dd'T'HH:mm:ss'Z'"}}", ` +
+    `"amount": {{#if (eq (body 'tier') 'pro')}}{{#if (eq (body 'billingCycle') 'annual')}}5988{{else}}599{{/if}}{{else}}{{#if (eq (body 'billingCycle') 'annual')}}11988{{else}}1199{{/if}}{{/if}} } }` }] },
   { method: 'post', path: 'subscriptions/verify', responses: [unauth, { status: 200, file: 'subscriptions/verify.response.json' }] },
   { method: 'post', path: 'subscriptions/cancel', responses: [unauth, { status: 200, file: 'subscriptions/cancel.response.json' }] },
   { method: 'post', path: 'subscriptions/webhook', responses: [{ status: 200, body: '{"ok": true}' }] },

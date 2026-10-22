@@ -1,7 +1,7 @@
 {
   "plan": {
-    "tier": "basic",
-    "name": "Basic",
+    "tier": "pro",
+    "name": "Pro",
     "status": "cancelling",
     "leadLimitMonthly": 15,
     "leadsUsedThisMonth": 16,
@@ -12,10 +12,11 @@
   },
   "subscription": {
     "id": "sub-7b1e",
-    "tier": "basic",
+    "tier": "pro",
     "billingCycle": "monthly",
     "status": "active",
     "currentPeriodEnd": "2026-10-24",
     "cancelAtPeriodEnd": true
-  }
+  },
+  "pendingPayment": null
 }

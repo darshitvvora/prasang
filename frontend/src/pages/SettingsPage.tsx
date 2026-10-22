@@ -54,7 +54,7 @@ export default function SettingsPage() {
     e.preventDefault();
     if (!user) return;
     const result = await verifyOtp(code.trim(), user.role === 'artist' ? 'artist' : 'planner');
-    if (result.status === 'incorrect') return setError('That code is not right. Check the SMS and try again.');
+    if (result.status === 'incorrect') return setError('That code is not right. Check the WhatsApp message and try again.');
     if (result.status === 'expired' || result.status === 'restart') return setError('That code has expired. Start again.');
     await attemptDelete();
   };

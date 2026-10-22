@@ -96,10 +96,17 @@ async def purge_hidden_media(session: AsyncSession, starter: WorkflowStarter, no
 
 
 async def run_sweeps(session: AsyncSession, starter: WorkflowStarter) -> dict[str, int]:
+    from app.subscriptions import service as subs
+    from app.subscriptions.gateway import get_gateway
+
+    gateway = get_gateway()
     result = {
         "lead_notifications": await retry_lead_notifications(session, starter),
         "trials_ended": await end_overdue_trials(session),
         "grants_ended": await end_overdue_grants(session),
+        "payments_found": await subs.reconcile_open_links(session, gateway),
+        "links_expired": await subs.expire_overdue_links(session, gateway),
+        "renewal_links_sent": await subs.create_due_renewals(session, gateway),
         "subscriptions_lapsed": await lapse_overdue_subscriptions(session),
         "leads_expired": await expire_leads(session),
         "reminders_queued": await queue_due_reminders(session),

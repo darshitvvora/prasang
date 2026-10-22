@@ -11,16 +11,17 @@ from supertokens_python.recipe.passwordless.types import PasswordlessLoginSMSTem
 from supertokens_python.recipe.thirdparty.provider import ProviderClientConfig, ProviderConfig, ProviderInput
 
 from app.config import Settings
+from app.notifications.texts import TextMessage
 
 log = logging.getLogger(__name__)
 AUTH_BASE_PATH = "/api/v1/auth"
-SmsSender = Callable[[str, str], Awaitable[None]]
+SmsSender = Callable[[str, TextMessage], Awaitable[None]]
 _initialised = False
 
 
-async def log_sms(phone: str, text: str) -> None:
+async def log_sms(phone: str, message: TextMessage) -> None:
     """Local/dev SMS delivery: the OTP appears in the API logs."""
-    log.warning("SMS to %s: %s", phone, text)
+    log.warning("SMS to %s: %s", phone, message.text)
 
 
 class _OtpSms(SMSDeliveryInterface[PasswordlessLoginSMSTemplateVars]):
@@ -30,7 +31,7 @@ class _OtpSms(SMSDeliveryInterface[PasswordlessLoginSMSTemplateVars]):
     async def send_sms(self, template_vars: PasswordlessLoginSMSTemplateVars, user_context: dict[str, Any]) -> None:
         minutes = max(1, template_vars.code_life_time // 60000)
         await self._send(template_vars.phone_number,
-                         f"{template_vars.user_input_code} is your Prasang login code. It expires in {minutes} minutes.")
+                         TextMessage("otp", {"otp": template_vars.user_input_code, "minutes": str(minutes)}))
 
 
 def _client_ip(api_options) -> str:

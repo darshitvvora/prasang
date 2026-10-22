@@ -20,5 +20,5 @@ export function leadBanner(p: PlanUsage): { strong: string; rest: string } | nul
   if ((p.leadsRemaining ?? 0) <= 0) {
     return { strong: `You've used all ${p.leadLimitMonthly} leads this month.`, rest: 'New leads are locked until you upgrade.' };
   }
-  return { strong: `You have ${p.leadsRemaining} leads remaining this month.`, rest: 'Upgrade to Pro for unlimited leads.' };
+  return { strong: `You have ${p.leadsRemaining} leads remaining this month.`, rest: 'Upgrade to Premium for unlimited leads.' };
 }

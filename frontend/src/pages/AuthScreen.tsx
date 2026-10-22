@@ -106,7 +106,7 @@ export default function AuthScreen({ mode }: { mode: Mode }) {
     try {
       const result = await verifyOtp(otpCode, role, { newAccount: modeIsSignup });
       if (result.status === 'signedIn') navigate(next ?? homePathFor(result.user), { replace: true });
-      else if (result.status === 'incorrect') setOtpMessage('That code is not right. Check the SMS and try again.');
+      else if (result.status === 'incorrect') setOtpMessage('That code is not right. Check the WhatsApp message and try again.');
       else if (result.status === 'expired') setOtpMessage('That code has expired. Tap resend for a new one.');
       else if (result.status === 'restart') { setOtpStep('phone'); setOtpCode(''); setOtpMessage('Please request a new code.'); }
     } catch (err) {
@@ -211,7 +211,7 @@ export default function AuthScreen({ mode }: { mode: Mode }) {
                     <input id="otp-phone" type="tel" className="auth-input phone-field" placeholder="9876543210" value={otpPhone}
                       onChange={(e) => setOtpPhone(e.target.value.replace(/\D/g, '').slice(0, 10))} maxLength={10} autoFocus />
                   </div>
-                  <p className="auth-field-hint">We'll send a 6-digit OTP to this number</p>
+                  <p className="auth-field-hint">We'll send a 6-digit code to this number on WhatsApp</p>
                 </div>
                 <button type="submit" className="auth-submit-btn" disabled={loading || !role || !/^[6-9]\d{9}$/.test(otpPhone)}>
                   {loading ? 'Sending...' : 'Send OTP'}

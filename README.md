@@ -47,12 +47,29 @@ Demo data: 12 artists (Mumbai, Pune, Delhi, Bengaluru), reviews, leads. For API 
 |---|---|
 | Phone OTP sign-in | OTP printed in API logs |
 | Lead notifications (Temporal) | WhatsApp/SMS/email printed in `docker compose logs worker` |
-| Welcome, trial-ending, renewal, payment-failed, plan-ended and "did you book?" messages | printed in `docker compose logs worker` |
+| Welcome, trial-ending, payment-link, renewal-link, payment-received, plan-ended and "did you book?" messages | printed in `docker compose logs worker` |
 | Google reviews on profiles | Need `GOOGLE_PLACES_API_KEY`; otherwise hidden |
 | Contact form | Stored; emailed to `SUPPORT_EMAIL` when email is set up |
-| Paid plans | Fake gateway: checkout succeeds instantly; trial/renewal timers run in Temporal |
+| Paid plans | Fake gateway: the payment link counts as paid at once; trial/renewal timers run in Temporal, renewal links come from the scheduler |
 | Instagram / YouTube / Facebook | Post embeds + profile widgets from links (YouTube `@handle` widgets need `YOUTUBE_API_KEY`) |
 | Photo / video uploads | Need `S3_BUCKET` + AWS credentials; otherwise the API answers `storage_not_configured` and links still work |
+
+### Turning on real payments, email and SMS
+
+Each one switches on by itself when its variables are in the root `.env` (see [`.env.example`](.env.example)) — then
+`docker compose up -d api worker scheduler`. Nothing else to change; without them everything stays local.
+
+| What | Variables | Where to get them |
+|---|---|---|
+| Payments (PhonePe Payment Links) | `PHONEPE_CLIENT_ID`, `PHONEPE_CLIENT_SECRET`, `PHONEPE_CLIENT_VERSION`, `PHONEPE_WEBHOOK_USERNAME`, `PHONEPE_WEBHOOK_PASSWORD`, `PHONEPE_ENV` (`sandbox` → `production`) | PhonePe Business dashboard → Developer Settings; webhook on the same page |
+| Email (SendPulse SMTP) | `SMTP_HOST=smtp-pulse.com`, `SMTP_PORT=465`, `SMTP_USERNAME`, `SMTP_PASSWORD`, `EMAIL_SENDER` | SendPulse → SMTP → Settings |
+| WhatsApp messages incl. login OTP (MSG91) | `MSG91_AUTH_KEY`, `MSG91_WHATSAPP_NUMBER`, one `MSG91_WHATSAPP_TEMPLATE_<TYPE>` per message type (SMS templates only with DLT) | MSG91 → WhatsApp; `python -m app.cli msg91-templates` prints every template to create and which are still missing |
+
+How payments work: there is no auto-debit. Each billing period is one PhonePe payment link, shown on the site and sent by
+email + SMS. A purchase link is valid 24 h; a renewal link goes out 5 days before the period ends and works until the
+3-day grace period is over. PhonePe's webhook (`POST /api/v1/subscriptions/webhook`) marks it paid; the "I've paid"
+button and the scheduler also ask PhonePe directly, so a lost webhook never loses a payment. The step-by-step account
+setup is in [`docs/backlog.md`](docs/backlog.md) (epic EP).
 
 ### Admin (no admin UI yet — commands, each one audit-logged)
 
@@ -65,9 +82,9 @@ docker compose exec api python -m app.cli admin suspend <slug> --reason "…"   
 docker compose exec api python -m app.cli admin grant-plan <slug> pro --days 30 --reason "…"
 docker compose exec api python -m app.cli admin hide-review <review-id> --reason "…" # / restore-review
 docker compose exec api python -m app.cli admin block-user <phone> --reason "…"     # artists: also suspended + billing cancelled
-docker compose exec api python -m app.cli admin sync-subscription <slug>            # re-read Razorpay (missed webhook)
+docker compose exec api python -m app.cli admin sync-subscription <slug>            # re-read the newest PhonePe link (missed webhook)
 docker compose exec api python -m app.cli admin clear-google-place <slug>
-docker compose exec api python -m app.cli admin reports                             # reported reviews + contact messages
+docker compose exec api python -m app.cli admin reports                             # payments to fix by hand, reported reviews, contact messages
 ```
 
 In production run the same commands on the app server through an SSM session.

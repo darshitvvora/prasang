@@ -87,8 +87,8 @@ expect 204 - -X DELETE -H "$A" "$BASE/artists/me/media/$MEDIA_ID"
 ORDER=$(json "$BASE/artists/me/media" "json.dumps({'ids': [m['id'] for m in reversed(d['items'])]})" -H "$A")
 expect 200 '"items"' -X PUT -H "$A" -H "$J" -d "$ORDER" "$BASE/artists/me/media/order"
 expect 200 '"plan"' -H "$A" "$BASE/subscriptions/me"
-GW_SUB=$(json "$BASE/subscriptions" "d['checkout']['razorpaySubscriptionId']" -X POST -H "$A" -H "$J" -d '{"tier":"pro","billingCycle":"monthly"}')
-expect 200 '"status": *"active"' -X POST -H "$A" -H "$J" -d "{\"razorpayPaymentId\":\"pay_smoke\",\"razorpaySubscriptionId\":\"$GW_SUB\",\"razorpaySignature\":\"mock-signature\"}" "$BASE/subscriptions/verify"
+SUB_ID=$(json "$BASE/subscriptions" "d['subscriptionId']" -X POST -H "$A" -H "$J" -d '{"tier":"pro","billingCycle":"monthly"}')
+expect 200 '"status": *"active"' -X POST -H "$A" -H "$J" -d "{\"subscriptionId\":\"$SUB_ID\"}" "$BASE/subscriptions/verify"
 expect 200 '"cancelAtPeriodEnd": *true' -X POST -H "$A" "$BASE/subscriptions/cancel"
 # --- site, billing, booking confirmation, reviews ---
 expect 200 '"supportEmail"' "$BASE/site-info"

@@ -13,6 +13,7 @@ import FullPageSpinner from '../components/FullPageSpinner';
 import NotFoundPage from './NotFoundPage';
 import { EMBED_ALLOW, EMBED_SANDBOX, mediaIsEmbed } from '../components/embed';
 import { ApiError } from '../api/client';
+import { profileTabs, type ProfileTab } from './profileTabs';
 import { useArtist, useArtistReviews, useGoogleReviews, useSimilarArtists } from '../api/queries';
 import { formatPrice, imageOr } from '../api/format';
 import type { ArtistDetail } from '../api/types';
@@ -58,7 +59,9 @@ function ArtistProfile({ artist }: { artist: ArtistDetail }) {
   const similarQuery = useSimilarArtists(artist.slug);
   const similar = (similarQuery.data?.items ?? []).filter((a) => a.artistId !== artist.artistId).slice(0, 3);
   const [contactOpen, setContactOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<'media' | 'reviews'>('media');
+  const { tabs, initial } = profileTabs(artist.media.length > 0);
+  const [chosenTab, setActiveTab] = useState<ProfileTab>(initial);
+  const activeTab: ProfileTab = tabs.includes(chosenTab) ? chosenTab : initial;  // e.g. moving from a paid to a Free profile
   const media = artist.media.length > 0
     ? artist.media
     : [{ id: 'profile', kind: 'image' as const, url: imageOr(artist.profileImageUrl), thumbnailUrl: null, caption: null, displayOrder: 0 }];
@@ -207,7 +210,7 @@ function ArtistProfile({ artist }: { artist: ArtistDetail }) {
 
             {/* Tabs */}
             <div className="profile-tabs" role="tablist">
-              {(['media', 'reviews'] as const).map((tab) => (
+              {tabs.map((tab) => (
                 <button
                   key={tab}
                   className={`profile-tab${activeTab === tab ? ' active' : ''}`}
@@ -302,26 +305,6 @@ function ArtistProfile({ artist }: { artist: ArtistDetail }) {
               </div>
             )}
 
-            {/* Social widgets: Instagram profile, YouTube channel, Facebook page */}
-            {activeTab === 'media' && artist.socialWidgets.length > 0 && (
-              <section className="profile-section profile-widgets">
-                <h2 className="profile-section-title">On social media</h2>
-                <div className="profile-widgets-grid">
-                  {artist.socialWidgets.map((w) => (
-                    <div key={w.platform} className={`profile-widget ${w.platform}`}>
-                      <a href={w.profileUrl} target="_blank" rel="noopener noreferrer" className="profile-widget-link">
-                        {WIDGET_LABELS[w.platform]} ↗
-                      </a>
-                      {w.embedUrl && (
-                        <iframe src={w.embedUrl} title={`${artist.name} on ${WIDGET_LABELS[w.platform]}`} className="profile-widget-frame"
-                          sandbox={EMBED_SANDBOX} allow={EMBED_ALLOW} allowFullScreen loading="lazy" />
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </section>
-            )}
-
             {/* Tab: Reviews */}
             {activeTab === 'reviews' && (
               <div className="profile-tab-content" role="tabpanel">
@@ -390,6 +373,26 @@ function ArtistProfile({ artist }: { artist: ArtistDetail }) {
                   </div>
                 )}
               </div>
+            )}
+
+            {/* Social widgets (paid plans): shown under both Media and Reviews */}
+            {artist.socialWidgets.length > 0 && (
+              <section className="profile-section profile-widgets">
+                <h2 className="profile-section-title">On social media</h2>
+                <div className="profile-widgets-grid">
+                  {artist.socialWidgets.map((w) => (
+                    <div key={w.platform} className={`profile-widget ${w.platform}`}>
+                      <a href={w.profileUrl} target="_blank" rel="noopener noreferrer" className="profile-widget-link">
+                        {WIDGET_LABELS[w.platform]} ↗
+                      </a>
+                      {w.embedUrl && (
+                        <iframe src={w.embedUrl} title={`${artist.name} on ${WIDGET_LABELS[w.platform]}`} className="profile-widget-frame"
+                          sandbox={EMBED_SANDBOX} allow={EMBED_ALLOW} allowFullScreen loading="lazy" />
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </section>
             )}
 
             {/* Similar Artists */}

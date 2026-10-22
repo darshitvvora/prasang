@@ -1,34 +1,29 @@
 {
-  "entity": "event",
-  "account_id": "acc_BFQ7uQEaa7j2z7",
-  "event": "subscription.charged",
-  "contains": [
-    "subscription",
-    "payment"
-  ],
-  "created_at": 1790670000,
+  "event": "paylink.order.completed",
   "payload": {
-    "subscription": {
-      "entity": {
-        "id": "sub_PQx7Lw3t1Zk2Ab",
-        "entity": "subscription",
-        "plan_id": "plan_PRO_MONTHLY",
-        "status": "active",
-        "current_start": 1790670000,
-        "current_end": 1793348400,
-        "notes": {
-          "subscription_id": "sub-9c2a"
-        }
-      }
-    },
-    "payment": {
-      "entity": {
-        "id": "pay_PQx8Qm2b9YtR3c",
-        "entity": "payment",
+    "orderId": "OMO2510221530123456",
+    "merchantId": "PRASANGUAT",
+    "merchantOrderId": "PRS-6f1c2a9e3b4d4c5e8f701a2b3c4d5e6f",
+    "state": "COMPLETED",
+    "amount": 59900,
+    "expireAt": 1792748400000,
+    "metaInfo": { "udf1": "PRS-6f1c2a9e3b4d4c5e8f701a2b3c4d5e6f" },
+    "paymentFlow": { "type": "PAYLINK", "paylinkUrl": "https://phon.pe/pl/x7Lw3t1Z" },
+    "paymentDetails": [
+      {
+        "paymentMode": "UPI_QR",
+        "transactionId": "OM2510221531009876",
+        "timestamp": 1792662660000,
         "amount": 59900,
-        "currency": "INR",
-        "status": "captured"
+        "state": "COMPLETED",
+        "splitInstruments": [
+          {
+            "amount": 59900,
+            "rail": { "type": "UPI", "upiTransactionId": "529512345678", "vpa": "98****01@ybl" },
+            "instrument": { "type": "ACCOUNT", "accountType": "SAVINGS", "accountNumber": "******1234" }
+          }
+        ]
       }
-    }
+    ]
   }
 }

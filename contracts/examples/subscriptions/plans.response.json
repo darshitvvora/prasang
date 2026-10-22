@@ -2,7 +2,7 @@
   "items": [
     {
       "tier": "free",
-      "name": "Free",
+      "name": "Basic",
       "tagline": "Get started, get noticed",
       "monthlyPrice": 0,
       "annualPrice": 0,
@@ -39,7 +39,7 @@
         },
         {
           "label": "Instagram / YouTube / Facebook embeds",
-          "value": "Links only"
+          "value": true
         },
         {
           "label": "Verified badge",
@@ -68,17 +68,17 @@
       ]
     },
     {
-      "tier": "basic",
-      "name": "Basic",
-      "tagline": "For artists just getting started",
-      "monthlyPrice": 299,
-      "annualPrice": 2988,
-      "annualMonthlyEquivalent": 249,
+      "tier": "pro",
+      "name": "Pro",
+      "tagline": "For growing artists",
+      "monthlyPrice": 599,
+      "annualPrice": 5988,
+      "annualMonthlyEquivalent": 499,
       "leadLimitMonthly": 15,
       "maxImages": 5,
       "maxVideos": 1,
       "maxHdVideos": 0,
-      "popular": false,
+      "popular": true,
       "features": [
         {
           "label": "Profile listing",
@@ -127,73 +127,6 @@
         {
           "label": "Custom portfolio link",
           "value": false
-        },
-        {
-          "label": "Priority support",
-          "value": false
-        }
-      ]
-    },
-    {
-      "tier": "pro",
-      "name": "Pro",
-      "tagline": "For growing artists",
-      "monthlyPrice": 599,
-      "annualPrice": 5988,
-      "annualMonthlyEquivalent": 499,
-      "leadLimitMonthly": -1,
-      "maxImages": 20,
-      "maxVideos": 3,
-      "maxHdVideos": 0,
-      "popular": true,
-      "features": [
-        {
-          "label": "Profile listing",
-          "value": true
-        },
-        {
-          "label": "Basic search visibility",
-          "value": true
-        },
-        {
-          "label": "Contact leads per month",
-          "value": "Unlimited"
-        },
-        {
-          "label": "Photo & video uploads",
-          "value": "20 photos + 3 videos"
-        },
-        {
-          "label": "Video size",
-          "value": "Up to 40 MB each"
-        },
-        {
-          "label": "Profile views shown",
-          "value": true
-        },
-        {
-          "label": "Instagram / YouTube / Facebook embeds",
-          "value": true
-        },
-        {
-          "label": "Verified badge",
-          "value": true
-        },
-        {
-          "label": "Featured in search",
-          "value": false
-        },
-        {
-          "label": "Priority in search results",
-          "value": "Higher boost"
-        },
-        {
-          "label": "WhatsApp lead notifications",
-          "value": true
-        },
-        {
-          "label": "Custom portfolio link",
-          "value": true
         },
         {
           "label": "Priority support",

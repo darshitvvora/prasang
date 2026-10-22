@@ -7,7 +7,7 @@ import '../pages/artist/ArtistPages.css';
 
 type Active = 'dashboard' | 'leads' | 'profile' | 'subscription' | 'reviews';
 
-const NEXT_TIER: Record<string, string | null> = { free: 'Basic', basic: 'Pro', pro: 'Premium', premium: null };
+const NEXT_TIER: Record<string, string | null> = { free: 'Pro', pro: 'Premium', premium: null };
 
 export default function ArtistSidebar({ active }: { active: Active }) {
   const sub = useMySubscription();
