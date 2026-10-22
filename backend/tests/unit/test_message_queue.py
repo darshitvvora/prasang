@@ -17,8 +17,8 @@ class Spy:
         self.sms: list[tuple[str, str]] = []
         self.emails: list[tuple[str, str, str]] = []
 
-    async def send_sms(self, phone, text):
-        self.sms.append((phone, text))
+    async def send_text(self, phone, message):
+        self.sms.append((phone, message.text))
 
     async def send_email(self, to, subject, text):
         self.emails.append((to, subject, text))
@@ -112,21 +112,7 @@ async def test_downgrade_queues_plan_ended():
     assert msg.context == {"plan": "Pro"}  # Arjun is on Pro (old Basic)
 
 
-async def test_halted_webhook_queues_payment_failed():
-    await seed_demo()
-    async with get_sessionmaker()() as s:
-        from app.subscriptions.service import handle_webhook
-
-        artist = (await s.execute(select(ArtistProfile).where(ArtistProfile.slug == "arjun-malhotra-magic"))).scalar_one()
-        s.add(Subscription(artist_id=artist.id, tier="pro", billing_cycle="monthly", status="active",
-                           gateway_subscription_id="sub_h", current_period_end=date(2026, 11, 1)))
-        await s.commit()
-        await handle_webhook(s, "subscription.halted", {"id": "sub_h"})
-        sub_id = (await s.execute(select(Subscription.id).where(Subscription.gateway_subscription_id == "sub_h"))).scalar_one()
-    assert await _kinds() == [("payment_failed", f"{sub_id}-2026-11-01")]
-
-
-async def test_due_reminders_trial_48h_and_annual_7d_only():
+async def test_due_reminders_trial_48h_only():
     await seed_demo()
     now = datetime(2026, 10, 19, 6, 0, tzinfo=UTC)
     async with get_sessionmaker()() as s:
@@ -139,9 +125,9 @@ async def test_due_reminders_trial_48h_and_annual_7d_only():
         s.add(Subscription(artist_id=monthly.id, tier="pro", billing_cycle="monthly", status="active",
                            gateway_subscription_id="sub_m", current_period_end=date(2026, 10, 24)))
         await s.commit()
-        assert await queue_due_reminders(s, now) == 2
+        assert await queue_due_reminders(s, now) == 1  # renewals are payment links now (create_due_renewals)
         assert await queue_due_reminders(s, now) == 0
-        users = {trial.user_id: "trial_ending", annual.user_id: "renewal_reminder"}
+        users = {trial.user_id: "trial_ending"}
         rows = (await s.execute(select(QueuedMessage))).scalars().all()
         assert {r.user_id: r.kind for r in rows} == users
 
@@ -158,14 +144,14 @@ async def test_sweeper_restarts_pending_messages():
 
 
 class Rejecting(Spy):
-    async def send_sms(self, phone, text):
+    async def send_text(self, phone, text):
         from app.notifications.notifier import NotificationRejected
 
         raise NotificationRejected("bad number")
 
 
 class Flaky(Spy):
-    async def send_sms(self, phone, text):
+    async def send_text(self, phone, text):
         raise RuntimeError("provider down")
 
 
@@ -193,22 +179,3 @@ async def test_transient_failures_give_up_after_max_attempts():
         msg = await s.get(QueuedMessage, mid)
         assert (msg.status, msg.attempts) == ("failed", 3)
         assert await retry_pending_messages(s, RecordingStarter(), now=datetime.now(UTC) + timedelta(hours=1)) == 0
-
-
-async def test_payment_failed_sent_once_per_period_and_not_during_checkout():
-    """Final review I4: Razorpay retries and declined checkout cards must not each send an SMS."""
-    from app.subscriptions.service import handle_webhook
-
-    await seed_demo()
-    async with get_sessionmaker()() as s:
-        artist = (await s.execute(select(ArtistProfile).where(ArtistProfile.slug == "arjun-malhotra-magic"))).scalar_one()
-        s.add(Subscription(artist_id=artist.id, tier="pro", billing_cycle="monthly", status="created", gateway_subscription_id="sub_c"))
-        s.add(Subscription(artist_id=artist.id, tier="pro", billing_cycle="monthly", status="active",
-                           gateway_subscription_id="sub_r", current_period_end=date(2026, 11, 1)))
-        await s.commit()
-        await handle_webhook(s, "payment.failed", {}, {"id": "pay_c1", "status": "failed", "subscription_id": "sub_c"})
-        for pid in ("pay_r1", "pay_r2", "pay_r3"):
-            await handle_webhook(s, "payment.failed", {}, {"id": pid, "status": "failed", "subscription_id": "sub_r"})
-        await handle_webhook(s, "subscription.halted", {"id": "sub_r"})
-    kinds = await _kinds()
-    assert [k for k, _ in kinds] == ["payment_failed"]

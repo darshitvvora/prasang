@@ -28,8 +28,8 @@ class RecordingGateway(FakeGateway):
     def __init__(self):
         self.cancelled: list[tuple[str, bool]] = []
 
-    async def cancel_subscription(self, gateway_subscription_id, at_cycle_end):
-        self.cancelled.append((gateway_subscription_id, at_cycle_end))
+    async def cancel_link(self, order_id):
+        self.cancelled.append(order_id)
 
 
 class RecordingStarter:
@@ -98,7 +98,7 @@ async def test_artist_delete_cancels_billing_and_hides_profile(client, gateway, 
         s.add(ArtistMedia(artist_id=artist.id, kind="image", url="https://cdn/x.jpg", storage_key="artists/a/x.jpg", display_order=99))
         await s.commit()
     assert (await client.delete("/api/v1/me", headers=ARTIST)).status_code == 204
-    assert gateway.cancelled == [("sub_del", False)]
+    assert gateway.cancelled == []  # a paid period has nothing to cancel at PhonePe; no renewal link will follow
     assert (await client.get(f"/api/v1/artists/{ARJUN}")).status_code == 404
     await project_batch(get_sessionmaker(), EsIndexer(es))
     await es.indices.refresh(index=alias())

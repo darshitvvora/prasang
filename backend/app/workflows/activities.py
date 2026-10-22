@@ -7,6 +7,7 @@ from app.artists.models import ArtistProfile
 from app.auth.models import User
 from app.leads.models import Lead
 from app.notifications.notifier import NotificationRejected, Notifier
+from app.notifications.texts import TextMessage
 from app.subscriptions.models import SubscriptionPlan
 from app.workflows.lead_notification import LeadContext, OutboundMessage
 
@@ -48,11 +49,11 @@ class LeadActivities:
 
     @activity.defn(name="send_whatsapp")
     async def send_whatsapp(self, msg: OutboundMessage) -> None:
-        await self._send(self.notifier.send_whatsapp, msg.to, msg.text)
+        await self._send(self.notifier.send_whatsapp, msg.to, TextMessage(msg.kind, msg.variables))
 
     @activity.defn(name="send_sms")
     async def send_sms(self, msg: OutboundMessage) -> None:
-        await self._send(self.notifier.send_sms, msg.to, msg.text)
+        await self._send(self.notifier.send_sms, msg.to, TextMessage(msg.kind, msg.variables))
 
     def all(self) -> list:
         return [self.load_lead_context, self.send_email, self.send_whatsapp, self.send_sms]

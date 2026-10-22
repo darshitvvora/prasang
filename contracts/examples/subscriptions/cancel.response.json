@@ -17,5 +17,6 @@
     "status": "active",
     "currentPeriodEnd": "2026-10-24",
     "cancelAtPeriodEnd": true
-  }
+  },
+  "pendingPayment": null
 }

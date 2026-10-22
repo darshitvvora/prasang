@@ -1,14 +1,8 @@
 {
-  "subscriptionId": "sub-9c2a",
-  "checkout": {
-    "keyId": "rzp_test_1DP5mmOlF5G5ag",
-    "razorpaySubscriptionId": "sub_PQx7Lw3t1Zk2Ab",
-    "name": "Prasang",
-    "description": "Pro plan — monthly",
-    "prefill": {
-      "name": "Arjun Malhotra",
-      "email": "arjun.malhotra@gmail.com",
-      "contact": "9820011001"
-    }
+  "subscriptionId": "6f1c2a9e-3b4d-4c5e-8f70-1a2b3c4d5e6f",
+  "payment": {
+    "url": "https://phon.pe/pl/x7Lw3t1Z",
+    "expiresAt": "2026-10-23T09:30:00Z",
+    "amount": 599
   }
 }

@@ -41,6 +41,23 @@ async def test_unpaid_checkout_expires_after_24h():
     assert result == "expired" and CALLS == [("expire", "s1")]
 
 
+async def test_renewal_link_waits_until_its_pay_by_time():
+    """Renewal links stay payable for days, not 24 h: a payment on day 6 of 8 still activates."""
+    CALLS.clear()
+    queue = str(uuid.uuid4())
+    async with await WorkflowEnvironment.start_time_skipping() as env, await _env_worker(env, queue):
+        pay_by = (await env.get_current_time()) + timedelta(days=8)
+        handle = await env.client.start_workflow(SubscriptionWorkflow.run, args=["r1", None, pay_by.isoformat()],
+                                                 id=f"sub-{uuid.uuid4()}", task_queue=queue)
+        await env.sleep(timedelta(days=6))
+        assert CALLS == []
+        await handle.signal(SubscriptionWorkflow.ended, "completed")
+        assert await handle.result() == "completed"
+        expired = await env.client.execute_workflow(SubscriptionWorkflow.run, args=["r2", None, pay_by.isoformat()],
+                                                    id=f"sub-{uuid.uuid4()}", task_queue=queue)
+    assert expired == "expired" and CALLS == [("expire", "r2")]
+
+
 async def test_active_subscription_lapses_without_renewal():
     CALLS.clear()
     queue = str(uuid.uuid4())

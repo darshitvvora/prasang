@@ -72,14 +72,14 @@ This folder is the contract between the React frontend and the FastAPI backend.
 | GET | /subscriptions/plans | public | – | `{items: Plan[]}` |
 | GET | /subscriptions/me | artist | – | MySubscriptionResponse |
 | POST | /subscriptions/trial | artist | StartTrialRequest | PlanUsage · 409 `trial_used` |
-| POST | /subscriptions | artist | CreateSubscriptionRequest | 201 CreateSubscriptionResponse (also used to upgrade/switch; see rules) |
-| POST | /subscriptions/verify | artist | VerifyPaymentRequest | VerifyPaymentResponse · 400 `invalid_signature` |
+| POST | /subscriptions | artist | CreateSubscriptionRequest | 201 CreateSubscriptionResponse — a PhonePe payment link (also emailed + texted), valid 24 h; also used to upgrade/switch (see rules) · 502 `payments_unavailable` |
+| POST | /subscriptions/verify | artist | VerifyPaymentRequest `{subscriptionId}` | VerifyPaymentResponse — "I've paid": asks PhonePe for the link's status; `pending_activation` until PhonePe confirms · 404 `subscription_not_found` |
 | POST | /subscriptions/cancel | artist | – | MySubscriptionResponse |
 | GET | /site-info | public | – | SiteInfo — support email/phone and business address (nulls when not configured) |
 | POST | /contact | public | ContactRequest | 201 `{id}` · 429 `contact_rate_limited` (5 per IP per hour) |
 | GET | /subscriptions/downgrade-preview?tier= | artist | – | DowngradePreview — how many photos/videos/HD videos/embeds a move to `tier` would remove (hidden at once, deleted after 7 days) |
-| GET | /subscriptions/me/payments | artist | – | BillingHistoryResponse — newest first; `receiptUrl` is the gateway's hosted invoice (null for failed payments) |
-| POST | /subscriptions/webhook | Razorpay HMAC | Razorpay event | 200 |
+| GET | /subscriptions/me/payments | artist | – | BillingHistoryResponse — newest first, one row per PhonePe payment attempt; `receiptUrl` is null (the payment-received email is the receipt) |
+| POST | /subscriptions/webhook | PhonePe `Authorization: SHA256(username:password)` | PhonePe `paylink.order.completed` / `paylink.order.failed` | 200 |
 
 ## Error codes
 
@@ -97,7 +97,8 @@ This folder is the contract between the React frontend and the FastAPI backend.
 | `lead_rate_limited` | 429 | >10 leads per planner per day |
 | `invalid_transition` | 409 | Lead status change not allowed |
 | `trial_used` | 409 | Artist already used the 7-day trial |
-| `invalid_signature` | 400 | Razorpay signature mismatch |
+| `invalid_signature` | 400 | PhonePe webhook authorization mismatch |
+| `payments_unavailable` | 502 | PhonePe couldn't create the payment link; retry shortly |
 | `search_unavailable` | 503 | Elasticsearch is unreachable; retry shortly |
 | `storage_not_configured` | 503 | Photo/video uploads are not set up on this server (social links still work) |
 | `artist_suspended` | 409 | The artist is suspended and not taking enquiries |
@@ -117,7 +118,8 @@ This folder is the contract between the React frontend and the FastAPI backend.
 - Monthly lead caps (calendar month, IST): free 3, basic 15, pro/premium unlimited (`-1`). Leads over the cap are stored with `isLocked: true`; the artist sees `plannerPhone`/`plannerEmail` as `null` until upgrade. Planners always receive the artist's contact info.
 - `POST /leads` requires a signed-in planner. A second lead by the same planner for the same artist and event date returns `200` with the existing `leadId`.
 - 7-day trial: once per artist, no card, any paid tier.
-- `POST /subscriptions` never conflicts: if the artist already has an **active** subscription this is a plan change — the new one starts with its own checkout and the old one is cancelled when the new one activates. An unpaid `created` subscription (checkout closed) is cancelled and replaced, so retrying after closing the Razorpay window always works.
+- **Payments are PhonePe payment links, not auto-debit.** Each paid period is one subscription with one link. `POST /subscriptions` never conflicts: if the artist already has an **active** plan this is a plan change — the new plan starts from the day it is paid and replaces the old one. Any unpaid link is cancelled and replaced, so retrying always works.
+- **Renewals:** 5 days before a period ends the server creates a renewal link (emailed + texted; shown as `pendingPayment` with `renewal: true` on `/subscriptions/me`). Paying it early loses nothing — the new period starts when the current one ends. Unpaid, the plan moves to Free 3 days after the period ends. `POST /subscriptions/cancel` stops renewal links (and closes one already sent).
 - Before `POST /artists`, artist-scoped reads (`/artists/me`, `/artists/me/dashboard`, `/artists/me/media`, `/leads/artist`) return 404 `artist_profile_not_found`; `/subscriptions/me` returns the Free plan with `trialAvailable: true`.
 - Phone numbers are 10-digit Indian mobile numbers without country code (`9820011001`); the UI adds `+91`.
 - `Review.eventMonth` is `YYYY-MM`.

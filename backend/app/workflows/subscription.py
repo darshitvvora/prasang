@@ -1,17 +1,20 @@
-"""Durable timers for paid plans and trials. State changes come in as signals from the API (verify/webhooks)."""
+"""Durable timers for paid plans and trials. State changes come in as signals from the API (webhook / "I've paid")."""
 from datetime import datetime, timedelta
 
 from temporalio import workflow
 from temporalio.common import RetryPolicy
 
-ACTIVATION_WINDOW = timedelta(hours=24)
+ACTIVATION_WINDOW = timedelta(hours=24)  # used when no pay-by time is given
 GRACE = timedelta(days=3)
 OPTS = {"start_to_close_timeout": timedelta(seconds=30), "retry_policy": RetryPolicy(maximum_attempts=10)}
 
 
 @workflow.defn
 class SubscriptionWorkflow:
-    """created → (activated within 24h, else expire) → active until period end + 3 days without a charge (lapse) or ended."""
+    """created → (link paid by its pay-by time, else expire) → active until period end + 3 days (lapse) or ended.
+
+    A paid renewal is its own workflow; it ends this one with an `ended("completed")` signal.
+    """
 
     def __init__(self) -> None:
         self.period_end: datetime | None = None
@@ -33,12 +36,15 @@ class SubscriptionWorkflow:
         self.ended = status
 
     @workflow.run
-    async def run(self, subscription_id: str, period_end_iso: str | None = None) -> str:
+    async def run(self, subscription_id: str, period_end_iso: str | None = None, pay_by_iso: str | None = None) -> str:
         if period_end_iso:  # continued-as-new
             self.period_end = datetime.fromisoformat(period_end_iso)
         else:
+            window = ACTIVATION_WINDOW
+            if pay_by_iso:
+                window = max(datetime.fromisoformat(pay_by_iso) - workflow.now(), timedelta(seconds=1))
             try:
-                await workflow.wait_condition(lambda: self.period_end is not None or self.ended is not None, timeout=ACTIVATION_WINDOW)
+                await workflow.wait_condition(lambda: self.period_end is not None or self.ended is not None, timeout=window)
             except TimeoutError:
                 await workflow.execute_activity("expire_unpaid_subscription", subscription_id, **OPTS)
                 return "expired"

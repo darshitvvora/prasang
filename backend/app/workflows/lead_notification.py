@@ -2,7 +2,7 @@
 
 Workflow code only (deterministic). Activities live in app.workflows.activities and are referenced by name.
 """
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import date, timedelta
 
 from temporalio import workflow
@@ -35,10 +35,24 @@ class OutboundMessage:
     to: str
     text: str
     subject: str = ""
+    kind: str = ""  # SMS/WhatsApp template kind (app.notifications.texts) and its variables
+    variables: dict[str, str] = field(default_factory=dict)
+
+
+def _when(c: LeadContext) -> str:
+    return date.fromisoformat(c.event_date).strftime("%-d %b %Y") if c.event_date else "date not fixed yet"
+
+
+def lead_text_message(c: LeadContext) -> tuple[str, dict[str, str]]:
+    """SMS/WhatsApp template kind + variables (a locked lead hides the planner's details)."""
+    common = {"event": c.event_title, "date": _when(c), "budget": c.budget_label}
+    if c.is_locked:
+        return "lead_locked", common | {"link": "https://prasang.in/pricing"}
+    return "lead", common | {"planner": c.planner_name, "phone": c.planner_phone, "link": "https://prasang.in/artist/leads"}
 
 
 def lead_message(c: LeadContext) -> str:
-    when = date.fromisoformat(c.event_date).strftime("%-d %b %Y") if c.event_date else "date not fixed yet"
+    when = _when(c)
     if c.is_locked:
         return (f"New lead on Prasang: someone wants to book you for a {c.event_title} ({when}, {c.budget_label}). "
                 "You've reached this month's lead limit — upgrade your plan to see their details: https://prasang.in/pricing")
@@ -57,6 +71,7 @@ class LeadNotificationWorkflow:
         ctx: LeadContext = await workflow.execute_activity(
             "load_lead_context", lead_id, result_type=LeadContext, start_to_close_timeout=TIMEOUT, retry_policy=RETRY)
         text = lead_message(ctx)
+        kind, variables = lead_text_message(ctx)
         sent = {"email": False, "whatsapp": False, "sms": False}
 
         async def attempt(channel: str, msg: OutboundMessage) -> None:
@@ -69,7 +84,8 @@ class LeadNotificationWorkflow:
         if ctx.artist_email:
             await attempt("email", OutboundMessage(to=ctx.artist_email, text=text, subject=f"New lead: {ctx.event_title}"))
         if ctx.whatsapp_enabled:
-            await attempt("whatsapp", OutboundMessage(to=ctx.artist_whatsapp or ctx.artist_phone, text=text))
+            await attempt("whatsapp", OutboundMessage(to=ctx.artist_whatsapp or ctx.artist_phone, text=text, kind=kind,
+                                                      variables=variables))
         if not sent["whatsapp"]:
-            await attempt("sms", OutboundMessage(to=ctx.artist_phone, text=text))
+            await attempt("sms", OutboundMessage(to=ctx.artist_phone, text=text, kind=kind, variables=variables))
         return sent

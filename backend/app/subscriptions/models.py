@@ -27,8 +27,6 @@ class SubscriptionPlan(Base):
     is_featured: Mapped[bool] = mapped_column(default=False)
     whatsapp_notifications: Mapped[bool] = mapped_column(default=False)
     features: Mapped[list] = mapped_column(JSONB, default=list)
-    gateway_plan_monthly: Mapped[str | None] = mapped_column(String(60))
-    gateway_plan_annual: Mapped[str | None] = mapped_column(String(60))
     sort_order: Mapped[int] = mapped_column(default=0)
 
 
@@ -43,7 +41,12 @@ class Subscription(Timestamps, Base):
     tier: Mapped[str] = mapped_column(TierEnum)
     billing_cycle: Mapped[str] = mapped_column(BillingCycleEnum)
     status: Mapped[str] = mapped_column(SubscriptionStatusEnum, default="created")
+    # One billing period paid by one PhonePe payment link; this is the link's merchantOrderId (PRS-<id hex>).
     gateway_subscription_id: Mapped[str | None] = mapped_column(String(80), unique=True)
+    payment_url: Mapped[str | None] = mapped_column(String(300))
+    pay_by: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))  # link expiry; unpaid after this = expired
+    # Set on a renewal: the period it continues. Paying it extends from that period's end instead of today.
+    renews_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("subscriptions.id", ondelete="SET NULL"), index=True)
     current_period_end: Mapped[date | None] = mapped_column(Date)
     cancel_at_period_end: Mapped[bool] = mapped_column(default=False)
     workflow_id: Mapped[str | None] = mapped_column(String(120))
@@ -63,13 +66,13 @@ class PaymentEvent(Base):
 
 
 class SubscriptionPayment(Base):
-    """One gateway payment (charge or failed attempt) for a subscription — the artist's billing history."""
+    """One payment attempt (paid or failed) on a subscription's payment link — the artist's billing history."""
 
     __tablename__ = "subscription_payments"
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
     subscription_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("subscriptions.id", ondelete="CASCADE"), index=True)
-    gateway_payment_id: Mapped[str] = mapped_column(String(80), unique=True)
-    gateway_invoice_id: Mapped[str | None] = mapped_column(String(80))
+    gateway_payment_id: Mapped[str] = mapped_column(String(80), unique=True)  # PhonePe transactionId
+    gateway_invoice_id: Mapped[str | None] = mapped_column(String(80))  # PhonePe orderId of the link
     amount: Mapped[int]  # paise
     currency: Mapped[str] = mapped_column(String(3), default="INR")
     status: Mapped[str] = mapped_column(String(10))  # paid | failed

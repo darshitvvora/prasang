@@ -36,7 +36,7 @@ export default function PrivacyPolicy() {
 
           <h2>3. Data Sharing and Disclosure</h2>
           <p>
-            Prasang is a pure subscription platform. We do not sell your personal data. We may share your data with third-party service providers (such as Razorpay for payments and AWS for hosting) strictly for the purpose of operating the Platform. We may also disclose your information to comply with applicable laws, such as the Digital Personal Data Protection Act, 2023 (DPDPA) of India, and the General Data Protection Regulation (GDPR).
+            Prasang is a pure subscription platform. We do not sell your personal data. We may share your data with third-party service providers (such as PhonePe for payments, SendPulse for email, MSG91 for WhatsApp and SMS messages, and AWS for hosting) strictly for the purpose of operating the Platform. We may also disclose your information to comply with applicable laws, such as the Digital Personal Data Protection Act, 2023 (DPDPA) of India, and the General Data Protection Regulation (GDPR).
           </p>
 
           <h2>4. Your Privacy Rights</h2>

@@ -37,7 +37,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s %(message)s")
 
     notifier = get_notifier(settings)
-    init_supertokens(settings, sms_sender=notifier.send_sms)
+    init_supertokens(settings, sms_sender=notifier.send_text)  # WhatsApp or SMS
     if settings.env != "test":
         set_starter(TemporalStarter())
     app = FastAPI(title="Prasang API", version="1.0.0", docs_url=f"{API_PREFIX}/docs", openapi_url=f"{API_PREFIX}/openapi.json")

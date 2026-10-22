@@ -1,5 +1,10 @@
-"""Plans, trials and paid subscriptions. The gateway handles money; Temporal handles the timers."""
+"""Plans, trials and paid plans. PhonePe payment links take the money; Temporal and the sweeper handle the timers.
+
+Every paid period is one `Subscription` row with its own payment link: a purchase or plan change starts today, a renewal
+(link sent RENEWAL_LEAD_DAYS before the period ends) continues from the end of the period it renews.
+"""
 import logging
+import uuid
 from datetime import UTC, date, datetime, timedelta
 
 from sqlalchemy import select
@@ -13,11 +18,11 @@ from app.auth.models import User
 from app.contract import (
     BillingHistoryResponse,
     BillingItem,
-    Checkout,
-    CheckoutPrefill,
     CreateSubscriptionResponse,
     DowngradePreview,
     MySubscriptionResponse,
+    PaymentLinkInfo,
+    PendingPayment,
     Plan,
     PlanFeature,
     PlanUsage,
@@ -28,7 +33,7 @@ from app.leads.service import unlock_month
 from app.media.limits import overflow, reconcile
 from app.notifications.queue import queue_message
 from app.outbox.emit import artist_changed
-from app.subscriptions.gateway import PaymentGateway, get_gateway
+from app.subscriptions.gateway import FakeGateway, LinkStatus, PaymentGateway, get_gateway
 from app.subscriptions.models import Subscription, SubscriptionPlan
 from app.subscriptions.payments import billing_history, record_payment
 from app.workflows.starter import get_starter
@@ -36,7 +41,9 @@ from app.workflows.starter import get_starter
 log = logging.getLogger(__name__)
 TRIAL_DAYS = 7
 CYCLE_DAYS = {"monthly": 30, "annual": 365}
-TOTAL_COUNT = {"monthly": 120, "annual": 10}  # Razorpay needs a finite billing count
+LINK_VALID = timedelta(hours=24)  # purchase / plan change: pay within a day (the workflow expires it after that)
+RENEWAL_LEAD_DAYS = 5  # renewal links go out this many days before the period ends
+GRACE_DAYS = 3  # a period that ends unpaid keeps its plan this long (matches the workflow and the sweeper)
 
 
 def to_plan(p: SubscriptionPlan) -> Plan:
@@ -76,9 +83,31 @@ async def my_subscription(session: AsyncSession, user: User) -> MySubscriptionRe
         free = await session.get(SubscriptionPlan, "free")
         return MySubscriptionResponse(plan=PlanUsage(
             tier="free", name=free.name, status="free", lead_limit_monthly=free.lead_limit_monthly, leads_used_this_month=0,
-            leads_remaining=max(free.lead_limit_monthly, 0), period_end=None, trial_ends_at=None, trial_available=True), subscription=None)
+            leads_remaining=max(free.lead_limit_monthly, 0), period_end=None, trial_ends_at=None, trial_available=True),
+            subscription=None, pending_payment=None)
     return MySubscriptionResponse(plan=await usage_for(session, artist, datetime.now(UTC)),
-                                  subscription=_summary(await current_subscription(session, artist.id)))
+                                  subscription=_summary(await current_subscription(session, artist.id)),
+                                  pending_payment=await _pending(session, artist.id))
+
+
+def price(plan: SubscriptionPlan, cycle: str) -> int:
+    """Rupees for one period."""
+    return plan.annual_price if cycle == "annual" else plan.monthly_price
+
+
+def _link(sub: Subscription, plan: SubscriptionPlan) -> PaymentLinkInfo:
+    return PaymentLinkInfo(url=sub.payment_url, expires_at=sub.pay_by, amount=price(plan, sub.billing_cycle))
+
+
+async def _pending(session: AsyncSession, artist_id) -> PendingPayment | None:
+    sub = (await session.execute(select(Subscription).where(
+        Subscription.artist_id == artist_id, Subscription.status == "created", Subscription.pay_by > datetime.now(UTC))
+        .order_by(Subscription.created_at.desc()))).scalars().first()
+    if sub is None or not sub.payment_url:
+        return None
+    plan = await session.get(SubscriptionPlan, sub.tier)
+    return PendingPayment(subscription_id=str(sub.id), tier=sub.tier, billing_cycle=sub.billing_cycle,
+                          renewal=sub.renews_id is not None, payment=_link(sub, plan))
 
 
 async def apply_tier(session: AsyncSession, artist: ArtistProfile, tier: str, source: str) -> None:
@@ -137,30 +166,67 @@ async def end_trial(session: AsyncSession, artist_id) -> None:
         await session.commit()
 
 
+def order_id(sub_id: uuid.UUID) -> str:
+    """PhonePe merchantOrderId: max 63 chars, only `-` and `_` allowed."""
+    return f"PRS-{sub_id.hex}"
+
+
+def _cycle_label(cycle: str) -> str:
+    return "yearly" if cycle == "annual" else "monthly"
+
+
+async def _new_period(session: AsyncSession, artist: ArtistProfile, plan: SubscriptionPlan, cycle: str, gateway: PaymentGateway,
+                      pay_by: datetime, renews: Subscription | None = None) -> Subscription:
+    """Create the unpaid period and its PhonePe link (raises if PhonePe refuses). The caller commits and starts the timer."""
+    owner = await session.get(User, artist.user_id)
+    sub = Subscription(id=uuid.uuid4(), artist_id=artist.id, tier=plan.tier, billing_cycle=cycle, status="created",
+                       renews_id=renews.id if renews else None)
+    sub.gateway_subscription_id, sub.workflow_id = order_id(sub.id), f"sub-{sub.id}"
+    link = await gateway.create_link(sub.gateway_subscription_id, price(plan, cycle) * 100,
+                                     f"Prasang {plan.name} plan ({_cycle_label(cycle)})", name=artist.stage_name or owner.full_name,
+                                     phone=owner.phone or artist.contact_phone, email=owner.email, expires_at=pay_by)
+    sub.payment_url, sub.pay_by = link.url, link.expires_at
+    session.add(sub)
+    await session.flush()
+    context = {"plan": plan.name, "cycle": _cycle_label(cycle), "amount": f"₹{price(plan, cycle):,}", "url": link.url,
+               "pay_by": _day(link.expires_at.astimezone(IST).date())}
+    if renews is not None:
+        context["date"] = _day(renews.current_period_end)
+    await queue_message(session, artist.user_id, "renewal_due" if renews else "payment_link", str(sub.id), context)
+    return sub
+
+
+async def _start_timer(sub: Subscription) -> None:
+    try:
+        await get_starter().start_subscription(str(sub.id), sub.pay_by.isoformat())
+    except Exception:
+        log.exception("could not start payment timer for %s (the sweeper expires it)", sub.id)
+
+
+async def _cancel_unpaid(session: AsyncSession, artist_id, gateway: PaymentGateway) -> None:
+    """Close the artist's open links so only the newest one can be paid."""
+    for stale in (await session.execute(select(Subscription).where(
+            Subscription.artist_id == artist_id, Subscription.status == "created"))).scalars():
+        stale.status = "cancelled"
+        try:
+            await gateway.cancel_link(stale.gateway_subscription_id)
+        except Exception:
+            log.warning("could not cancel payment link %s at PhonePe", stale.gateway_subscription_id, exc_info=True)
+    await session.flush()
+
+
 async def subscribe(session: AsyncSession, user: User, tier: str, cycle: str, gateway: PaymentGateway) -> CreateSubscriptionResponse:
     artist = await get_own(session, user)
     plan = await session.get(SubscriptionPlan, tier)
-    for stale in (await session.execute(select(Subscription).where(
-            Subscription.artist_id == artist.id, Subscription.status == "created"))).scalars():
-        stale.status = "cancelled"  # checkout was closed; stop the gateway from charging it later
-        try:
-            await gateway.cancel_subscription(stale.gateway_subscription_id, at_cycle_end=False)
-        except Exception:
-            log.warning("could not cancel stale checkout %s at the gateway", stale.gateway_subscription_id, exc_info=True)
-    await session.flush()
-    gateway_id = await gateway.create_subscription(gateway.plan_id(plan, cycle), TOTAL_COUNT[cycle], {"artist_id": str(artist.id)})
-    sub = Subscription(artist_id=artist.id, tier=tier, billing_cycle=cycle, status="created", gateway_subscription_id=gateway_id)
-    session.add(sub)
-    await session.flush()
-    sub.workflow_id = f"sub-{sub.id}"
-    await session.commit()
+    await _cancel_unpaid(session, artist.id, gateway)
     try:
-        await get_starter().start_subscription(str(sub.id))
+        sub = await _new_period(session, artist, plan, cycle, gateway, datetime.now(UTC) + LINK_VALID)
     except Exception:
-        log.exception("could not start subscription timer for %s", sub.id)
-    return CreateSubscriptionResponse(subscription_id=str(sub.id), checkout=Checkout(
-        key_id=gateway.key_id, razorpay_subscription_id=gateway_id, name="Prasang",
-        description=f"{plan.name} plan — {cycle}", prefill=CheckoutPrefill(name=user.full_name, email=user.email, contact=user.phone)))
+        log.exception("could not create a PhonePe payment link for %s", artist.id)
+        raise AppError(502, "payments_unavailable", "We couldn't create your payment link. Please try again in a minute.") from None
+    await session.commit()
+    await _start_timer(sub)
+    return CreateSubscriptionResponse(subscription_id=str(sub.id), payment=_link(sub, plan))
 
 
 async def _by_gateway_id(session: AsyncSession, gateway_id: str) -> Subscription | None:
@@ -169,25 +235,19 @@ async def _by_gateway_id(session: AsyncSession, gateway_id: str) -> Subscription
 
 async def activate(session: AsyncSession, sub: Subscription, period_end: date) -> None:
     artist = await session.get(ArtistProfile, sub.artist_id)
+    replaced = []
     for previous in (await session.execute(select(Subscription).where(
-            Subscription.artist_id == sub.artist_id, Subscription.status.in_(("active", "halted")), Subscription.id != sub.id))).scalars():
-        previous.status = "cancelled"  # plan change: the new subscription replaces it — stop billing the old one now
-        try:
-            await get_gateway().cancel_subscription(previous.gateway_subscription_id, at_cycle_end=False)
-        except Exception:
-            log.exception("could not cancel replaced subscription %s at the gateway", previous.gateway_subscription_id)
-        await _signal(previous, "ended", "cancelled")
+            Subscription.artist_id == sub.artist_id, Subscription.status.in_(LIVE), Subscription.id != sub.id))).scalars():
+        # A renewal continues its period (completed); a plan change replaces the old plan from today (cancelled).
+        previous.status = "completed" if previous.id == sub.renews_id else "cancelled"
+        replaced.append(previous)
     await session.flush()
     sub.status, sub.current_period_end, sub.cancel_at_period_end = "active", period_end, False
     await apply_tier(session, artist, sub.tier, "paid")
     await session.commit()
+    for previous in replaced:
+        await _signal(previous, "ended", previous.status)
     await _signal(sub, "activated", period_end_iso(period_end))
-
-
-async def record_charge(session: AsyncSession, sub: Subscription, period_end: date) -> None:
-    sub.status, sub.current_period_end = "active", period_end
-    await session.commit()
-    await _signal(sub, "charged", period_end_iso(period_end))
 
 
 async def end(session: AsyncSession, sub: Subscription, status: str, commit: bool = True) -> None:
@@ -211,20 +271,24 @@ async def _signal(sub: Subscription, name: str, arg: str) -> None:
         log.exception("could not signal %s to subscription %s", name, sub.id)
 
 
-async def verify(session: AsyncSession, user: User, payment_id: str, gateway_sub_id: str, signature: str, gateway: PaymentGateway):
+async def verify(session: AsyncSession, user: User, subscription_id: str, gateway: PaymentGateway):
+    """The artist says they paid: ask PhonePe and apply the answer (idempotent with the webhook). Returns (usage, paid)."""
     artist = await get_own(session, user)
-    if not gateway.verify_payment_signature(payment_id, gateway_sub_id, signature):
-        raise AppError(400, "invalid_signature", "We couldn't verify this payment. If money was deducted, it will be refunded.")
-    sub = await _by_gateway_id(session, gateway_sub_id)
+    try:
+        sub = await session.get(Subscription, uuid.UUID(subscription_id))
+    except ValueError:
+        sub = None
     if sub is None or sub.artist_id != artist.id:
         raise not_found("subscription_not_found", "That subscription doesn't exist")
     if sub.status == "created":
-        await activate(session, sub, date.today() + timedelta(days=CYCLE_DAYS[sub.billing_cycle]))
-    plan = await session.get(SubscriptionPlan, sub.tier)
-    price = plan.annual_price if sub.billing_cycle == "annual" else plan.monthly_price
-    await record_payment(session, sub, {"id": payment_id, "status": "captured"}, gateway, fallback_amount=price * 100)
-    await session.commit()
-    return await usage_for(session, artist, datetime.now(UTC))
+        try:
+            status = await gateway.link_status(sub.gateway_subscription_id)
+        except Exception:
+            log.warning("could not read link status for %s", sub.gateway_subscription_id, exc_info=True)
+        else:
+            await apply_link_status(session, sub, status)
+    await session.refresh(sub)
+    return await usage_for(session, artist, datetime.now(UTC)), sub.status in ("active", "completed")
 
 
 async def cancel(session: AsyncSession, user: User, gateway: PaymentGateway) -> MySubscriptionResponse:
@@ -232,8 +296,8 @@ async def cancel(session: AsyncSession, user: User, gateway: PaymentGateway) -> 
     sub = await current_subscription(session, artist.id)
     if sub is None:
         raise not_found("subscription_not_found", "You don't have an active subscription")
-    await gateway.cancel_subscription(sub.gateway_subscription_id, at_cycle_end=True)
-    sub.cancel_at_period_end = True
+    sub.cancel_at_period_end = True  # no renewal link will be sent; a renewal link already out is closed
+    await _cancel_unpaid(session, artist.id, gateway)
     await session.commit()
     return await my_subscription(session, user)
 
@@ -246,35 +310,53 @@ async def payments(session: AsyncSession, user: User) -> BillingHistoryResponse:
 
 
 async def expire_unpaid(session: AsyncSession, subscription_id: str, gateway: PaymentGateway) -> None:
+    """The link's time is up. Check PhonePe first: a payment whose webhook we missed must still count."""
     sub = await session.get(Subscription, subscription_id)
-    if sub is not None and sub.status == "created":
-        sub.status = "expired"
-        await session.commit()
+    if sub is None or sub.status != "created":
+        return
+    try:
+        status = await gateway.link_status(sub.gateway_subscription_id)
+    except Exception:
+        log.warning("could not read link status for %s; expiring it", sub.gateway_subscription_id, exc_info=True)
+        status = None
+    if status is not None and status.state == "COMPLETED":
+        await apply_link_status(session, sub, status)
+        return
+    sub.status = "expired"
+    await session.commit()
+    if status is None or status.state == "ACTIVE":
         try:
-            await gateway.cancel_subscription(sub.gateway_subscription_id, at_cycle_end=False)
+            await gateway.cancel_link(sub.gateway_subscription_id)
         except Exception:
-            log.warning("gateway cancel failed for %s", sub.gateway_subscription_id, exc_info=True)
+            log.warning("could not cancel payment link %s at PhonePe", sub.gateway_subscription_id, exc_info=True)
 
 
 async def lapse(session: AsyncSession, subscription_id: str) -> None:
     sub = await session.get(Subscription, subscription_id)
-    if sub is not None and sub.status in ("active", "halted"):
+    if sub is not None and sub.status in LIVE:
         await end(session, sub, "expired")
 
 
-LIVE = ("active", "halted")
+LIVE = ("active", "halted")  # halted only exists on old Razorpay rows
 TERMINAL = ("cancelled", "expired", "completed")
 
 
+def _flag(session: AsyncSession, sub: Subscription, action: str, why: str) -> None:
+    """Something only a person can fix on the PhonePe dashboard — listed by `admin reports`."""
+    session.add(AdminAction(actor="system", action=action, target_type="subscription",
+                            target_id=sub.gateway_subscription_id or str(sub.id), reason=why))
+
+
 async def cancel_or_flag(session: AsyncSession, sub: Subscription, why: str) -> bool:
-    """Stop billing now. If the gateway refuses, keep the real status and flag it for `admin reports` (never hide it)."""
-    try:
-        await get_gateway().cancel_subscription(sub.gateway_subscription_id, at_cycle_end=False)
-    except Exception:
-        log.exception("could not cancel %s at the gateway (%s) — flagged for manual cancellation", sub.gateway_subscription_id, why)
-        session.add(AdminAction(actor="system", action="manual_cancel_needed", target_type="subscription",
-                                target_id=sub.gateway_subscription_id or str(sub.id), reason=why))
-        return False
+    """Stop any further payment. Paid periods have nothing to stop; an open link is cancelled at PhonePe, and if that fails
+    the row keeps its real status and is flagged for `admin reports` (never hidden)."""
+    if sub.status == "created":
+        try:
+            await get_gateway().cancel_link(sub.gateway_subscription_id)
+        except Exception:
+            log.exception("could not cancel link %s at PhonePe (%s) — flagged for manual cancellation", sub.gateway_subscription_id, why)
+            _flag(session, sub, "manual_cancel_needed", why)
+            return False
     sub.status = "cancelled"
     return True
 
@@ -285,65 +367,132 @@ async def _owner_removed(session: AsyncSession, sub: Subscription) -> bool:
     return owner is None or owner.deleted_at is not None or owner.blocked_at is not None
 
 
-async def _paid(session: AsyncSession, sub: Subscription, period_end: date) -> None:
-    """A payment arrived for `sub` (activated/charged). Every state must end with the artist on what they paid for."""
-    if await _owner_removed(session, sub):  # deleted or blocked account: never restore a plan, stop the billing
-        log.error("payment on %s for a deleted/blocked account — cancelling; refund manually", sub.gateway_subscription_id)
-        await cancel_or_flag(session, sub, "payment received for a deleted or blocked account — refund manually")
+async def _period_end(session: AsyncSession, sub: Subscription) -> date:
+    start = today_ist()
+    if sub.renews_id is not None:
+        renewed = await session.get(Subscription, sub.renews_id)
+        if renewed is not None and renewed.status in LIVE and renewed.current_period_end and renewed.current_period_end >= start:
+            start = renewed.current_period_end  # paid early: the new period follows the current one
+    return start + timedelta(days=CYCLE_DAYS[sub.billing_cycle])
+
+
+async def _paid(session: AsyncSession, sub: Subscription, amount_paise: int | None) -> None:
+    """PhonePe says the link was paid. Idempotent: the webhook, "I've paid" and the sweeper may all report it."""
+    if sub.status == "active" or (sub.status == "completed" and sub.current_period_end):
+        return
+    plan = await session.get(SubscriptionPlan, sub.tier)
+    if amount_paise is not None and amount_paise < price(plan, sub.billing_cycle) * 100:
+        log.error("link %s paid %s paise, expected %s — not activating", sub.gateway_subscription_id, amount_paise,
+                  price(plan, sub.billing_cycle) * 100)
+        _flag(session, sub, "refund_needed", f"paid {amount_paise / 100:.2f} instead of {price(plan, sub.billing_cycle)}")
         await session.commit()
         return
-    if sub.status == "active":
-        await record_charge(session, sub, period_end)
+    if await _owner_removed(session, sub):  # deleted or blocked account: never restore a plan
+        log.error("payment on %s for a deleted/blocked account — refund manually", sub.gateway_subscription_id)
+        sub.status = "cancelled"
+        _flag(session, sub, "refund_needed", "payment received for a deleted or blocked account — refund manually")
+        await session.commit()
         return
-    if sub.status in ("created", "halted"):
-        await activate(session, sub, period_end)
+    if sub.status in TERMINAL and await current_subscription(session, sub.artist_id) is not None:
+        # A replaced or expired link was paid while another plan is live: don't swap plans behind the artist's back.
+        log.error("payment for replaced link %s while another plan is live — refund manually", sub.gateway_subscription_id)
+        _flag(session, sub, "refund_needed", "paid a replaced payment link while another plan was live — refund manually")
+        await session.commit()
         return
-    # Terminal (replaced checkout, lapsed, cancelled): money was taken anyway.
-    other = await current_subscription(session, sub.artist_id)
-    if other is None:
-        await activate(session, sub, period_end)  # restore the plan they are paying for
-        return
-    log.error("payment for replaced subscription %s while %s is live — cancelling it at the gateway; refund manually",
-              sub.gateway_subscription_id, other.gateway_subscription_id)
-    try:
-        await get_gateway().cancel_subscription(sub.gateway_subscription_id, at_cycle_end=False)
-    except Exception:
-        log.exception("could not cancel %s", sub.gateway_subscription_id)
-
-
-async def _queue_payment_failed(session: AsyncSession, sub: Subscription) -> None:
-    """Once per billing period, and never during first checkout (the artist is right there retrying their card)."""
-    if sub.status == "created":
-        return
+    period_end = await _period_end(session, sub)
     artist = await session.get(ArtistProfile, sub.artist_id)
+    await queue_message(session, artist.user_id, "payment_received", str(sub.id), {
+        "plan": plan.name, "amount": f"₹{price(plan, sub.billing_cycle):,}", "date": _day(period_end)})
+    await activate(session, sub, period_end)
+
+
+async def apply_link_status(session: AsyncSession, sub: Subscription, status: LinkStatus) -> None:
+    """Record the link's payment attempts and, when it is paid, start the period. The caller's changes are committed."""
     plan = await session.get(SubscriptionPlan, sub.tier)
-    await queue_message(session, artist.user_id, "payment_failed", f"{sub.id}-{sub.current_period_end}", {"plan": plan.name})
+    paid_amount = None
+    for payment in status.payments:
+        await record_payment(session, sub, payment | {"invoice_id": status.gateway_order_id},
+                             fallback_amount=price(plan, sub.billing_cycle) * 100)
+        if payment["status"] == "paid" and payment.get("amount") is not None:
+            paid_amount = (paid_amount or 0) + payment["amount"]
+    await session.commit()
+    if status.state == "COMPLETED":
+        await _paid(session, sub, paid_amount)
+    elif status.state in ("EXPIRED", "CANCELLED") and sub.status == "created":
+        sub.status = "expired"
+        await session.commit()
 
 
-async def handle_webhook(session: AsyncSession, event: str, entity: dict, payment: dict | None = None) -> None:
-    gateway_id = entity.get("id") or (payment or {}).get("subscription_id") or ""
-    sub = await _by_gateway_id(session, gateway_id)
+async def handle_webhook(session: AsyncSession, event: str, payload: dict) -> None:
+    """`paylink.order.completed` / `paylink.order.failed`; `payload` is PhonePe's order (merchantOrderId, state, ...)."""
+    from app.subscriptions.gateway import normalise_payments
+
+    sub = await _by_gateway_id(session, payload.get("merchantOrderId") or "")
     if sub is None:
-        log.warning("webhook %s for unknown subscription %s", event, gateway_id)
+        log.warning("webhook %s for unknown payment link %s", event, payload.get("merchantOrderId"))
         return
-    if event == "payment.failed":
-        if payment:
-            await record_payment(session, sub, payment, get_gateway())
-            await _queue_payment_failed(session, sub)
-            await session.commit()
-        return
-    current_end = entity.get("current_end")
-    period_end = datetime.fromtimestamp(current_end, IST).date() if current_end else None
-    if event in ("subscription.activated", "subscription.charged") and period_end:
-        await _paid(session, sub, period_end)
-        if payment:
-            await record_payment(session, sub, payment, get_gateway())
-            await session.commit()
-    elif event == "subscription.halted":
-        if sub.status == "active":
-            sub.status = "halted"
-            await _queue_payment_failed(session, sub)
-            await session.commit()
-    elif event in ("subscription.cancelled", "subscription.completed"):
-        if sub.status not in TERMINAL:
-            await end(session, sub, "cancelled" if event == "subscription.cancelled" else "completed")
+    state = payload.get("state") or ("COMPLETED" if event == "paylink.order.completed" else "FAILED")
+    await apply_link_status(session, sub, LinkStatus(state=state, gateway_order_id=payload.get("orderId"),
+                                                     payments=normalise_payments(payload.get("paymentDetails"))))
+
+
+async def create_due_renewals(session: AsyncSession, gateway: PaymentGateway) -> int:
+    """Send one renewal link per period, RENEWAL_LEAD_DAYS before it ends (or late, within the grace days, if missed)."""
+    today = today_ist()
+    due = (await session.execute(select(Subscription).where(
+        Subscription.status == "active", Subscription.cancel_at_period_end.is_(False),
+        Subscription.current_period_end <= today + timedelta(days=RENEWAL_LEAD_DAYS),
+        Subscription.current_period_end >= today - timedelta(days=GRACE_DAYS)))).scalars().all()
+    created = []
+    for current in due:
+        renewal_exists = (await session.execute(select(Subscription.id).where(
+            Subscription.renews_id == current.id, Subscription.status != "cancelled"))).first()
+        open_link = (await session.execute(select(Subscription.id).where(
+            Subscription.artist_id == current.artist_id, Subscription.status == "created"))).first()
+        if renewal_exists or open_link:
+            continue
+        artist = await session.get(ArtistProfile, current.artist_id)
+        if await _owner_removed(session, current):
+            continue
+        plan = await session.get(SubscriptionPlan, current.tier)
+        # Payable until the plan would lapse: end of the last grace day (IST).
+        pay_by = datetime.fromisoformat(period_end_iso(current.current_period_end + timedelta(days=GRACE_DAYS)))
+        try:
+            created.append(await _new_period(session, artist, plan, current.billing_cycle, gateway, pay_by, renews=current))
+        except Exception:
+            log.exception("could not create renewal link for subscription %s (next sweep retries)", current.id)
+            await session.rollback()
+            continue
+        await session.commit()
+    for sub in created:
+        await _start_timer(sub)
+    return len(created)
+
+
+async def expire_overdue_links(session: AsyncSession, gateway: PaymentGateway) -> int:
+    """Links past their pay-by time whose timer never ran (Temporal was down)."""
+    ids = (await session.execute(select(Subscription.id).where(
+        Subscription.status == "created", Subscription.pay_by < datetime.now(UTC)).limit(100))).scalars().all()
+    for sub_id in ids:
+        await expire_unpaid(session, str(sub_id), gateway)
+    return len(ids)
+
+
+async def reconcile_open_links(session: AsyncSession, gateway: PaymentGateway, min_age: timedelta = timedelta(minutes=10)) -> int:
+    """Ask PhonePe about open links in case a webhook never arrived. Returns how many turned out paid."""
+    if isinstance(gateway, FakeGateway):
+        return 0  # the fake reports every link as paid; local links are paid from the web app instead
+    rows = (await session.execute(select(Subscription).where(
+        Subscription.status == "created", Subscription.pay_by >= datetime.now(UTC),
+        Subscription.created_at < datetime.now(UTC) - min_age).order_by(Subscription.created_at).limit(50))).scalars().all()
+    paid = 0
+    for sub in rows:
+        try:
+            status = await gateway.link_status(sub.gateway_subscription_id)
+        except Exception:
+            log.warning("sweep: could not read link status for %s", sub.gateway_subscription_id, exc_info=True)
+            continue
+        if status.state != "ACTIVE":
+            await apply_link_status(session, sub, status)
+            paid += status.state == "COMPLETED"
+    return paid

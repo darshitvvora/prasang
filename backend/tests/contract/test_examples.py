@@ -69,7 +69,7 @@ TABLE: dict[str, object] = {
     "subscriptions/verify.request.json": C.VerifyPaymentRequest,
     "subscriptions/verify.response.json": C.VerifyPaymentResponse,
     "subscriptions/cancel.response.json": C.MySubscriptionResponse,
-    "subscriptions/webhook.request.json": C.RazorpayWebhookEvent,
+    "subscriptions/webhook.request.json": C.PhonePeWebhookEvent,
     "errors/validation_error.json": C.ErrorBody,
     "errors/artist_not_found.json": C.ErrorBody,
     "errors/unauthenticated.json": C.ErrorBody,

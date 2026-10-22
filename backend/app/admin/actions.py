@@ -16,7 +16,6 @@ from app.reviews.models import Review
 from app.reviews.ratings import recalc_rating
 from app.subscriptions import service as subs
 from app.subscriptions.models import Subscription, SubscriptionPlan
-from app.subscriptions.payments import record_payment
 
 log = logging.getLogger(__name__)
 
@@ -91,7 +90,7 @@ def _suspend(artist: ArtistProfile, reason: str) -> None:
 
 
 async def suspend(session: AsyncSession, slug: str, *, actor: str, reason: str) -> None:
-    """Hidden from search and its public link; billing keeps running (refund manually in Razorpay if needed)."""
+    """Hidden from search and its public link; the paid period keeps running (refund manually on PhonePe if needed)."""
     artist = await _artist(session, slug)
     _suspend(artist, reason)
     artist_changed(session, artist.id)
@@ -173,29 +172,17 @@ async def unblock_user(session: AsyncSession, user_ref: str, *, actor: str) -> N
     await session.commit()
 
 
-SYNC_EVENTS = {"active": "subscription.activated", "authenticated": None, "created": None, "pending": None,
-               "halted": "subscription.halted", "cancelled": "subscription.cancelled", "completed": "subscription.completed",
-               "expired": "subscription.cancelled"}
-
-
 async def sync_subscription(session: AsyncSession, slug: str, *, actor: str) -> None:
-    """Re-read the artist's newest subscription from the gateway and apply it as if the webhook had arrived."""
+    """Re-read the artist's newest payment link from PhonePe and apply it as if the webhook had arrived."""
     artist = await _artist(session, slug)
     sub = (await session.execute(select(Subscription).where(Subscription.artist_id == artist.id)
                                  .order_by(Subscription.created_at.desc()))).scalars().first()
     if sub is None:
         raise not_found("subscription_not_found", f"{slug} has no subscriptions")
-    gateway = subs.get_gateway()
-    entity = await gateway.fetch_subscription(sub.gateway_subscription_id)
-    event = SYNC_EVENTS.get(entity.get("status", ""))
-    payments = await gateway.fetch_payments(sub.gateway_subscription_id)
-    for payment in payments:
-        await record_payment(session, sub, payment, gateway)
-    _log(session, actor, "sync_subscription", "subscription", sub.id, gateway_status=entity.get("status"), applied=event,
-         payments=len(payments))
+    status = await subs.get_gateway().link_status(sub.gateway_subscription_id)
+    _log(session, actor, "sync_subscription", "subscription", sub.id, gateway_status=status.state, payments=len(status.payments))
     await session.commit()
-    if event:
-        await subs.handle_webhook(session, event, entity)
+    await subs.apply_link_status(session, sub, status)
 
 
 async def clear_google_place(session: AsyncSession, slug: str, *, actor: str) -> None:
@@ -213,10 +200,11 @@ async def open_reports(session: AsyncSession) -> dict:
     reports = (await session.execute(select(ReviewReport, Review).join(Review, Review.id == ReviewReport.review_id)
                                      .where(ReviewReport.status == "open").order_by(ReviewReport.created_at))).all()
     messages = (await session.execute(select(ContactMessage).order_by(ContactMessage.created_at.desc()).limit(20))).scalars().all()
-    flagged = (await session.execute(select(AdminAction).where(AdminAction.action == "manual_cancel_needed")
+    flagged = (await session.execute(select(AdminAction).where(AdminAction.action.in_(("manual_cancel_needed", "refund_needed")))
                                      .order_by(AdminAction.created_at.desc()).limit(50))).scalars().all()
     return {
-        "billing": [{"gateway_subscription_id": a.target_id, "why": a.reason, "at": a.created_at.isoformat()} for a in flagged],
+        "billing": [{"gateway_subscription_id": a.target_id, "action": a.action, "why": a.reason, "at": a.created_at.isoformat()}
+                    for a in flagged],
         "reviews": [{"review_id": str(r.id), "rating": r.rating, "text": r.text[:120], "reason": rep.reason,
                      "reported_at": rep.created_at.isoformat()} for rep, r in reports],
         "contact": [{"at": m.created_at.isoformat(), "from": f"{m.name} <{m.contact}>", "topic": m.topic, "message": m.message[:160]}

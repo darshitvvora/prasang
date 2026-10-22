@@ -21,16 +21,13 @@ SLUG = "arjun-malhotra-magic"
 
 
 class RecordingGateway(FakeGateway):
-    def __init__(self, status: str = "active"):
-        self.cancelled: list[tuple[str, bool]] = []
-        self.status = status
+    """The fake reports every link as paid; cancellations are recorded."""
 
-    async def cancel_subscription(self, gateway_subscription_id, at_cycle_end):
-        self.cancelled.append((gateway_subscription_id, at_cycle_end))
+    def __init__(self):
+        self.cancelled: list[str] = []
 
-    async def fetch_subscription(self, gateway_subscription_id):
-        end = int((datetime.now(UTC) + timedelta(days=30)).timestamp())
-        return {"id": gateway_subscription_id, "status": self.status, "current_end": end}
+    async def cancel_link(self, order_id):
+        self.cancelled.append(order_id)
 
 
 @pytest.fixture
@@ -61,13 +58,13 @@ async def test_block_artist_cancels_live_subscription(gateway):
     await seed_demo()
     async with get_sessionmaker()() as s:
         await _add_sub(s, await _artist(s))
+        await _add_sub(s, await _artist(s), status="created", gateway_id="PRS-open")
         await actions.block_user(s, "dev-artist-arjun", actor="test", reason="Fake profile")
     async with get_sessionmaker()() as s:
         artist = await _artist(s)
-        assert gateway.cancelled == [("sub_live1", False)]
+        assert gateway.cancelled == ["PRS-open"]  # the paid period has nothing to cancel; the open link is closed
         assert artist.suspended_at is not None and artist.suspension_reason == "Fake profile"
-        sub = (await s.execute(select(Subscription))).scalar_one()
-        assert sub.status == "cancelled"
+        assert {sub.status for sub in (await s.execute(select(Subscription))).scalars()} == {"cancelled"}
         assert artist.subscription_tier == "free"
         assert (await s.get(User, "dev-artist-arjun")).blocked_at is not None
 
@@ -188,13 +185,14 @@ def test_reason_required(argv):
 
 
 async def test_sync_subscription_backfills_payments(gateway):
+    from app.subscriptions.gateway import LinkStatus
     from app.subscriptions.models import SubscriptionPayment
 
-    async def payments(gateway_subscription_id):
-        return [{"id": "pay_hist", "amount": 59900, "currency": "INR", "status": "captured", "invoice_id": "inv_h",
-                 "created_at": 1750000000}]
+    async def status(order_id):
+        return LinkStatus(state="COMPLETED", gateway_order_id="OMO-h", payments=[
+            {"id": "pay_hist", "amount": 59900, "status": "paid", "created_at": 1750000000}])
 
-    gateway.fetch_payments = payments
+    gateway.link_status = status
     await seed_demo()
     async with get_sessionmaker()() as s:
         await _add_sub(s, await _artist(s))
